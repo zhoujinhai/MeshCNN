@@ -27,6 +27,7 @@ def get_norm_layer(norm_type='instance', num_groups=1):
         raise NotImplementedError('normalization layer [%s] is not found' % norm_type)
     return norm_layer
 
+
 def get_norm_args(norm_layer, nfeats_list):
     if hasattr(norm_layer, '__name__') and norm_layer.__name__ == 'NoNorm':
         norm_args = [{'fake': True} for f in nfeats_list]
@@ -38,6 +39,7 @@ def get_norm_args(norm_layer, nfeats_list):
         raise NotImplementedError('normalization layer [%s] is not found' % norm_layer.func.__name__)
     return norm_args
 
+
 class NoNorm(nn.Module): #todo with abstractclass and pass
     def __init__(self, fake=True):
         self.fake = fake
@@ -46,6 +48,7 @@ class NoNorm(nn.Module): #todo with abstractclass and pass
         return x
     def __call__(self, x):
         return self.forward(x)
+
 
 def get_scheduler(optimizer, opt):
     if opt.lr_policy == 'lambda':
@@ -110,6 +113,7 @@ def define_classifier(input_nc, ncf, ninput_edges, nclasses, opt, gpu_ids, arch,
         raise NotImplementedError('Encoder model name [%s] is not recognized' % arch)
     return init_net(net, init_type, init_gain, gpu_ids)
 
+
 def define_loss(opt):
     if opt.dataset_mode == 'classification':
         loss = torch.nn.CrossEntropyLoss()
@@ -117,10 +121,10 @@ def define_loss(opt):
         loss = torch.nn.CrossEntropyLoss(ignore_index=-1)
     return loss
 
+
 ##############################################################################
 # Classes For Classification / Segmentation Networks
 ##############################################################################
-
 class MeshConvNet(nn.Module):
     """Network for learning a global shape descriptor (classification)
     """
@@ -135,7 +139,6 @@ class MeshConvNet(nn.Module):
             setattr(self, 'conv{}'.format(i), MResConv(ki, self.k[i + 1], nresblocks))
             setattr(self, 'norm{}'.format(i), norm_layer(**norm_args[i]))
             setattr(self, 'pool{}'.format(i), MeshPool(self.res[i + 1]))
-
 
         self.gp = torch.nn.AvgPool1d(self.res[-1])
         # self.gp = torch.nn.MaxPool1d(self.res[-1])
@@ -155,6 +158,7 @@ class MeshConvNet(nn.Module):
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
+
 
 class MResConv(nn.Module):
     def __init__(self, in_channels, out_channels, skips=1):
@@ -197,6 +201,7 @@ class MeshEncoderDecoder(nn.Module):
 
     def __call__(self, x, meshes):
         return self.forward(x, meshes)
+
 
 class DownConv(nn.Module):
     def __init__(self, in_channels, out_channels, blocks=0, pool=0):
@@ -378,9 +383,11 @@ class MeshDecoder(nn.Module):
     def __call__(self, x, encoder_outs=None):
         return self.forward(x, encoder_outs)
 
+
 def reset_params(model): # todo replace with my init
     for i, m in enumerate(model.modules()):
         weight_init(m)
+
 
 def weight_init(m):
     if isinstance(m, nn.Conv2d):

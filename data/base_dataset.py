@@ -3,8 +3,8 @@ import numpy as np
 import pickle
 import os
 
-class BaseDataset(data.Dataset):
 
+class BaseDataset(data.Dataset):
     def __init__(self, opt):
         self.opt = opt
         self.mean = 0
@@ -29,6 +29,8 @@ class BaseDataset(data.Dataset):
             num_aug = self.opt.num_aug
             self.opt.num_aug = 1
             mean, std = np.array(0), np.array(0)
+            # 会遍历数据集 并按照pytorch数据加载流程调用__getitem__
+            # 遍历-->DataLoader.next-->DataLoader.iter-->collate_fn-->getitem
             for i, data in enumerate(self):
                 if i % 500 == 0:
                     print('{} of {}'.format(i, self.size))

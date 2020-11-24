@@ -8,17 +8,16 @@ from models.layers.mesh_prepare import fill_mesh
 
 
 class Mesh:
-
     def __init__(self, file=None, opt=None, hold_history=False, export_folder=''):
         self.vs = self.v_mask = self.filename = self.features = self.edge_areas = None
         self.edges = self.gemm_edges = self.sides = None
         self.pool_count = 0
-        fill_mesh(self, file, opt)
+        fill_mesh(self, file, opt)  # 给self赋值 包括vs,edges,gemm_edges,features等
         self.export_folder = export_folder
         self.history_data = None
         if hold_history:
-            self.init_history()
-        self.export()
+            self.init_history()  # 历史数据  'groups'， 'gemm_edges'等
+        self.export()  # 导出到指定路径
 
     def extract_features(self):
         return self.features
@@ -69,7 +68,6 @@ class Mesh:
         self.__clean_history(groups, torch_mask)
         self.pool_count += 1
         self.export()
-
 
     def export(self, file=None, vcolor=None):
         if file is None:
@@ -150,20 +148,21 @@ class Mesh:
 
     def init_history(self):
         self.history_data = {
-                               'groups': [],
-                               'gemm_edges': [self.gemm_edges.copy()],
-                               'occurrences': [],
-                               'old2current': np.arange(self.edges_count, dtype=np.int32),
-                               'current2old': np.arange(self.edges_count, dtype=np.int32),
-                               'edges_mask': [torch.ones(self.edges_count,dtype=torch.bool)],
-                               'edges_count': [self.edges_count],
-                              }
+            'groups': [],
+            'gemm_edges': [self.gemm_edges.copy()],
+            'occurrences': [],
+            'old2current': np.arange(self.edges_count, dtype=np.int32),
+            'current2old': np.arange(self.edges_count, dtype=np.int32),
+            'edges_mask': [torch.ones(self.edges_count, dtype=torch.bool)],
+            'edges_count': [self.edges_count],
+        }
         if self.export_folder:
             self.history_data['collapses'] = MeshUnion(self.edges_count)
 
     def union_groups(self, source, target):
         if self.export_folder and self.history_data:
-            self.history_data['collapses'].union(self.history_data['current2old'][source], self.history_data['current2old'][target])
+            self.history_data['collapses'].union(self.history_data['current2old'][source],
+                                                 self.history_data['current2old'][target])
         return
 
     def remove_group(self, index):
@@ -178,7 +177,7 @@ class Mesh:
 
     def get_occurrences(self):
         return self.history_data['occurrences'].pop()
-    
+
     def __clean_history(self, groups, pool_mask):
         if self.history_data is not None:
             mask = self.history_data['old2current'] != -1
@@ -190,7 +189,7 @@ class Mesh:
             self.history_data['groups'].append(groups.get_groups(pool_mask))
             self.history_data['gemm_edges'].append(self.gemm_edges.copy())
             self.history_data['edges_count'].append(self.edges_count)
-    
+
     def unroll_gemm(self):
         self.history_data['gemm_edges'].pop()
         self.gemm_edges = self.history_data['gemm_edges'][-1]

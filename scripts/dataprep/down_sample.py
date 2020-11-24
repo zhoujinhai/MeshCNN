@@ -1,6 +1,7 @@
 import bpy
 import os
 import sys
+import glob
 
 '''
 Simplifies mesh to target number of faces
@@ -15,15 +16,21 @@ Author: Rana Hanocka
 @output:
     simplified mesh .obj
     to run it from cmd line:
-    /opt/blender/blender --background --python blender_process.py /home/rana/koala.obj 1000 /home/rana/koala_1000.obj
+    /opt/blender/blender --background --python down_sample.py /home/heygears/work/MeshCNN/datasets/tooth/obj 5000 /home/heygears/work/MeshCNN/datasets/tooth/down_obj_1
 '''
 
-
 class SampleProcess:
-    def __init__(self, obj_file, target_faces, export_name):
-        mesh = self.load_obj(obj_file)
-        self.simplify(mesh, target_faces)
-        self.export_obj(mesh, export_name)
+    def __init__(self, obj_path, target_faces, export_path):
+        obj_list = glob.glob(os.path.join(obj_path, "*.obj"))
+        print(len(obj_list))
+        for i, obj in enumerate(obj_list):
+            print(i)
+            mesh = self.load_obj(obj)
+            save_name = os.path.basename(obj)
+            export_name = os.path.join(export_path, save_name)
+            self.simplify(mesh, target_faces)
+            self.export_obj(mesh, export_name)
+
 
     def load_obj(self, obj_file):
         bpy.ops.import_scene.obj(filepath=obj_file, axis_forward='-Z', axis_up='Y', filter_glob="*.obj;*.mtl", use_edges=True,
@@ -51,9 +58,9 @@ class SampleProcess:
         if nfaces < target_faces:
             self.subsurf(mesh)
             nfaces = len(mesh.data.polygons)
-        ratio = target_faces / float(nfaces)
+        ratio = (target_faces+0.5) / float(nfaces)
         mod.ratio = float('%s' % ('%.6g' % (ratio)))
-        print('faces: ', mod.face_count, " nfaces: ", nfaces, " ratio: ", mod.ratio)
+        print('faces: ', mod.face_count, " nfaces: ", nfaces, " ratio: ", mod.ratio, " down_faces: ", nfaces*mod.ratio)
         bpy.ops.object.modifier_apply(modifier=mod.name)
 
     def export_obj(self, mesh, export_name):
@@ -70,9 +77,9 @@ class SampleProcess:
                                  group_by_material=False, keep_vertex_order=True, global_scale=1, path_mode='AUTO',
                                  axis_forward='-Z', axis_up='Y')
 
-obj_file = sys.argv[-3]
+obj_file_path = sys.argv[-3]
 target_faces = int(sys.argv[-2])
-export_name = sys.argv[-1]
+export_path = sys.argv[-1]
 
-print('args: ', obj_file, target_faces, export_name)
-blender = SampleProcess(obj_file, target_faces, export_name)
+print('args: ', obj_file_path, target_faces, export_path)
+blender = SampleProcess(obj_file_path, target_faces, export_path)

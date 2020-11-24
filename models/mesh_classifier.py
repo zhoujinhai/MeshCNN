@@ -52,7 +52,6 @@ class ClassifierModel:
         if self.opt.dataset_mode == 'segmentation' and not self.is_train:
             self.soft_label = torch.from_numpy(data['soft_label'])
 
-
     def forward(self):
         out = self.net(self.edge_features, self.mesh)
         return out
@@ -67,9 +66,7 @@ class ClassifierModel:
         self.backward(out)
         self.optimizer.step()
 
-
 ##################
-
     def load_network(self, which_epoch):
         """load model from disk"""
         save_filename = '%s_net.pth' % which_epoch
@@ -84,7 +81,6 @@ class ClassifierModel:
         if hasattr(state_dict, '_metadata'):
             del state_dict._metadata
         net.load_state_dict(state_dict)
-
 
     def save_network(self, which_epoch):
         """save model to disk"""

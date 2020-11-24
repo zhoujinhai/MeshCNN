@@ -14,6 +14,7 @@ def get_data(dset):
     cmd = './scripts/{}/get_data.sh > /dev/null 2>&1'.format(dset)
     os.system(cmd)
 
+
 def add_args(file, temp_file, new_args):
     with open(file) as f:
         tokens = f.readlines()
@@ -24,6 +25,7 @@ def add_args(file, temp_file, new_args):
     with open(temp_file, 'w') as f:
         f.writelines(tokens)
 
+
 def run_train(dset):
     train_file = './scripts/{}/train.sh'.format(dset)
     temp_train_file = './scripts/{}/train_temp.sh'.format(dset)
@@ -33,9 +35,11 @@ def run_train(dset):
     os.system(cmd)
     os.remove(temp_train_file)
 
+
 def get_pretrained(dset):
     cmd = './scripts/{}/get_pretrained.sh > /dev/null 2>&1'.format(dset)
     os.system(cmd)
+
 
 def run_test(dset):
     test_file = './scripts/{}/test.sh'.format(dset)
@@ -58,14 +62,17 @@ def run_test(dset):
         assert acc == 92.554, "human_seg accuracy was {} and not 92.554".format(acc)
     os.remove(temp_test_file)
 
+
 def run_dataset(dset):
     get_data(dset)
     run_train(dset)
     get_pretrained(dset)
     run_test(dset)
 
+
 def test_shrec():
     run_dataset('shrec')
+
 
 def test_human_seg():
     run_dataset('human_seg')

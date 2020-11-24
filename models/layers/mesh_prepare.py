@@ -4,10 +4,16 @@ import ntpath
 
 
 def fill_mesh(mesh2fill, file: str, opt):
-    load_path = get_mesh_path(file, opt.num_aug)
+    """
+    mesh2fill: mesh data  (dict)
+    file: obj文件路径
+    opt: 可选参数
+    """
+    load_path = get_mesh_path(file, opt.num_aug)  # 获取对应obj的npz文件，存于cache文件夹
     if os.path.exists(load_path):
         mesh_data = np.load(load_path, encoding='latin1', allow_pickle=True)
     else:
+        # 不存在则进行增强，并保存到cache文件夹下
         mesh_data = from_scratch(file, opt)
         np.savez_compressed(load_path, gemm_edges=mesh_data.gemm_edges, vs=mesh_data.vs, edges=mesh_data.edges,
                             edges_count=mesh_data.edges_count, ve=mesh_data.ve, v_mask=mesh_data.v_mask,
@@ -26,7 +32,12 @@ def fill_mesh(mesh2fill, file: str, opt):
     mesh2fill.features = mesh_data['features']
     mesh2fill.sides = mesh_data['sides']
 
+
 def get_mesh_path(file: str, num_aug: int):
+    """
+    file: obj文件路径
+    num_aug: 增强数量
+    """
     filename, _ = os.path.splitext(file)
     dir_name = os.path.dirname(filename)
     prefix = os.path.basename(filename)
@@ -36,7 +47,13 @@ def get_mesh_path(file: str, num_aug: int):
         os.makedirs(load_dir, exist_ok=True)
     return load_file
 
+
 def from_scratch(file, opt):
+    """
+    file: obj文件路径
+    opt: 可选项，配置参数
+    return: 输出解析增强后的mesh_data数据
+    """
 
     class MeshPrep:
         def __getitem__(self, item):
@@ -62,7 +79,11 @@ def from_scratch(file, opt):
     mesh_data.features = extract_features(mesh_data)
     return mesh_data
 
+
 def fill_from_file(mesh, file):
+    """
+    解析obj文件，得到对应的vs和faces
+    """
     mesh.filename = ntpath.split(file)[1]
     mesh.fullfilename = file
     vs, faces = [], []
@@ -77,6 +98,7 @@ def fill_from_file(mesh, file):
         elif splitted_line[0] == 'f':
             face_vertex_ids = [int(c.split('/')[0]) for c in splitted_line[1:]]
             assert len(face_vertex_ids) == 3
+            # 下标从0开始
             face_vertex_ids = [(ind - 1) if (ind >= 0) else (len(vs) + ind)
                                for ind in face_vertex_ids]
             faces.append(face_vertex_ids)
@@ -111,6 +133,20 @@ def remove_non_manifolds(mesh, faces):
             for idx, edge in enumerate(faces_edges):
                 edges_set.add(edge)
     return faces[mask], face_areas[mask]
+
+
+def compute_face_normals_and_areas(mesh, faces):
+    """
+    计算每个面的法向量和面积
+    """
+    face_normals = np.cross(mesh.vs[faces[:, 1]] - mesh.vs[faces[:, 0]],
+                            mesh.vs[faces[:, 2]] - mesh.vs[faces[:, 1]])
+    face_areas = np.sqrt((face_normals ** 2).sum(axis=1))
+    # print("n_faces: ", len(faces), mesh.filename)
+    face_normals /= face_areas[:, np.newaxis]
+    assert (not np.any(face_areas[:, np.newaxis] == 0)), 'has zero area face: %s' % mesh.filename
+    face_areas *= 0.5
+    return face_normals, face_areas
 
 
 def build_gemm(mesh, faces, face_areas):
@@ -158,17 +194,8 @@ def build_gemm(mesh, faces, face_areas):
     mesh.gemm_edges = np.array(edge_nb, dtype=np.int64)
     mesh.sides = np.array(sides, dtype=np.int64)
     mesh.edges_count = edges_count
-    mesh.edge_areas = np.array(mesh.edge_areas, dtype=np.float32) / np.sum(face_areas) #todo whats the difference between edge_areas and edge_lenghts?
-
-
-def compute_face_normals_and_areas(mesh, faces):
-    face_normals = np.cross(mesh.vs[faces[:, 1]] - mesh.vs[faces[:, 0]],
-                            mesh.vs[faces[:, 2]] - mesh.vs[faces[:, 1]])
-    face_areas = np.sqrt((face_normals ** 2).sum(axis=1))
-    face_normals /= face_areas[:, np.newaxis]
-    assert (not np.any(face_areas[:, np.newaxis] == 0)), 'has zero area face: %s' % mesh.filename
-    face_areas *= 0.5
-    return face_normals, face_areas
+    # TODO: whats the difference between edge_areas and edge_lenghts?
+    mesh.edge_areas = np.array(mesh.edge_areas, dtype=np.float32) / np.sum(face_areas)
 
 
 # Data augmentation methods
@@ -185,47 +212,13 @@ def post_augmentation(mesh, opt):
         slide_verts(mesh, opt.slide_verts)
 
 
-def slide_verts(mesh, prct):
-    edge_points = get_edge_points(mesh)
-    dihedral = dihedral_angle(mesh, edge_points).squeeze() #todo make fixed_division epsilon=0
-    thr = np.mean(dihedral) + np.std(dihedral)
-    vids = np.random.permutation(len(mesh.ve))
-    target = int(prct * len(vids))
-    shifted = 0
-    for vi in vids:
-        if shifted < target:
-            edges = mesh.ve[vi]
-            if min(dihedral[edges]) > 2.65:
-                edge = mesh.edges[np.random.choice(edges)]
-                vi_t = edge[1] if vi == edge[0] else edge[0]
-                nv = mesh.vs[vi] + np.random.uniform(0.2, 0.5) * (mesh.vs[vi_t] - mesh.vs[vi])
-                mesh.vs[vi] = nv
-                shifted += 1
-        else:
-            break
-    mesh.shifted = shifted / len(mesh.ve)
-
-
 def scale_verts(mesh, mean=1, var=0.1):
     for i in range(mesh.vs.shape[1]):
         mesh.vs[:, i] = mesh.vs[:, i] * np.random.normal(mean, var)
 
 
-def angles_from_faces(mesh, edge_faces, faces):
-    normals = [None, None]
-    for i in range(2):
-        edge_a = mesh.vs[faces[edge_faces[:, i], 2]] - mesh.vs[faces[edge_faces[:, i], 1]]
-        edge_b = mesh.vs[faces[edge_faces[:, i], 1]] - mesh.vs[faces[edge_faces[:, i], 0]]
-        normals[i] = np.cross(edge_a, edge_b)
-        div = fixed_division(np.linalg.norm(normals[i], ord=2, axis=1), epsilon=0)
-        normals[i] /= div[:, np.newaxis]
-    dot = np.sum(normals[0] * normals[1], axis=1).clip(-1, 1)
-    angles = np.pi - np.arccos(dot)
-    return angles
-
-
 def flip_edges(mesh, prct, faces):
-    edge_count, edge_faces, edges_dict = get_edge_faces(faces)
+    edge_count, edge_faces, edges_dict = get_edge_faces(faces)  # 根据面获取边及边对应的面
     dihedral = angles_from_faces(mesh, edge_faces[:, 2:], faces)
     edges2flip = np.random.permutation(edge_count)
     # print(dihedral.min())
@@ -265,6 +258,40 @@ def flip_edges(mesh, prct, faces):
     return faces
 
 
+def slide_verts(mesh, prct):
+    edge_points = get_edge_points(mesh)
+    dihedral = dihedral_angle(mesh, edge_points).squeeze() #todo make fixed_division epsilon=0
+    thr = np.mean(dihedral) + np.std(dihedral)
+    vids = np.random.permutation(len(mesh.ve))
+    target = int(prct * len(vids))
+    shifted = 0
+    for vi in vids:
+        if shifted < target:
+            edges = mesh.ve[vi]
+            if min(dihedral[edges]) > 2.65:
+                edge = mesh.edges[np.random.choice(edges)]
+                vi_t = edge[1] if vi == edge[0] else edge[0]
+                nv = mesh.vs[vi] + np.random.uniform(0.2, 0.5) * (mesh.vs[vi_t] - mesh.vs[vi])
+                mesh.vs[vi] = nv
+                shifted += 1
+        else:
+            break
+    mesh.shifted = shifted / len(mesh.ve)
+
+
+def angles_from_faces(mesh, edge_faces, faces):
+    normals = [None, None]
+    for i in range(2):
+        edge_a = mesh.vs[faces[edge_faces[:, i], 2]] - mesh.vs[faces[edge_faces[:, i], 1]]
+        edge_b = mesh.vs[faces[edge_faces[:, i], 1]] - mesh.vs[faces[edge_faces[:, i], 0]]
+        normals[i] = np.cross(edge_a, edge_b)
+        div = fixed_division(np.linalg.norm(normals[i], ord=2, axis=1), epsilon=0)
+        normals[i] /= div[:, np.newaxis]
+    dot = np.sum(normals[0] * normals[1], axis=1).clip(-1, 1)
+    angles = np.pi - np.arccos(dot)
+    return angles
+
+
 def rebuild_face(face, new_face):
     new_point = list(set(new_face) - set(face))[0]
     for i in range(3):
@@ -272,6 +299,7 @@ def rebuild_face(face, new_face):
             face[i] = new_point
             break
     return face
+
 
 def check_area(mesh, faces):
     face_normals = np.cross(mesh.vs[faces[:, 1]] - mesh.vs[faces[:, 0]],
@@ -282,6 +310,9 @@ def check_area(mesh, faces):
 
 
 def get_edge_faces(faces):
+    """
+    根据面求出所有边和边对应的面
+    """
     edge_count = 0
     edge_faces = []
     edge2keys = dict()
@@ -293,6 +324,7 @@ def get_edge_faces(faces):
                 edge_count += 1
                 edge_faces.append(np.array([cur_edge[0], cur_edge[1], -1, -1]))
             edge_key = edge2keys[cur_edge]
+            # 一条边可以对应两个面
             if edge_faces[edge_key][2] == -1:
                 edge_faces[edge_key][2] = face_id
             else:
@@ -355,7 +387,7 @@ def symmetric_ratios(mesh, edge_points):
 
 def get_edge_points(mesh):
     """ returns: edge_points (#E x 4) tensor, with four vertex ids per edge
-        for example: edge_points[edge_id, 0] and edge_points[edge_id, 1] are the two vertices which define edge_id 
+        for example: edge_points[edge_id, 0] and edge_points[edge_id, 1] are the two vertices which define edge_id
         each adjacent face to edge_id has another vertex, which is edge_points[edge_id, 2] or edge_points[edge_id, 3]
     """
     edge_points = np.zeros([mesh.edges_count, 4], dtype=np.int32)
@@ -403,6 +435,7 @@ def get_normals(mesh, edge_points, side):
     normals /= div[:, np.newaxis]
     return normals
 
+
 def get_opposite_angles(mesh, edge_points, side):
     edges_a = mesh.vs[edge_points[:, side // 2]] - mesh.vs[edge_points[:, side // 2 + 2]]
     edges_b = mesh.vs[edge_points[:, 1 - side // 2]] - mesh.vs[edge_points[:, side // 2 + 2]]
@@ -425,6 +458,7 @@ def get_ratios(mesh, edge_points, side):
     closest_point = point_a + (projection_length / edges_lengths)[:, np.newaxis] * line_ab
     d = np.linalg.norm(point_o - closest_point, ord=2, axis=1)
     return d / edges_lengths
+
 
 def fixed_division(to_div, epsilon):
     if epsilon == 0:

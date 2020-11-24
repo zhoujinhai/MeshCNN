@@ -1,12 +1,14 @@
 import os
 import torch
+import sys
+sys.path.append("/home/heygears/work/MeshCNN/")
 from data.base_dataset import BaseDataset
 from util.util import is_mesh_file, pad
 import numpy as np
 from models.layers.mesh import Mesh
 
-class SegmentationData(BaseDataset):
 
+class SegmentationData(BaseDataset):
     def __init__(self, opt):
         BaseDataset.__init__(self, opt)
         self.opt = opt
@@ -88,3 +90,15 @@ def read_sseg(sseg_file):
     sseg_labels = read_seg(sseg_file)
     sseg_labels = np.array(sseg_labels > 0, dtype=np.int32)
     return sseg_labels
+
+
+if __name__ == "__main__":
+    from options.train_options import TrainOptions
+    print("1")
+    from data import DataLoader
+    opt = TrainOptions().parse()
+    opt.dataroot = "/home/heygears/work/MeshCNN/" + opt.dataroot
+
+    dataset = DataLoader(opt)
+    dataset_size = len(dataset)
+    print('#training meshes = %d' % dataset_size)

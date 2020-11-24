@@ -11,8 +11,6 @@ edge_colors = (r2h((15, 167, 175)), r2h((230, 81, 81)), r2h((142, 105, 252)), r2
                r2h((51, 159, 255)), r2h((225, 117, 231)), r2h((97, 243, 185)), r2h((161, 183, 196)))
 
 
-
-
 def init_plot():
     ax = pl.figure().add_subplot(111, projection='3d')
     # hide axis, thank to
@@ -49,7 +47,7 @@ def surfaces(mesh, plot):
     vs, faces, edges = mesh
     vtx = vs[faces]
     edgecolor = edge_color if not len(edges) else 'none'
-    tri = a3.art3d.Poly3DCollection(vtx, facecolors=surface_color +'55', edgecolors=edgecolor,
+    tri = a3.art3d.Poly3DCollection(vtx, facecolors=surface_color + '55', edgecolors=edgecolor,
                                     linewidths=.5, linestyles='dashdot')
     plot[0].add_collection3d(tri)
     return plot
@@ -139,7 +137,7 @@ def view_meshes(*files, offset=.2):
         max_x += max_x_current + offset
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser("view meshes")
     parser.add_argument('--files', nargs='+', default=['checkpoints/human_seg/meshes/shrec__14_0.obj',
