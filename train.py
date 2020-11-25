@@ -3,7 +3,7 @@ from options.train_options import TrainOptions
 from data import DataLoader
 from models import create_model
 from util.writer import Writer
-from test import run_test
+from val import run_val
 
 if __name__ == '__main__':
     opt = TrainOptions().parse()
@@ -54,7 +54,7 @@ if __name__ == '__main__':
             writer.plot_model_wts(model, epoch)
 
         if epoch % opt.run_test_freq == 0:
-            acc = run_test(epoch)
+            acc = run_val(epoch)
             writer.plot_acc(acc, epoch)
 
     writer.close()

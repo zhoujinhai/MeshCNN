@@ -42,7 +42,7 @@ def get_pretrained(dset):
 
 
 def run_test(dset):
-    test_file = './scripts/{}/test.sh'.format(dset)
+    test_file = './scripts/{}/val.sh'.format(dset)
     temp_test_file = './scripts/{}/test_temp.sh'.format(dset)
     p = subprocess.run(['cp', '-p', '--preserve', test_file, temp_test_file])
     add_args(test_file, temp_test_file, ['--gpu_ids -1 \\'])

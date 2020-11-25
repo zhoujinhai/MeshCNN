@@ -16,8 +16,12 @@ class SegmentationData(BaseDataset):
         self.root = opt.dataroot
         self.dir = os.path.join(opt.dataroot, opt.phase)
         self.paths = self.make_dataset(self.dir)
-        self.seg_paths = self.get_seg_files(self.paths, os.path.join(self.root, 'seg'), seg_ext='.eseg')
-        self.sseg_paths = self.get_seg_files(self.paths, os.path.join(self.root, 'sseg'), seg_ext='.seseg')
+        if opt.phase == "test":
+            self.seg_paths = None
+            self.sseg_paths = None
+        else:
+            self.seg_paths = self.get_seg_files(self.paths, os.path.join(self.root, 'seg'), seg_ext='.eseg')
+            self.sseg_paths = self.get_seg_files(self.paths, os.path.join(self.root, 'sseg'), seg_ext='.seseg')
         self.classes, self.offset = self.get_n_segs(os.path.join(self.root, 'classes.txt'), self.seg_paths)
         self.nclasses = len(self.classes)
         self.size = len(self.paths)
@@ -31,11 +35,12 @@ class SegmentationData(BaseDataset):
         mesh = Mesh(file=path, opt=self.opt, hold_history=True, export_folder=self.opt.export_folder)
         meta = {}
         meta['mesh'] = mesh
-        label = read_seg(self.seg_paths[index]) - self.offset
-        label = pad(label, self.opt.ninput_edges, val=-1, dim=0)
-        meta['label'] = label
-        soft_label = read_sseg(self.sseg_paths[index])
-        meta['soft_label'] = pad(soft_label, self.opt.ninput_edges, val=-1, dim=0)
+        if self.opt.phase != "test":
+            label = read_seg(self.seg_paths[index]) - self.offset
+            label = pad(label, self.opt.ninput_edges, val=-1, dim=0)
+            meta['label'] = label
+            soft_label = read_sseg(self.sseg_paths[index])
+            meta['soft_label'] = pad(soft_label, self.opt.ninput_edges, val=-1, dim=0)
         # get edge features
         edge_features = mesh.extract_features()
         edge_features = pad(edge_features, self.opt.ninput_edges)

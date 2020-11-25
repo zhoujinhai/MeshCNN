@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ## run the test and export collapses
-python test.py \
+python val.py \
 --dataroot datasets/cubes \
 --name cubes \
 --ncf 64 128 256 256 \

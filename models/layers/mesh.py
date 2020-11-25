@@ -99,6 +99,7 @@ class Mesh:
         if not self.export_folder:
             return
         cur_segments = segments
+        print("count:", self.pool_count, self.export_folder)
         for i in range(self.pool_count + 1):
             filename, file_extension = os.path.splitext(self.filename)
             file = '%s/%s_%d%s' % (self.export_folder, filename, i, file_extension)

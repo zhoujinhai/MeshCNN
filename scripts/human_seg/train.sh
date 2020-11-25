@@ -14,3 +14,7 @@ python train.py \
 --lr 0.001 \
 --num_aug 20 \
 --slide_verts 0.2 \
+--save_epoch_freq 5 \
+--niter 1 \
+--niter_decay 2 \
+

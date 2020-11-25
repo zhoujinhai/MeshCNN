@@ -7,18 +7,19 @@ from util.writer import Writer
 def run_test(epoch=-1):
     print('Running Test')
     opt = TestOptions().parse()
-    opt.serial_batches = True  # no shuffle
     dataset = DataLoader(opt)
     model = create_model(opt)
     writer = Writer(opt)
     # test
     writer.reset_counter()
+    pred_classes = []
     for i, data in enumerate(dataset):
         model.set_input(data)
-        ncorrect, nexamples = model.test()
-        writer.update_counter(ncorrect, nexamples)
-    writer.print_acc(epoch, writer.acc)
-    return writer.acc
+        pred_class = model.test()
+        print("pred_class", pred_class, len(pred_class))
+        pred_classes.append(pred_class)
+    print("predict done!")
+    return pred_classes
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ## run the valing
-python test.py \
+python val.py \
 --dataroot datasets/tooth_seg \
 --name tooth_seg \
 --arch meshunet \

@@ -384,7 +384,7 @@ class MeshDecoder(nn.Module):
         return self.forward(x, encoder_outs)
 
 
-def reset_params(model): # todo replace with my init
+def reset_params(model):  # todo replace with my init
     for i, m in enumerate(model.modules()):
         weight_init(m)
 

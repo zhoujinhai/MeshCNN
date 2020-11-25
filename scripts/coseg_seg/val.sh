@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 ## run the test and export collapses
-python test.py \
---dataroot datasets/human_seg \
---name human_seg \
+python val.py \
+--dataroot datasets/coseg_aliens \
+--name coseg_aliens \
 --arch meshunet \
 --dataset_mode segmentation \
 --ncf 32 64 128 256 \
@@ -12,4 +12,3 @@ python test.py \
 --resblocks 3 \
 --batch_size 12 \
 --export_folder meshes \
---which_epoch 100 \
