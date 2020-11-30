@@ -3,7 +3,7 @@ import matplotlib.colors as colors
 import pylab as pl
 import numpy as np
 
-V = np.array
+
 r2h = lambda x: colors.rgb2hex(tuple(map(lambda y: y / 255., x)))
 surface_color = r2h((255, 230, 205))
 edge_color = r2h((90, 90, 90))
@@ -80,15 +80,15 @@ def parse_obje(obj_file, scale_by):
     faces = []
     edges = []
 
-    def add_to_edges():
-        if edge_c >= len(edges):
-            for _ in range(len(edges), edge_c + 1):
-                edges.append([])
-        edges[edge_c].append(edge_v)
+    # def add_to_edges():
+    #     if edge_c >= len(edges):
+    #         for _ in range(len(edges), edge_c + 1):
+    #             edges.append([])
+    #     edges[edge_c].append(edge_v)
 
     def fix_vertices():
         nonlocal vs, scale_by
-        vs = V(vs)
+        vs = np.array(vs)
         z = vs[:, 2].copy()
         vs[:, 2] = vs[:, 1]
         vs[:, 1] = z
@@ -116,12 +116,16 @@ def parse_obje(obj_file, scale_by):
                 if len(splitted_line) >= 4:
                     edge_v = [int(c) - 1 for c in splitted_line[1:-1]]
                     edge_c = int(splitted_line[-1])
-                    add_to_edges()
+                    # add_to_edges()
+                    if edge_c >= len(edges):
+                        for _ in range(len(edges), edge_c + 1):
+                            edges.append([])
+                    edges[edge_c].append(edge_v)
 
-    vs = V(vs)
+    vs = np.array(vs)
     fix_vertices()
-    faces = V(faces, dtype=int)
-    edges = [V(c, dtype=int) for c in edges]
+    faces = np.array(faces, dtype=int)
+    edges = [np.array(c, dtype=int) for c in edges]
     return (vs, faces, edges), scale_by
 
 

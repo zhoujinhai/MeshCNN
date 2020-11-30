@@ -15,8 +15,14 @@ def run_val(epoch=-1):
 
     for i, data in enumerate(dataset):
         model.set_input(data)
-        ncorrect, nexamples = model.val()
-        writer.update_counter(ncorrect, nexamples)
+        try:
+            ncorrect, nexamples = model.val()
+            writer.update_counter(ncorrect, nexamples)
+        except:
+            print(data["filename"])
+            with open('error_model.txt', mode='a') as filename:
+                filename.write(str(data["filename"][0]))
+                filename.write('\n')  # 换行
     writer.print_acc(epoch, writer.acc)
     return writer.acc
 

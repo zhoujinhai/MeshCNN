@@ -10,7 +10,10 @@ python train.py \
 --ninput_edges 7500 \
 --pool_res 8000 5000 3000 \
 --resblocks 3 \
---batch_size 12 \
+--batch_size 1 \
 --lr 0.001 \
 --num_aug 20 \
 --slide_verts 0.2 \
+--save_epoch_freq 10 \
+--niter 100 \
+--niter_decay 200 \

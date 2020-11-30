@@ -27,7 +27,13 @@ if __name__ == '__main__':
             total_steps += opt.batch_size
             epoch_iter += opt.batch_size
             model.set_input(data)
-            model.optimize_parameters()
+            try:
+                model.optimize_parameters()
+            except:
+                print(data["filename"])
+                with open('error_model.txt', mode='a') as filename:
+                    filename.write(str(data["filename"][0]))
+                    filename.write('\n')  # 换行
 
             if total_steps % opt.print_freq == 0:
                 loss = model.loss

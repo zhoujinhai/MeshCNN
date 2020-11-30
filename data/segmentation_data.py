@@ -34,6 +34,7 @@ class SegmentationData(BaseDataset):
         path = self.paths[index]
         mesh = Mesh(file=path, opt=self.opt, hold_history=True, export_folder=self.opt.export_folder)
         meta = {}
+        meta["filename"] = mesh.filename
         meta['mesh'] = mesh
         if self.opt.phase != "test":
             label = read_seg(self.seg_paths[index]) - self.offset
