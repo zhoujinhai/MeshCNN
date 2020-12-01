@@ -2,6 +2,7 @@ import torch
 from . import networks
 from os.path import join
 from util.util import seg_accuracy, print_network
+from apex import amp
 
 
 class ClassifierModel:
@@ -42,6 +43,9 @@ class ClassifierModel:
         if not self.is_train or opt.continue_train:
             self.load_network(opt.which_epoch)
 
+        # add apex
+        self.net, self.optimizer = amp.initialize(self.net, self.optimizer, opt_level="O1")
+
     def set_input(self, data):
         input_edge_features = torch.from_numpy(data['edge_features']).float()
         # set inputs
@@ -60,7 +64,10 @@ class ClassifierModel:
 
     def backward(self, out):
         self.loss = self.criterion(out, self.labels)
-        self.loss.backward()
+        # self.loss.backward()
+        # add apex
+        with amp.scale_loss(self.loss, self.optimizer) as scaled_loss:
+            scaled_loss.backward()
 
     def optimize_parameters(self):
         self.optimizer.zero_grad()
