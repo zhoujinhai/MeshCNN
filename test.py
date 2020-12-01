@@ -1,25 +1,25 @@
 from options.test_options import TestOptions
 from data import DataLoader
 from models import create_model
-from util.writer import Writer
+import torch
+
+from models import networks
 
 
-def run_test(epoch=-1):
+def run_test():
     print('Running Test')
     opt = TestOptions().parse()
     dataset = DataLoader(opt)
     model = create_model(opt)
-    writer = Writer(opt)
-    # test
-    writer.reset_counter()
-    pred_classes = []
+
+    print("data number: {} \n ".format(len(dataset)))
     for i, data in enumerate(dataset):
+        print("Predict {} ".format(i+1))
         model.set_input(data)
         pred_class = model.test()
-        print("pred_class", pred_class, len(pred_class))
-        pred_classes.append(pred_class)
-    print("predict done!")
-    return pred_classes
+        print("Predict result :{}".format(pred_class))
+
+    print("-----------------\npredict done!")
 
 
 if __name__ == '__main__':

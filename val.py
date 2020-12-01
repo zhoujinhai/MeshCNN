@@ -10,7 +10,7 @@ def run_val(epoch=-1):
     dataset = DataLoader(opt)
     model = create_model(opt)
     writer = Writer(opt)
-    # test
+    # val
     writer.reset_counter()
 
     for i, data in enumerate(dataset):

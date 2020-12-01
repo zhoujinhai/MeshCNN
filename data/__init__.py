@@ -4,7 +4,6 @@ from data.base_dataset import collate_fn
 
 def CreateDataset(opt):
     """loads dataset class"""
-
     if opt.dataset_mode == 'segmentation':
         from data.segmentation_data import SegmentationData
         dataset = SegmentationData(opt)

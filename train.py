@@ -4,6 +4,8 @@ from data import DataLoader
 from models import create_model
 from util.writer import Writer
 from val import run_val
+from apex import amp
+
 
 if __name__ == '__main__':
     opt = TrainOptions().parse()
@@ -14,6 +16,8 @@ if __name__ == '__main__':
     model = create_model(opt)
     writer = Writer(opt)
     total_steps = 0
+    # add apex
+    model.net, model.optimizer = amp.initialize(model.net, model.optimizer, opt_level="O1")
 
     for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
         epoch_start_time = time.time()

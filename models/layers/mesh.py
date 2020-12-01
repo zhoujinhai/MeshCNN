@@ -8,7 +8,7 @@ from models.layers.mesh_prepare import fill_mesh
 
 
 class Mesh:
-    def __init__(self, file=None, opt=None, hold_history=False, export_folder=''):
+    def __init__(self, file=None, opt=None, hold_history=False, export_folder='', phase="train"):
         self.vs = self.v_mask = self.filename = self.features = self.edge_areas = None
         self.edges = self.gemm_edges = self.sides = None
         self.pool_count = 0
@@ -17,6 +17,7 @@ class Mesh:
         self.history_data = None
         if hold_history:
             self.init_history()  # 历史数据  'groups'， 'gemm_edges'等
+        self.phase = phase
         self.export()  # 导出到指定路径
 
     def extract_features(self):
@@ -70,6 +71,10 @@ class Mesh:
         self.export()
 
     def export(self, file=None, vcolor=None):
+
+        if self.phase == "test" and self.pool_count >= 1:
+            return
+
         if file is None:
             if self.export_folder:
                 filename, file_extension = os.path.splitext(self.filename)
@@ -99,9 +104,11 @@ class Mesh:
         if not self.export_folder:
             return
         cur_segments = segments
-        # print("count:", self.pool_count, self.export_folder)
-        # for i in range(self.pool_count + 1):
-        for i in range(1):
+        for i in range(self.pool_count + 1):
+
+            if self.phase == "test" and i >= 1:
+                return
+
             filename, file_extension = os.path.splitext(self.filename)
             file = '%s/%s_%d%s' % (self.export_folder, filename, i, file_extension)
             fh, abs_path = mkstemp()

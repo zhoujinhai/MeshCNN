@@ -43,9 +43,6 @@ class ClassifierModel:
         if not self.is_train or opt.continue_train:
             self.load_network(opt.which_epoch)
 
-        # add apex
-        self.net, self.optimizer = amp.initialize(self.net, self.optimizer, opt_level="O1")
-
     def set_input(self, data):
         input_edge_features = torch.from_numpy(data['edge_features']).float()
         # set inputs
@@ -128,7 +125,7 @@ class ClassifierModel:
             out = self.forward()
             pred_class = out.data.max(1)[1]
             self.export_segmentation(pred_class.cpu())
-        return pred_class
+        return pred_class.cpu()
 
     def get_accuracy(self, pred, labels):
         """computes accuracy for classification / segmentation """

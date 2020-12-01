@@ -10,5 +10,5 @@ python val.py \
 --ninput_edges 7500 \
 --pool_res 8000 5000 3000 \
 --resblocks 3 \
---batch_size 12 \
+--batch_size 1 \
 --export_folder meshes \
