@@ -18,7 +18,8 @@ def run_val(epoch=-1):
         try:
             ncorrect, nexamples = model.val()
             writer.update_counter(ncorrect, nexamples)
-        except:
+        except Exception as e:
+            print(e)
             print(data["filename"])
             with open('error_model.txt', mode='a') as filename:
                 filename.write(str(data["filename"][0]))

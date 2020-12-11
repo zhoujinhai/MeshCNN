@@ -4,6 +4,12 @@
 
 # data files
 *.obj
+*.stl
 checkpoints
 datasets
 runs
+hgapi
+error_model.txt
+nohup.out
+show_model.py
+test.png

@@ -65,7 +65,7 @@ def from_scratch(file, opt):
     mesh_data.edges_count = None
     mesh_data.ve = None
     mesh_data.v_mask = None
-    mesh_data.filename = 'unknown'
+    mesh_data.filename = None
     mesh_data.edge_lengths = None
     mesh_data.edge_areas = []
     mesh_data.vs, faces = fill_from_file(mesh_data, file)
@@ -110,7 +110,7 @@ def fill_from_file(mesh, file):
 
 
 def remove_non_manifolds(mesh, faces):
-    mesh.ve = [[] for _ in mesh.vs]
+    # mesh.ve = [[] for _ in mesh.vs]
     edges_set = set()
     mask = np.ones(len(faces), dtype=bool)
     _, face_areas = compute_face_normals_and_areas(mesh, faces)
@@ -141,6 +141,20 @@ def compute_face_normals_and_areas(mesh, faces):
     """
     face_normals = np.cross(mesh.vs[faces[:, 1]] - mesh.vs[faces[:, 0]],
                             mesh.vs[faces[:, 2]] - mesh.vs[faces[:, 1]])
+
+    # >>> deal zero face >>>
+    # Case1: Collinear
+    zeros_idx = np.argwhere((face_normals[:, 0] == 0) & (face_normals[:, 1] == 0) & (face_normals[:, 2] == 0))
+    # print(zeros_idx)
+    # TODO: 对错误的进行调整 取平均值是否可行？  取平均值会很小！ 改为取绝对值的平均值or相邻面？
+    # normal_mean = np.mean(face_normals, axis=0)
+    normal_mean = np.mean(np.abs(face_normals), axis=0)
+    for idx in zeros_idx:
+        face_normals[idx] = normal_mean
+        print("normal_mean: ", normal_mean)
+    # Case2: ？？？
+    # <<< deal zero face <<<
+
     face_areas = np.sqrt((face_normals ** 2).sum(axis=1))
     # print("n_faces: ", len(faces), mesh.filename)
     face_normals /= face_areas[:, np.newaxis]
@@ -304,6 +318,19 @@ def rebuild_face(face, new_face):
 def check_area(mesh, faces):
     face_normals = np.cross(mesh.vs[faces[:, 1]] - mesh.vs[faces[:, 0]],
                             mesh.vs[faces[:, 2]] - mesh.vs[faces[:, 1]])
+
+    # >>> deal zero face >>>
+    # Case1: Collinear
+    zeros_idx = np.argwhere((face_normals[:, 0] == 0) & (face_normals[:, 1] == 0) & (face_normals[:, 2] == 0))
+    # print(zeros_idx)
+    # TODO: 对错误的进行调整 取平均值是否可行？
+    # normal_mean = np.mean(face_normals, axis=0)
+    normal_mean = np.mean(np.abs(face_normals), axis=0)
+    for idx in zeros_idx:
+        face_normals[idx] = normal_mean
+    # Case2: ？？？
+    # <<< deal zero face <<<
+
     face_areas = np.sqrt((face_normals ** 2).sum(axis=1))
     face_areas *= 0.5
     return face_areas[0] > 0 and face_areas[1] > 0
@@ -348,10 +375,25 @@ def extract_features(mesh):
             for extractor in [dihedral_angle, symmetric_opposite_angles, symmetric_ratios]:
                 feature = extractor(mesh, edge_points)
                 features.append(feature)
-            return np.concatenate(features, axis=0)
+            # # add middle point coordinate
+            # middle_features = mid_point(mesh)
+            # features.append(middle_features)
+
+            features = np.concatenate(features, axis=0)
+            # print(features, features.shape)
+            return features
         except Exception as e:
             print(e)
             raise ValueError(mesh.filename, 'bad features')
+
+
+def mid_point(mesh):
+    middle_point = []
+    for edge_id, edge in enumerate(mesh.edges):
+        middle_point.append(list(mesh.vs[edge[0]] + mesh.vs[edge[1]] / 2))
+    middle_point = np.asarray(middle_point).reshape(-1, len(mesh.edges))
+    # print(middle_point, middle_point.shape)
+    return middle_point
 
 
 def dihedral_angle(mesh, edge_points):

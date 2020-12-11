@@ -61,10 +61,10 @@ class ClassifierModel:
 
     def backward(self, out):
         self.loss = self.criterion(out, self.labels)
-        # self.loss.backward()
-        # add apex
-        with amp.scale_loss(self.loss, self.optimizer) as scaled_loss:
-            scaled_loss.backward()
+        self.loss.backward()
+        # # add apex
+        # with amp.scale_loss(self.loss, self.optimizer) as scaled_loss:
+        #     scaled_loss.backward()
 
     def optimize_parameters(self):
         self.optimizer.zero_grad()

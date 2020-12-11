@@ -42,6 +42,7 @@ class SegmentationData(BaseDataset):
             meta['label'] = label
             soft_label = read_sseg(self.sseg_paths[index])
             meta['soft_label'] = pad(soft_label, self.opt.ninput_edges, val=-1, dim=0)
+
         # get edge features
         edge_features = mesh.extract_features()
         edge_features = pad(edge_features, self.opt.ninput_edges)

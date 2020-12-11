@@ -6,6 +6,9 @@ from util.writer import Writer
 from val import run_val
 from apex import amp
 
+import warnings
+warnings.filterwarnings("ignore", category=Warning)
+
 
 if __name__ == '__main__':
     opt = TrainOptions().parse()
@@ -16,8 +19,8 @@ if __name__ == '__main__':
     model = create_model(opt)
     writer = Writer(opt)
     total_steps = 0
-    # add apex
-    model.net, model.optimizer = amp.initialize(model.net, model.optimizer, opt_level="O1")
+    # # add apex
+    # model.net, model.optimizer = amp.initialize(model.net, model.optimizer, opt_level="O1")
 
     for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
         epoch_start_time = time.time()
@@ -31,11 +34,13 @@ if __name__ == '__main__':
             total_steps += opt.batch_size
             epoch_iter += opt.batch_size
             model.set_input(data)
+
             try:
                 model.optimize_parameters()
-            except:
-                print(data["filename"])
+            except Exception as e:
+                print(e, data["filename"])
                 with open('error_model.txt', mode='a') as filename:
+                    filename.write(str(e)+" ")
                     filename.write(str(data["filename"][0]))
                     filename.write('\n')  # 换行
 

@@ -43,7 +43,7 @@ class MeshPool(nn.Module):
         queue = self.__build_queue(self.__fe[mesh_index, :, :mesh.edges_count], mesh.edges_count)
         # recycle = []
         # last_queue_len = len(queue)
-        last_count = mesh.edges_count + 1
+        # last_count = mesh.edges_count + 1
         mask = np.ones(mesh.edges_count, dtype=np.bool)
         edge_groups = MeshUnion(mesh.edges_count, self.__fe.device)
         while mesh.edges_count > self.__out_target:
@@ -90,7 +90,6 @@ class MeshPool(nn.Module):
             if edge == -1 or -1 in mesh.gemm_edges[edge]:
                 return True
         return False
-
 
     @staticmethod
     def __is_one_ring_valid(mesh, edge_id):
