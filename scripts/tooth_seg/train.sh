@@ -6,9 +6,9 @@ python train.py \
 --name tooth_seg \
 --arch meshunet \
 --dataset_mode segmentation \
---ncf 32 64 128 256 512 \
+--ncf 16 32 64 128 \
 --ninput_edges 7500 \
---pool_res 7000 6000 4500 3000 \
+--pool_res 7000 5000 3500 \
 --resblocks 3 \
 --batch_size 1 \
 --lr 0.001 \
@@ -16,4 +16,4 @@ python train.py \
 --slide_verts 0.2 \
 --save_epoch_freq 10 \
 --niter 100 \
---niter_decay 20
+--niter_decay 200

@@ -21,6 +21,8 @@ class MeshPool(nn.Module):
         return self.forward(fe, meshes)
 
     def forward(self, fe, meshes):
+        pool_target = self.__out_target
+        # print(pool_target)
         self.__updated_fe = [[] for _ in range(len(meshes))]
         pool_threads = []
         self.__fe = fe
@@ -36,6 +38,8 @@ class MeshPool(nn.Module):
             for mesh_index in range(len(meshes)):
                 pool_threads[mesh_index].join()
         out_features = torch.cat(self.__updated_fe).view(len(meshes), -1, self.__out_target)
+        print("out_features: {}, len(meshes): {}".format(out_features.size(), len(meshes)))
+        self.__out_target = pool_target
         return out_features
 
     def __pool_main(self, mesh_index):
@@ -47,6 +51,11 @@ class MeshPool(nn.Module):
         mask = np.ones(mesh.edges_count, dtype=np.bool)
         edge_groups = MeshUnion(mesh.edges_count, self.__fe.device)
         while mesh.edges_count > self.__out_target:
+        # while mesh.edges_count > self.__out_target and len(queue) > 0:
+            if len(queue) < 1:
+                # Todo 单改这个只能对最后一次池化处理(规避)
+                self.__out_target = mesh.edges_count
+                continue
             value, edge_id = heappop(queue)
             edge_id = int(edge_id)
             if mask[edge_id]:
@@ -56,9 +65,10 @@ class MeshPool(nn.Module):
         self.__updated_fe[mesh_index] = fe
 
     def __pool_edge(self, mesh, edge_id, mask, edge_groups):
+
         if self.has_boundaries(mesh, edge_id):
             return False
-        elif self.__clean_side(mesh, edge_id, mask, edge_groups, 0)\
+        elif self.__clean_side(mesh, edge_id, mask, edge_groups, 0) \
             and self.__clean_side(mesh, edge_id, mask, edge_groups, 2) \
             and self.__is_one_ring_valid(mesh, edge_id):
             self.__merge_edges[0] = self.__pool_side(mesh, edge_id, mask, edge_groups, 0)
@@ -95,7 +105,9 @@ class MeshPool(nn.Module):
     def __is_one_ring_valid(mesh, edge_id):
         v_a = set(mesh.edges[mesh.ve[mesh.edges[edge_id, 0]]].reshape(-1))
         v_b = set(mesh.edges[mesh.ve[mesh.edges[edge_id, 1]]].reshape(-1))
+
         shared = v_a & v_b - set(mesh.edges[edge_id])
+
         return len(shared) == 2
 
     def __pool_side(self, mesh, edge_id, mask, edge_groups, side):

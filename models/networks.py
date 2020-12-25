@@ -42,8 +42,10 @@ class NoNorm(nn.Module): #todo with abstractclass and pass
     def __init__(self, fake=True):
         self.fake = fake
         super(NoNorm, self).__init__()
+
     def forward(self, x):
         return x
+
     def __call__(self, x):
         return self.forward(x)
 
@@ -102,7 +104,7 @@ def define_classifier(input_nc, ncf, ninput_edges, nclasses, opt, gpu_ids, arch,
     @nclasses: 类别数
     @arch: 网络结构
     """
-    net = None
+
     norm_layer = get_norm_layer(norm_type=opt.norm, num_groups=opt.num_groups)
 
     if arch == 'mconvnet':
@@ -124,6 +126,8 @@ def define_loss(opt):
         loss = torch.nn.CrossEntropyLoss()
     elif opt.dataset_mode == 'segmentation':
         loss = torch.nn.CrossEntropyLoss(ignore_index=-1)
+    else:
+        loss = torch.nn.CrossEntropyLoss()
     return loss
 
 
@@ -195,8 +199,10 @@ class MeshEncoderDecoder(nn.Module):
         super(MeshEncoderDecoder, self).__init__()
         self.transfer_data = transfer_data
         self.encoder = MeshEncoder(pools, down_convs, blocks=blocks)
+        print("pools: ", pools)
         unrolls = pools[:-1].copy()
         unrolls.reverse()
+        print("unrolls: ", unrolls)
         self.decoder = MeshDecoder(unrolls, up_convs, blocks=blocks, transfer_data=transfer_data)
 
     def forward(self, x, meshes):
@@ -310,6 +316,7 @@ class MeshEncoder(nn.Module):
                 pool = pools[i + 1]
             else:
                 pool = 0
+            # print("pool: ", pool)
             self.convs.append(DownConv(convs[i], convs[i + 1], blocks=blocks, pool=pool))
         self.global_pool = None
         if fcs is not None:

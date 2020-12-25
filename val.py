@@ -7,6 +7,7 @@ from util.writer import Writer
 def run_val(epoch=-1):
     print('Running Val')
     opt = ValOptions().parse()
+    # opt.gpu_ids = []  # use cpu [], gpu: [0]
     dataset = DataLoader(opt)
     model = create_model(opt)
     writer = Writer(opt)

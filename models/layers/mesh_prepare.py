@@ -351,7 +351,7 @@ def get_edge_faces(faces):
                 edge_count += 1
                 edge_faces.append(np.array([cur_edge[0], cur_edge[1], -1, -1]))
             edge_key = edge2keys[cur_edge]
-            # 一条边可以对应两个面
+            # 一条边可以对应两个面(排序情况下没有方向)
             if edge_faces[edge_key][2] == -1:
                 edge_faces[edge_key][2] = face_id
             else:

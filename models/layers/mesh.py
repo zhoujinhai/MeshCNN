@@ -68,7 +68,7 @@ class Mesh:
         self.ve = new_ve
         self.__clean_history(groups, torch_mask)
         self.pool_count += 1
-        self.export()
+        self.export()   # Todo 是否可以去掉 只初始化保存一次 可去掉的话export里面无需做判断
 
     def export(self, file=None, vcolor=None):
 

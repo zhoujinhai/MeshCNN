@@ -89,7 +89,7 @@ class SegmentationData(BaseDataset):
 
 
 def read_seg(seg):
-    seg_labels = np.loadtxt(open(seg, 'r'), dtype='float64')
+    seg_labels = np.loadtxt(seg, dtype='float64')
     return seg_labels
 
 

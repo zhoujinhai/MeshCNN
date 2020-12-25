@@ -1,14 +1,15 @@
 import vedo
 from vedo import load, show
+import torch
 import os
 import glob
 import numpy as np
 import shutil
 
-# import sys
-# sys.path.append(r"/home/heygears/work/package/hgapi")
-# import hgapi
-from hgapi import hgapi
+import sys
+sys.path.append(r"/home/heygears/work/package/hgapi")
+import hgapi
+# from hgapi import hgapi
 
 
 def get_edges(faces):
@@ -186,6 +187,8 @@ def get_gum_line_pts(gum_line_path):
         if 0 == num and line.strip() == "BEGIN_0":
             is_generate_by_streamflow = True
             continue
+        if line.strip() == "BEGIN" or line.strip() == "END":
+            continue
         if is_generate_by_streamflow:
             line = line.strip()
             if line == "END_0":
@@ -220,6 +223,24 @@ def pts_to_vtk(gum_line_pts, save_path="./test.vtk"):
     print("vtk file is saved in ", save_path)
 
 
+def read_seg(seg):
+    seg_labels = np.loadtxt(seg, dtype='float64')
+    return seg_labels
+
+
+def read_sseg(sseg_file):
+    sseg_labels = read_seg(sseg_file)
+    sseg_labels = np.array(sseg_labels > 0, dtype=np.int32)
+    return sseg_labels
+
+
+def pad(input_arr, target_length, val=0, dim=1):
+    shp = input_arr.shape
+    npad = [(0, 0) for _ in range(len(shp))]
+    npad[dim] = (0, target_length - shp[dim])
+    return np.pad(input_arr, pad_width=npad, mode='constant', constant_values=val)
+
+
 if __name__ == "__main__":
     # a = load('/home/heygears/work/Tooth_data_prepare/tooth/8AP1S/mesh1.obj').c(('blue'))
     # b = load('/home/heygears/work/Tooth_data_prepare/tooth/8AP1S/mesh2.obj').c(('magenta'))
@@ -227,52 +248,57 @@ if __name__ == "__main__":
     # show(a, b, c)
 
     # # convert pts to vtk in train Data
-    # pts_path = "/home/heygears/work/Tooth_data_prepare/tooth/pts"
-    # stl_path = "/home/heygears/work/Tooth_data_prepare/tooth/stl"
-    # vtk_path = "/home/heygears/work/Tooth_data_prepare/tooth/vtk"
+    # pts_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts/"
+    # # stl_path = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/errorModel-pts"
+    # obj_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/down_obj/"
+    # vtk_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/vtk"
+    # pts_save_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts"
     # pts_list = glob.glob(os.path.join(pts_path, "*.pts"))
-    # stl_lsit = glob.glob(os.path.join(stl_path, "*.stl"))
+    # # stl_list = glob.glob(os.path.join(stl_path, "*.stl"))
+    # obj_list = glob.glob(os.path.join(obj_path, "*.obj"))
+    # if not os.path.isdir(vtk_path):
+    #     os.makedirs(vtk_path)
+    # if not os.path.isdir(pts_save_path):
+    #     os.makedirs(pts_save_path)
     #
     # for pts in pts_list:
     #     file_name = os.path.basename(pts)[:-4]
     #     save_vtk_path = os.path.join(vtk_path, file_name+".vtk")
+    #     save_pts_path = os.path.join(pts_save_path, file_name + ".pts")
     #     print("*****", file_name)
     #     gum_line = get_gum_line_pts(pts)
+    #     np.savetxt(save_pts_path, gum_line)
     #     pts_to_vtk(gum_line, save_vtk_path)
-
-    # # show train data
-    # vtk_path = "/home/heygears/work/Tooth_data_prepare/tooth/need_change/vtk"
-    # stl_path = "/home/heygears/work/Tooth_data_prepare/tooth/need_change/stl"
-    # vtk_list = glob.glob(os.path.join(vtk_path, "*.vtk"))
-    # stl_list = glob.glob(os.path.join(stl_path, "*.stl"))
-    # for i, stl in enumerate(stl_list):
-    #     file_name = os.path.basename(stl)[:-4]
-    #     vtk = os.path.join(vtk_path, file_name+".vtk")
-    #     print(i, " ", file_name)
-    #     a = load(stl).c(('magenta'))
-    #     b = load(vtk).pointSize(10).c(('green'))
-    #     show(a, b)
-
-    # model_path = "/home/heygears/work/Tooth_data_prepare/tooth/file/show"
-    # # model_path = "/home/heygears/work/Tooth_data_prepare/deal_data_tools/file/show"
-    # file_list = [os.path.join(model_path, file_path) for file_path in os.listdir(model_path)]
     #
-    # for i, file in enumerate(file_list):
-    #     if not os.path.isdir(file):
-    #         continue
-    #     if i < 170:
-    #         continue
-    #     print("{} file path is: {}".format(i, file))
-    #     predict1_path = os.path.join(file, "mesh1.obj")
-    #     predict2_path = os.path.join(file, "mesh2.obj")
-    #     predict_pts = os.path.join(file, "test.vtk")
-    #     show_predict(predict1_path, predict2_path, predict_pts)
+    # # show train data
+    # vtk_list = glob.glob(os.path.join(vtk_path, "*.vtk"))
+    # # for i, stl in enumerate(stl_list):
+    # for i, stl in enumerate(obj_list):
+    #         file_name = os.path.basename(stl)[:-4]
+    #         vtk = os.path.join(vtk_path, file_name+".vtk")
+    #         print(i+1, " ", file_name)
+    #         a = load(stl).c(('magenta'))
+    #         b = load(vtk).pointSize(10).c(('green'))
+    #         show(a, b)
 
-    # # ---- Test one ----
-    # # predict
-    # a = load('/home/heygears/work/Tooth_data_prepare/model_test/predict1.obj').c(('blue'))
-    # b = load('/home/heygears/work/Tooth_data_prepare/model_test/predict2.obj').c(('magenta'))
-    # c = load("/home/heygears/work/Tooth_data_prepare/model_test/predict.vtk").pointSize(10).c(('green'))
+    model_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/file/show"
+    # model_path = "/home/heygears/work/Tooth_data_prepare/deal_data_tools/file/show"
+    file_list = [os.path.join(model_path, file_path) for file_path in os.listdir(model_path)]
+
+    for i, file in enumerate(file_list):
+        if not os.path.isdir(file):
+            continue
+        print("{} file path is: {}".format(i, file))
+        predict1_path = os.path.join(file, "mesh1.obj")
+        predict2_path = os.path.join(file, "mesh2.obj")
+        predict_pts = os.path.join(file, "test.vtk")
+        show_predict(predict1_path, predict2_path, predict_pts)
+
+    # ---- Test one ----
+    # predict
+    # a = load('/home/heygears/work/Tooth_data_prepare/deal_data_tools/predict1.obj').c(('blue'))
+    # b = load('/home/heygears/work/Tooth_data_prepare/deal_data_tools/predict2.obj').c(('magenta'))
+    # c = load("/home/heygears/work/Tooth_data_prepare/deal_data_tools/predict.vtk").pointSize(10).c(('green'))
     # show(a, b, c)
 
     # # origin
@@ -283,18 +309,20 @@ if __name__ == "__main__":
     # show(a, b, c, d)
 
     # # ---- Test Batch ----
-    # model_path = "/home/heygears/work/Tooth_data_prepare/model_test/predict_mesh_obj_20201210_100/"
+    # model_path = "/home/heygears/work/Tooth_data_prepare/model_test/predict_mesh_obj_20201216_200/"
     #
     # file_list = [os.path.join(model_path, file_path) for file_path in os.listdir(model_path)]
     #
+    # j = 1
     # for i, file in enumerate(file_list):
     #     if not os.path.isdir(file):
     #         continue
-    #     print("{} file path is: {}".format(i, file))
+    #     print("{} file path is: {}".format(j, file))
     #     predict1_path = os.path.join(file, "predict1.obj")
     #     predict2_path = os.path.join(file, "predict2.obj")
     #     predict_pts = os.path.join(file, "predict.vtk")
     #     show_predict(predict1_path, predict2_path, predict_pts)
+    #     j += 1
     #
     #     origin1_path = os.path.join(file, "origin1.obj")
     #     origin2_path = os.path.join(file, "origin2.obj")
@@ -330,4 +358,74 @@ if __name__ == "__main__":
     #     save_path = os.path.join(save_dir, model_name)
     #     healing(model_path, save_path)
     #     print("{} {} is healed".format(i, model_path))
+
+    # # # add loss
+    # seg_file = "/home/heygears/work/github/MeshCNN/datasets/tooth_seg/seg/1PT7E_VS_SET_VSc2_Subsetup_Retainer_Maxillar.eseg"
+    # label = read_sseg(seg_file) - 1
+    # label = pad(label, 7500, val=-1, dim=0)
+    # labels = torch.from_numpy(label[np.newaxis, :]).long()
+    # print("labels: ", labels, labels.size())
+    # #
+    # out = np.loadtxt("./out.txt")
+    # out = torch.from_numpy(out[np.newaxis, :])
+    # print("out: ", out, out.size())
+    # classes = out.data.max(1)[1]
+    # print("classes: ", classes, classes.size())
+    #
+    # criterion = torch.nn.CrossEntropyLoss(ignore_index=-1)
+    # loss = criterion(out, labels)
+    # print(loss)
+
+    # soft_label = np.loadtxt("./soft_label.txt")
+    # print(soft_label.shape, soft_label[40:50])
+
+    # sseg_file = "/home/heygears/work/github/MeshCNN/datasets/tooth_seg/sseg/1PT7E_VS_SET_VSc2_Subsetup_Retainer_Maxillar.seseg"
+    # sseg_label = np.loadtxt(sseg_file, dtype="float64")
+    # # print(sseg_label[40:50])
+    #
+    # soft_label = read_sseg(sseg_file)
+    # soft_label = torch.from_numpy(soft_label)
+    # print("soft_label: ", soft_label.size())
+    # # print(soft_label[:, 0][40:50])
+    # # print(soft_label[:, 1][40:50])
+    # border_edge_ids = torch.where(((soft_label[:, 0] == 1) & (soft_label[:, 1] == 1)))[0]
+    # # border_edge_ids = border_edge_ids.reshape((1, 596))
+    # out_edges = []
+    # out = out.squeeze()
+    # out_edges = out[:, border_edge_ids].unsqueeze(0)
+    # print(out_edges)
+    # for i in range(len(out)):
+    #     out_edge = out[i][border_edge_ids]
+    #     out_edges.append(out_edge.numpy())
+    # out_edges = torch.tensor(out_edges).unsqueeze(0)
+    # print(out_edges.size(), out_edges)
+
+    # label_edges = labels[0, border_edge_ids].unsqueeze(0)
+    # print(label_edges.size())
+    #
+    # criterion = torch.nn.CrossEntropyLoss(ignore_index=-1)
+    # loss = criterion(out_edges, label_edges)
+    # print(loss)
+
+    # 从共享文件夹中提取数据
+    # pts_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts"
+    # error_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/error_pts"
+    # obj_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/obj"
+    # obj_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/downSample"
+    # error_lable_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/error_label.txt"
+    # with open(error_lable_path, "r") as f:
+    #     lines = f.readlines()
+    #     error_file_names = [line.strip() for line in lines]
+    # print(len(error_file_names))
+    # pts_lists = glob.glob(os.path.join(pts_dir, "*.pts"))
+    #
+    # for pts_file in pts_lists:
+    #     base_name = os.path.basename(pts_file)
+    #     file_name = os.path.splitext(base_name)[0]
+    #     if file_name in error_file_names:
+    #         shutil.move(pts_file, error_dir)
+    #     else:
+    #         obj_path = os.path.join(obj_dir, file_name+".obj")
+    #         shutil.copyfile(obj_path, os.path.join(obj_save_dir, file_name + ".obj"))
+
     pass

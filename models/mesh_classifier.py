@@ -3,6 +3,7 @@ from . import networks
 from os.path import join
 from util.util import seg_accuracy, print_network
 from apex import amp
+import numpy as np
 
 
 class ClassifierModel:
@@ -52,14 +53,33 @@ class ClassifierModel:
         if self.opt.phase != "test":
             labels = torch.from_numpy(data['label']).long()
             self.labels = labels.to(self.device)
-            if self.opt.dataset_mode == 'segmentation' and not self.is_train:
+            # if self.opt.dataset_mode == 'segmentation' and not self.is_train:
+            if self.opt.dataset_mode == 'segmentation':
                 self.soft_label = torch.from_numpy(data['soft_label'])
+
+    # add edges loss
+    def edges_loss(self, out):
+        border_edge_ids = torch.where(((self.soft_label[:, 0] == 1) & (self.soft_label[:, 1] == 1)))[0]
+        out = out.squeeze()
+        out_edges = []
+        for i in range(len(out)):
+            out_edge = out[i][border_edge_ids]
+            out_edges.append(out_edge.cpu().detach().numpy())
+        out_edges = torch.tensor(out_edges).unsqueeze(0).to(self.device)
+        # out_edges = out[:, border_edge_ids].unsqueeze(0).to(self.device)
+        label_edges = self.labels[0, border_edge_ids].unsqueeze(0).to(self.device)
+        loss = self.criterion(out_edges, label_edges)
+        return loss
 
     def forward(self):
         out = self.net(self.edge_features, self.mesh)
+        # print("out: ", out, "out.size: ", out.size())
         return out
 
     def backward(self, out):
+        # modify loss: add soft label loss
+        # 从soft_label中找出边界，对边界部分重新计算损失
+        # self.loss = self.criterion(out, self.labels) + self.edges_loss(out)
         self.loss = self.criterion(out, self.labels)
         self.loss.backward()
         # # add apex
