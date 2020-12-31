@@ -345,7 +345,6 @@ def show_predict_batch(predict_model_list, predict_path):
     return: None
     """
     for i, predict_model in enumerate(tqdm(predict_model_list)):
-
         try:
             save_predict(predict_model, predict_path)
         except KeyError:
@@ -392,12 +391,12 @@ def show_predict(predict1, predict2, pts):
 
 
 if __name__ == "__main__":
-    predict_dir = "/home/heygears/work/github/MeshCNN/checkpoints/tooth_seg_20201224_512_3500/meshes/"
+    predict_dir = "/home/heygears/work/github/MeshCNN/checkpoints/tooth_seg/meshes/"
     # predict_dir = "/home/heygears/work/Tooth_data_prepare/model_test/predict_mesh_obj_20201216_100"
 
-    # 解析结果
-    # predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))
-    # parallel_show_predict(predict_model_list, predict_dir, n_workers=4)
+    # # 解析结果
+    predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))
+    parallel_show_predict(predict_model_list, predict_dir, n_workers=4)
 
     # 显示结果
     file_list = [os.path.join(predict_dir, file_path) for file_path in os.listdir(predict_dir)

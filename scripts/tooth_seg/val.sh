@@ -6,7 +6,7 @@ python val.py \
 --name tooth_seg \
 --arch meshunet \
 --dataset_mode segmentation \
---ncf 16 32 64 128 \
+--ncf 32 64 128 256 \
 --ninput_edges 7500 \
 --pool_res 7000 5000 3500 \
 --resblocks 3 \

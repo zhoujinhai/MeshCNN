@@ -247,19 +247,19 @@ if __name__ == "__main__":
     # c = load("/home/heygears/work/Tooth_data_prepare/tooth/8AP1S/down.vtk").pointSize(10).c(('green'))
     # show(a, b, c)
 
-    # # convert pts to vtk in train Data
-    # pts_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts/"
+    # # # # convert pts to vtk in train Data
+    # pts_path = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/pts"
     # # stl_path = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/errorModel-pts"
-    # obj_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/down_obj/"
-    # vtk_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/vtk"
-    # pts_save_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts"
+    # obj_path = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/stl"
+    # vtk_path = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/vtk"
+    # pts_save_path = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/new_pts"
     # pts_list = glob.glob(os.path.join(pts_path, "*.pts"))
     # # stl_list = glob.glob(os.path.join(stl_path, "*.stl"))
-    # obj_list = glob.glob(os.path.join(obj_path, "*.obj"))
+    # obj_list = glob.glob(os.path.join(obj_path, "*.stl"))
     # if not os.path.isdir(vtk_path):
     #     os.makedirs(vtk_path)
-    # if not os.path.isdir(pts_save_path):
-    #     os.makedirs(pts_save_path)
+    # # if not os.path.isdir(pts_save_path):
+    # #     os.makedirs(pts_save_path)
     #
     # for pts in pts_list:
     #     file_name = os.path.basename(pts)[:-4]
@@ -267,7 +267,7 @@ if __name__ == "__main__":
     #     save_pts_path = os.path.join(pts_save_path, file_name + ".pts")
     #     print("*****", file_name)
     #     gum_line = get_gum_line_pts(pts)
-    #     np.savetxt(save_pts_path, gum_line)
+    #     # np.savetxt(save_pts_path, gum_line)
     #     pts_to_vtk(gum_line, save_vtk_path)
     #
     # # show train data
@@ -281,7 +281,7 @@ if __name__ == "__main__":
     #         b = load(vtk).pointSize(10).c(('green'))
     #         show(a, b)
 
-    model_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/file/show"
+    model_path = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/file/show"
     # model_path = "/home/heygears/work/Tooth_data_prepare/deal_data_tools/file/show"
     file_list = [os.path.join(model_path, file_path) for file_path in os.listdir(model_path)]
 
@@ -407,25 +407,71 @@ if __name__ == "__main__":
     # loss = criterion(out_edges, label_edges)
     # print(loss)
 
-    # 从共享文件夹中提取数据
-    # pts_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts"
-    # error_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/error_pts"
-    # obj_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/obj"
-    # obj_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/downSample"
-    # error_lable_path = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/error_label.txt"
-    # with open(error_lable_path, "r") as f:
-    #     lines = f.readlines()
-    #     error_file_names = [line.strip() for line in lines]
-    # print(len(error_file_names))
-    # pts_lists = glob.glob(os.path.join(pts_dir, "*.pts"))
+    # # # 从共享文件夹中提取数据
+    # stl_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/first_test_error/"
+    # stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/errorModel-pts"
+    # error_dir = "/home/heygears/work/Tooth_data_prepare/tooth/second_batch_data/error/test_error"
     #
-    # for pts_file in pts_lists:
-    #     base_name = os.path.basename(pts_file)
-    #     file_name = os.path.splitext(base_name)[0]
-    #     if file_name in error_file_names:
-    #         shutil.move(pts_file, error_dir)
-    #     else:
-    #         obj_path = os.path.join(obj_dir, file_name+".obj")
-    #         shutil.copyfile(obj_path, os.path.join(obj_save_dir, file_name + ".obj"))
+    # error_model_stl = glob.glob(os.path.join(error_dir, "*.obj"))
+    # print(len(error_model_stl))
+    # for obj_model in error_model_stl:
+    #     basename = os.path.basename(obj_model)
+    #     file_name = os.path.splitext(basename)[0] + ".stl"
+    #     file_path = os.path.join(stl_dir, file_name)
+    #     shutil.copyfile(file_path, os.path.join(stl_save_dir, file_name))
+    #
+    # obj_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/test"
+    # save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/error/obj"
+    # stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/errorModel-pts"
+    # stl_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/error/pts"
+    # error_model_file = "./error_model.txt"
+    #
+    # with open(error_model_file, "r") as f:
+    #     for line in f:
+    #         line = line.strip()
+    #         obj_name = line + ".obj"
+    #         obj_path = os.path.join(obj_dir, obj_name)
+    #         if os.path.isfile(obj_path):
+    #             shutil.move(obj_path, save_dir)
+    #             stl_path = os.path.join(stl_dir, line + ".pts")
+    #             print(stl_path)
+    #             if os.path.isfile(stl_path):
+    #                 shutil.copyfile(stl_path, os.path.join(stl_save_dir, line+".pts"))
+
+    # label_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/label"
+    # pts_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts"
+    # stl_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/stl"
+    # files = os.walk(label_dir)
+    # for file in files:
+    #     for item in file[2]:
+    #         file_path = os.path.join(file[0], item)
+    #         if file_path.find(".pts") != -1:
+    #             shutil.move(file_path, pts_dir)
+    #         if file_path.find(".stl") != -1:
+    #             shutil.move(file_path, stl_dir)
+
+    # stl_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/error/stl"
+    # train_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/error/file/train"
+    # test_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/test"
+    # no_seg_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/stl"
+    # stl_lists = glob.glob(os.path.join(stl_dir, "*.stl"))
+    # print(len(stl_lists))
+    # obj_lists = glob.glob(os.path.join(train_dir, "*.obj"))
+    # print(len(obj_lists))
+    #
+    # for stl in stl_lists:
+    #     base_name = os.path.basename(stl)
+    #     obj_name = os.path.splitext(base_name)[0] + ".obj"
+    #     train_obj_path = os.path.join(train_dir, obj_name)
+    #
+    #     if os.path.isfile(train_obj_path):
+    #         continue
+    #
+    #     test_obj_path = os.path.join(test_dir, obj_name)
+    #
+    #     no_seg_stl_path = os.path.join(stl_dir, base_name)
+    #     print(no_seg_stl_path)
+    #     if os.path.isfile(no_seg_stl_path) and not os.path.isfile(os.path.join(no_seg_dir, base_name)):
+    #         shutil.move(no_seg_stl_path, no_seg_dir)
 
     pass

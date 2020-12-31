@@ -45,8 +45,14 @@ class SegmentationData(BaseDataset):
 
         # get edge features
         edge_features = mesh.extract_features()
-        edge_features = pad(edge_features, self.opt.ninput_edges)
-        meta['edge_features'] = (edge_features - self.mean) / self.std
+        if edge_features.shape[1] <= self.opt.ninput_edges:
+            edge_features = pad(edge_features, self.opt.ninput_edges)
+            meta['edge_features'] = (edge_features - self.mean) / self.std
+        else:
+            meta["edge_features"] = np.array([])
+
+        # print("edge_features: ", type(meta["edge_features"]), meta["edge_features"].shape)
+
         return meta
 
     def __len__(self):

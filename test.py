@@ -19,16 +19,20 @@ def run_test():
         print("Predict {} ".format(i+1))
         try:
             start = time.time()
-            model.set_input(data)
             print("test {}".format(data["filename"]))
+            if data["edge_features"].shape[1] == 0:
+                raise ValueError("input edges must greater than feature shape,"
+                                 " please check your model")
+            model.set_input(data)
             pred_class = model.test()
             end = time.time()
             run_time = end - start
             print("Predict result :{}, run time is {}ms".format(pred_class, run_time*1000))
         except Exception as e:
-            print(e)
-            print(data["filename"])
+            print(repr(e))
             with open('error_model.txt', mode='a') as filename:
+                filename.write(repr(e))
+                filename.write(" ")
                 filename.write(str(data["filename"][0]))
                 filename.write('\n')  # 换行
 

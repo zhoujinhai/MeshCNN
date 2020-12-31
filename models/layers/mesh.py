@@ -11,6 +11,7 @@ class Mesh:
     def __init__(self, file=None, opt=None, hold_history=False, export_folder='', phase="train"):
         self.vs = self.v_mask = self.filename = self.features = self.edge_areas = None
         self.edges = self.gemm_edges = self.sides = None
+        self.faces = None
         self.pool_count = 0
         fill_mesh(self, file, opt)  # 给self赋值 包括vs,edges,gemm_edges,features等
         self.export_folder = export_folder
@@ -68,12 +69,12 @@ class Mesh:
         self.ve = new_ve
         self.__clean_history(groups, torch_mask)
         self.pool_count += 1
-        self.export()   # Todo 是否可以去掉 只初始化保存一次 可去掉的话export里面无需做判断
+        # self.export()   # 注释后export()里面无需做判断，否则会池化后的结果也会保存
 
     def export(self, file=None, vcolor=None):
 
-        if self.phase == "test" and self.pool_count >= 1:
-            return
+        # if self.phase == "test" and self.pool_count >= 1:
+        #     return
 
         if file is None:
             if self.export_folder:
@@ -111,7 +112,9 @@ class Mesh:
 
             filename, file_extension = os.path.splitext(self.filename)
             file = '%s/%s_%d%s' % (self.export_folder, filename, i, file_extension)
+
             fh, abs_path = mkstemp()
+            # print("file: {}, fh: {}, abs_path: {}".format(file, fh, abs_path))
             edge_key = 0
             with os.fdopen(fh, 'w') as new_file:
                 with open(file) as old_file:
@@ -123,6 +126,7 @@ class Mesh:
                                 new_file.write('\n')
                         else:
                             new_file.write(line)
+            # print("edge_key: {}, history_data: {}".format(edge_key, len(self.history_data['edges_mask'])))
             os.remove(file)
             move(abs_path, file)
             if i < len(self.history_data['edges_mask']):

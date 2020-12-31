@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import sys
 import ntpath
 
 
@@ -17,11 +18,12 @@ def fill_mesh(mesh2fill, file: str, opt):
         mesh_data = from_scratch(file, opt)
         np.savez_compressed(load_path, gemm_edges=mesh_data.gemm_edges, vs=mesh_data.vs, edges=mesh_data.edges,
                             edges_count=mesh_data.edges_count, ve=mesh_data.ve, v_mask=mesh_data.v_mask,
-                            filename=mesh_data.filename, sides=mesh_data.sides,
+                            filename=mesh_data.filename, sides=mesh_data.sides, faces=mesh_data.faces,
                             edge_lengths=mesh_data.edge_lengths, edge_areas=mesh_data.edge_areas,
                             features=mesh_data.features)
     mesh2fill.vs = mesh_data['vs']
     mesh2fill.edges = mesh_data['edges']
+    mesh2fill.faces = mesh_data["faces"]
     mesh2fill.gemm_edges = mesh_data['gemm_edges']
     mesh2fill.edges_count = int(mesh_data['edges_count'])
     mesh2fill.ve = mesh_data['ve']
@@ -61,6 +63,7 @@ def from_scratch(file, opt):
 
     mesh_data = MeshPrep()
     mesh_data.vs = mesh_data.edges = None
+    mesh_data.faces = None
     mesh_data.gemm_edges = mesh_data.sides = None
     mesh_data.edges_count = None
     mesh_data.ve = None
@@ -76,6 +79,7 @@ def from_scratch(file, opt):
     build_gemm(mesh_data, faces, face_areas)
     if opt.num_aug > 1:
         post_augmentation(mesh_data, opt)
+    mesh_data.faces = faces
     mesh_data.features = extract_features(mesh_data)
     return mesh_data
 
@@ -143,18 +147,37 @@ def compute_face_normals_and_areas(mesh, faces):
                             mesh.vs[faces[:, 2]] - mesh.vs[faces[:, 1]])
 
     # >>> deal zero face >>>
-    # Case1: Collinear
     zeros_idx = np.argwhere((face_normals[:, 0] == 0) & (face_normals[:, 1] == 0) & (face_normals[:, 2] == 0))
-    # print(zeros_idx)
-    # TODO: 对错误的进行调整 取平均值是否可行？  取平均值会很小！ 改为取绝对值的平均值or相邻面？
-    # normal_mean = np.mean(face_normals, axis=0)
-    normal_mean = np.mean(np.abs(face_normals), axis=0)
+    normal_mean = np.mean(face_normals, axis=0)
     for idx in zeros_idx:
+        idx = idx[0]
         face_normals[idx] = normal_mean
-        print("normal_mean: ", normal_mean)
-    # Case2: ？？？
+        # print("face_normals_idx: ", face_normals[idx])
+    # # # 相邻面？
+    # nb_dict = {}
+    # for idx in zeros_idx:
+    #     idx = idx[0]
+    #     face_normal = np.array([sys.float_info.epsilon]*3)
+    #     face_vs_ids = faces[idx]
+    #     for i in range(3):
+    #         if face_vs_ids[i] not in nb_dict:
+    #             nb1 = get_faces_by_point(faces, face_vs_ids[i])
+    #             nb_dict[face_vs_ids[i]] = nb1
+    #         else:
+    #             nb1 = nb_dict[face_vs_ids[i]]
+    #
+    #         if face_vs_ids[(i+1) % 3] not in nb_dict:
+    #             nb2 = get_faces_by_point(faces, face_vs_ids[(i+1) % 3])
+    #             nb_dict[face_vs_ids[(i+1) % 3]] = nb2
+    #         else:
+    #             nb2 = nb_dict[face_vs_ids[(i+1) % 3]]
+    #
+    #         nb_faces = set(nb1) & set(nb2)
+    #         for nb_face in nb_faces:
+    #             face_normal += face_normals[nb_face]
+    #     face_normals[idx] = face_normal
+    #     # print("face_normals_idx: ", face_normals[idx])
     # <<< deal zero face <<<
-
     face_areas = np.sqrt((face_normals ** 2).sum(axis=1))
     # print("n_faces: ", len(faces), mesh.filename)
     face_normals /= face_areas[:, np.newaxis]
@@ -320,15 +343,10 @@ def check_area(mesh, faces):
                             mesh.vs[faces[:, 2]] - mesh.vs[faces[:, 1]])
 
     # >>> deal zero face >>>
-    # Case1: Collinear
     zeros_idx = np.argwhere((face_normals[:, 0] == 0) & (face_normals[:, 1] == 0) & (face_normals[:, 2] == 0))
-    # print(zeros_idx)
-    # TODO: 对错误的进行调整 取平均值是否可行？
-    # normal_mean = np.mean(face_normals, axis=0)
-    normal_mean = np.mean(np.abs(face_normals), axis=0)
+    normal_mean = np.mean(face_normals, axis=0)
     for idx in zeros_idx:
         face_normals[idx] = normal_mean
-    # Case2: ？？？
     # <<< deal zero face <<<
 
     face_areas = np.sqrt((face_normals ** 2).sum(axis=1))
@@ -379,6 +397,11 @@ def extract_features(mesh):
             # middle_features = mid_point(mesh)
             # features.append(middle_features)
 
+            # add curvature feature
+            c_ij, c_ji = compute_edge_curvature(mesh)
+            features.append(c_ij)
+            features.append(c_ji)
+
             features = np.concatenate(features, axis=0)
             # print(features, features.shape)
             return features
@@ -387,12 +410,45 @@ def extract_features(mesh):
             raise ValueError(mesh.filename, 'bad features')
 
 
+def compute_edge_curvature(mesh):
+    face_normals, face_areas = compute_face_normals_and_areas(mesh, mesh.faces)  # 计算点的法向量
+    c_ij = []
+    c_ji = []
+    for edge_id, edge in enumerate(mesh.edges):
+        point_i = mesh.edges[edge_id][0]
+        point_j = mesh.edges[edge_id][1]
+        normal_i = compute_point_normal(mesh.faces, face_normals, point_i)
+        normal_j = compute_point_normal(mesh.faces, face_normals, point_j)
+        e_ij = mesh.vs[point_j] - mesh.vs[point_i]
+        c_ij.append(2 * normal_i.dot(e_ij / (np.sqrt((e_ij ** 2).sum()) + + sys.float_info.epsilon)))
+        e_ji = mesh.vs[point_i] - mesh.vs[point_j]
+        c_ji.append(2 * normal_j.dot(e_ji / (np.sqrt((e_ji ** 2).sum()) + + sys.float_info.epsilon)))
+    c_ij = np.asarray(c_ij).reshape(-1, len(mesh.edges))
+    c_ji = np.asarray(c_ji).reshape(-1, len(mesh.edges))
+    # print("c_ij:", c_ij.shape, "c_ji: ", c_ji.shape)
+    return c_ij, c_ji
+
+
+def compute_point_normal(faces, face_normals, point_id):
+    face_ids = get_faces_by_point(faces, point_id)
+    normal_sum = face_normals[face_ids].sum(0)   # 按行相加
+    normal_div = np.sqrt((normal_sum ** 2).sum())
+    normal = normal_sum / (normal_div + sys.float_info.epsilon)
+    return normal
+
+
+def get_faces_by_point(faces, point_id):
+    point_faces = np.argwhere(faces == point_id)
+    face_ids = point_faces[:, 0]
+    return face_ids
+
+
 def mid_point(mesh):
     middle_point = []
     for edge_id, edge in enumerate(mesh.edges):
         middle_point.append(list(mesh.vs[edge[0]] + mesh.vs[edge[1]] / 2))
     middle_point = np.asarray(middle_point).reshape(-1, len(mesh.edges))
-    # print(middle_point, middle_point.shape)
+    print("middle_point: ", middle_point.shape)
     return middle_point
 
 
@@ -491,6 +547,13 @@ def get_opposite_angles(mesh, edge_points, side):
 def get_ratios(mesh, edge_points, side):
     edges_lengths = np.linalg.norm(mesh.vs[edge_points[:, side // 2]] - mesh.vs[edge_points[:, 1 - side // 2]],
                                    ord=2, axis=1)
+    # >>> deal zero edge_length
+    zeros_idx = np.argwhere(edges_lengths == 0)
+    edges_lengths_mean = np.mean(edges_lengths)
+    for idx in zeros_idx:
+        idx = idx[0]
+        edges_lengths[idx] = edges_lengths_mean
+    # <<<
     point_o = mesh.vs[edge_points[:, side // 2 + 2]]
     point_a = mesh.vs[edge_points[:, side // 2]]
     point_b = mesh.vs[edge_points[:, 1 - side // 2]]

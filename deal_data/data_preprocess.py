@@ -161,11 +161,17 @@ def parallel_stl_2_obj(stl_list, obj_save_path, n_workers=8):
 
 
 if __name__ == "__main__":
-    pts_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts"
-    stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/errorModel-pts"
-    obj_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/obj_bak"
-    test_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/down_obj"
+    pts_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/pts"
+    stl_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/stl"
+    obj_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/obj"
+    test_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/down_obj"
     target_faces = 5000
+
+    if not os.path.isdir(obj_save_dir):
+        os.makedirs(obj_save_dir)
+    if not os.path.isdir(test_dir):
+        os.makedirs(test_dir)
+
     pts_lists = glob.glob(os.path.join(pts_dir, "*.pts"))
     stl_list = []
     print(len(pts_lists))
@@ -173,17 +179,10 @@ if __name__ == "__main__":
         base_name = os.path.basename(pts_file)
         file_name = os.path.splitext(base_name)[0]
         stl_file = os.path.join(stl_dir, file_name + ".stl")
-        stl_list.append(stl_file)
+        if os.path.isfile(stl_file):
+            stl_list.append(stl_file)
 
-    # stl_model_dir = "/home/heygears/work/Tooth_data_prepare/tooth/test/stl"   # stl文件保存路径
-    # obj_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/test/obj"    # stl转obj后保存路径
-    # test_dir = "/home/heygears/work/Tooth_data_prepare/tooth/test/test"       # 测试集存放路径
-    # target_faces = 5000
-    #
-    # if not os.path.isdir(obj_save_dir):
-    #     os.makedirs(obj_save_dir)
-    #
-    # stl_list = glob.glob(os.path.join(stl_model_dir, "*.stl"))
+    # stl_list = glob.glob(os.path.join(stl_dir, "*.stl"))
     # print(stl_list)
     #
     # #  stl to obj
