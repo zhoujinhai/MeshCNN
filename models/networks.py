@@ -99,7 +99,7 @@ def init_net(net, init_type, init_gain, gpu_ids):
 def define_classifier(input_nc, ncf, ninput_edges, nclasses, opt, gpu_ids, arch, init_type, init_gain):
     """
     @input_nc: 输入特征维度
-    @ncf: 各卷积核尺寸
+    @ncf: 各卷积输入输出通道数
     @ninput_edges: 输入边的个数
     @nclasses: 类别数
     @arch: 网络结构

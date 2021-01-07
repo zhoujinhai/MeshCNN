@@ -3,7 +3,7 @@
 ## run the test
 python test.py \
 --dataroot datasets/tooth_seg \
---name tooth_seg \
+--name tooth_seg_20201231_add_data_with_curvature \
 --arch meshunet \
 --dataset_mode segmentation \
 --ncf 32 64 128 256 \
@@ -12,4 +12,4 @@ python test.py \
 --resblocks 3 \
 --batch_size 1 \
 --export_folder meshes \
---which_epoch 120 \
+--which_epoch 200 \

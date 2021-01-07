@@ -1,10 +1,6 @@
-import vedo
 from vedo import load, show
 import torch
-import os
-import glob
 import numpy as np
-import shutil
 
 import sys
 sys.path.append(r"/home/heygears/work/package/hgapi")
@@ -241,6 +237,49 @@ def pad(input_arr, target_length, val=0, dim=1):
     return np.pad(input_arr, pad_width=npad, mode='constant', constant_values=val)
 
 
+# # test torchScript
+class MyDecisionGate(torch.nn.Module):
+    def forward(self, x):
+        if x.sum() > 0:
+            return x
+        else:
+            return -x
+
+
+class MyCell(torch.nn.Module):
+    def __init__(self, dg):
+        super(MyCell, self).__init__()
+        self.dg = dg
+        self.linear = torch.nn.Linear(4, 4)
+
+    def forward(self, x, h):
+        x = self.dg(self.linear(x))
+        new_h = torch.tanh(x + h)
+        return new_h, new_h
+
+
+class MyRNNLoop(torch.nn.Module):
+    def __init__(self, script_gate):
+        super(MyRNNLoop, self).__init__()
+        self.cell = torch.jit.trace(MyCell(script_gate), (x, h))
+
+    def forward(self, xs):
+        h, y = torch.zeros(3, 4), torch.zeros(3, 4)
+        for i in range(xs.size(0)):
+            y, h = self.cell(xs[i], h)
+        return y, h
+
+
+class WrapRNN(torch.nn.Module):
+    def __init__(self):
+        super(WrapRNN, self).__init__()
+        self.loop = torch.jit.script(MyRNNLoop(script_gate))
+
+    def forward(self, xs):
+        y, h = self.loop(xs)
+        return torch.relu(y)
+
+
 if __name__ == "__main__":
     # a = load('/home/heygears/work/Tooth_data_prepare/tooth/8AP1S/mesh1.obj').c(('blue'))
     # b = load('/home/heygears/work/Tooth_data_prepare/tooth/8AP1S/mesh2.obj').c(('magenta'))
@@ -281,18 +320,18 @@ if __name__ == "__main__":
     #         b = load(vtk).pointSize(10).c(('green'))
     #         show(a, b)
 
-    model_path = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/file/show"
-    # model_path = "/home/heygears/work/Tooth_data_prepare/deal_data_tools/file/show"
-    file_list = [os.path.join(model_path, file_path) for file_path in os.listdir(model_path)]
-
-    for i, file in enumerate(file_list):
-        if not os.path.isdir(file):
-            continue
-        print("{} file path is: {}".format(i, file))
-        predict1_path = os.path.join(file, "mesh1.obj")
-        predict2_path = os.path.join(file, "mesh2.obj")
-        predict_pts = os.path.join(file, "test.vtk")
-        show_predict(predict1_path, predict2_path, predict_pts)
+    # model_path = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/file/show"
+    # # model_path = "/home/heygears/work/Tooth_data_prepare/deal_data_tools/file/show"
+    # file_list = [os.path.join(model_path, file_path) for file_path in os.listdir(model_path)]
+    #
+    # for i, file in enumerate(file_list):
+    #     if not os.path.isdir(file):
+    #         continue
+    #     print("{} file path is: {}".format(i, file))
+    #     predict1_path = os.path.join(file, "mesh1.obj")
+    #     predict2_path = os.path.join(file, "mesh2.obj")
+    #     predict_pts = os.path.join(file, "test.vtk")
+    #     show_predict(predict1_path, predict2_path, predict_pts)
 
     # ---- Test one ----
     # predict
@@ -473,5 +512,38 @@ if __name__ == "__main__":
     #     print(no_seg_stl_path)
     #     if os.path.isfile(no_seg_stl_path) and not os.path.isfile(os.path.join(no_seg_dir, base_name)):
     #         shutil.move(no_seg_stl_path, no_seg_dir)
+
+    # test torchScript
+
+    my_cell = MyCell(MyDecisionGate())
+    x = torch.rand(3, 4)
+    h = torch.rand(3, 4)
+    #
+    # trace
+    traced_cell = torch.jit.trace(my_cell, (x, h))
+    print("trace code: \n", traced_cell.code)
+
+    # script
+    script_gate = torch.jit.script(MyDecisionGate())
+    my_cell = MyCell(script_gate)
+    script_cell = torch.jit.script(my_cell)
+    print("script code: \n", script_cell.code)
+
+    # mixing scripting and tracing
+    rnn_loop = torch.jit.script(MyRNNLoop(script_gate))
+    print("rnn_loop code: \n", rnn_loop.code)
+
+    traced = torch.jit.trace(WrapRNN(), (torch.rand(1, 3, 4)))
+    print(traced.code)
+    traced.save("./wrapped_rnn.zip")
+    loaded = torch.jit.load("./wrapped_rnn.zip")
+    print(loaded)
+    print(loaded.code)
+    z = torch.rand(1, 3, 4)
+    print(loaded(z))
+
+    # torch.jit.save(traced, "./test.pt")
+    # loaded = torch.jit.load("./test.pt")
+    # print(loaded(z))
 
     pass

@@ -2,8 +2,6 @@ import torch
 from . import networks
 from os.path import join
 from util.util import seg_accuracy, print_network
-from apex import amp
-import numpy as np
 
 
 class ClassifierModel:
@@ -31,8 +29,12 @@ class ClassifierModel:
         self.nclasses = opt.nclasses
 
         # load/define networks
+        # print("opt: ", opt)
         self.net = networks.define_classifier(opt.input_nc, opt.ncf, opt.ninput_edges, opt.nclasses, opt,
                                               self.gpu_ids, opt.arch, opt.init_type, opt.init_gain)
+        # self.net = inference_network.define_classifier(opt.input_nc, opt.ncf, opt.ninput_edges,
+        #                                                opt.nclasses, opt.gpu_ids, opt.init_type,
+        #                                                opt.init_gain, opt.pool_res, opt.resblocks)
         self.net.train(self.is_train)
         self.criterion = networks.define_loss(opt).to(self.device)
 

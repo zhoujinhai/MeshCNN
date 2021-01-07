@@ -32,6 +32,7 @@ class SegmentationData(BaseDataset):
 
     def __getitem__(self, index):
         path = self.paths[index]
+        # print("opt: {}, export_folder: {}, phase: {}".format(self.opt, self.opt.export_folder,  self.opt.phase))
         mesh = Mesh(file=path, opt=self.opt, hold_history=True, export_folder=self.opt.export_folder, phase=self.opt.phase)
         meta = {}
         meta["filename"] = mesh.filename

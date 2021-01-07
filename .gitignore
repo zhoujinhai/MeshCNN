@@ -9,6 +9,8 @@ checkpoints
 datasets
 runs
 hgapi
+deal_data
+inference/data_deal
 error_model.txt
 nohup.out
 show_model.py

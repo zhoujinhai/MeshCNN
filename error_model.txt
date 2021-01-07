@@ -1,0 +1,28 @@
+ValueError('input edges must greater than feature shape, please check your model',) DSHGJ_VS_SET_VSc4_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) 7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) PDW3X_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) 9NJPM_VS_SET_VSc3_Subsetup5_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) 5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) YYPY3_VS_SET_VSc1_Subsetup17_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) H4BS5_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) PHT7D_VS_SET_VSc2_Subsetup35_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) KK595_VS_SET_VSc1_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) GQ5BT_VS_SET_VSc2_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) H4BS5_VS_SET_VSc2_Subsetup14_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) 4BE7T_VS_SET_VSc1_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) T4JHC_VS_SET_VSc2_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) B7PEU_VS_SET_VSc4_Subsetup18_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) 6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 6441 and 5000',) C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) JCJM8_VS_SET_VSc2_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+
+flops: 9898035000.0, params: 2277850.0
+

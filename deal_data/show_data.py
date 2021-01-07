@@ -391,12 +391,12 @@ def show_predict(predict1, predict2, pts):
 
 
 if __name__ == "__main__":
-    predict_dir = "/home/heygears/work/github/MeshCNN/checkpoints/tooth_seg/meshes/"
-    # predict_dir = "/home/heygears/work/Tooth_data_prepare/model_test/predict_mesh_obj_20201216_100"
+    # predict_dir = "/home/heygears/work/github/MeshCNN/checkpoints/tooth_seg_20201231_add_data_with_curvature/meshes/"
+    predict_dir = "/home/heygears/work/github/MeshCNN/inference/results"
 
     # # 解析结果
     predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))
-    parallel_show_predict(predict_model_list, predict_dir, n_workers=4)
+    parallel_show_predict(predict_model_list, predict_dir, n_workers=8)
 
     # 显示结果
     file_list = [os.path.join(predict_dir, file_path) for file_path in os.listdir(predict_dir)
