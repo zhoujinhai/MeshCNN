@@ -83,6 +83,8 @@ def run_test():
         del state_dict._metadata
     net.load_state_dict(state_dict)
     net = net.eval()
+    # script_model = torch.jit.script(net)
+    # print(script_model.code)
 
     # *** 3. data
     test_obj_lists = []
@@ -97,37 +99,37 @@ def run_test():
     for i, model_file in enumerate(test_obj_lists):
         data = process_data(model_file, mean, std, config)
         print("Predict {} th file: {}".format((i + 1), data["filename"]))
-        # try:
-        start = time.time()
-        if data["edge_features"].shape[1] == 0:
-            raise ValueError("input edges must greater than feature shape,"
-                             " please check your model")
+        try:
+            start = time.time()
+            if data["edge_features"].shape[1] == 0:
+                raise ValueError("input edges must greater than feature shape,"
+                                 " please check your model")
 
-        features = torch.from_numpy(data['edge_features']).float().unsqueeze(0)
-        features = features.to(device).requires_grad_(False)
-        mesh = [data['mesh']]
+            features = torch.from_numpy(data['edge_features']).float().unsqueeze(0)
+            features = features.to(device).requires_grad_(False)
+            mesh = [data['mesh']]
 
-        # predict
-        out = net(features, mesh)
-        pred_class = out.data.max(1)[1].cpu()
+            # predict
+            out = net(features, mesh)
+            pred_class = out.data.max(1)[1].cpu()
 
-        # 导出结果
-        export_segmentation(pred_class.cpu(), mesh)
+            # 导出结果
+            export_segmentation(pred_class.cpu(), mesh)
 
-        # compare result
-        ori_class = np.loadtxt("/home/heygears/work/github/MeshCNN/001")
-        print("***result is ture: ***", (ori_class == pred_class.numpy()).all())
+            # compare result
+            ori_class = np.loadtxt("/home/heygears/work/github/MeshCNN/001")
+            print("***result is ture: ***", (ori_class == pred_class.numpy()).all())
 
-        end = time.time()
-        run_time = end - start
-        print("Predict result :{}, run time is {}ms".format(pred_class, run_time*1000))
-        # except Exception as e:
-        #     print("error{}", repr(e))
-        #     with open('error_model.txt', mode='a') as filename:
-        #         filename.write(repr(e))
-        #         filename.write(" ")
-        #         filename.write(str(data["filename"][0]))
-        #         filename.write('\n')  # 换行
+            end = time.time()
+            run_time = end - start
+            print("Predict result :{}, run time is {}ms".format(pred_class, run_time*1000))
+        except Exception as e:
+            print("error{}", repr(e))
+            with open('error_model.txt', mode='a') as filename:
+                filename.write(repr(e))
+                filename.write(" ")
+                filename.write(str(data["filename"][0]))
+                filename.write('\n')  # 换行
 
     print("-----------------\npredict done!")
 
