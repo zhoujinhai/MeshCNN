@@ -1,60 +1,88 @@
 #!/usr/bin/env python
 # coding: utf-8
-""""
-Usage: python show_data.py
-"""
+
+# ### step1 读取pts文件 获取标注点集$A$
 
 # In[1]:
 
 
-import os 
+import os
 import numpy as np
-from scipy import spatial
+from scipy.spatial import KDTree
 import glob
-from multiprocessing import Process
-from tqdm import tqdm
-from vedo import load, show, Point
 import math
 import sys
 
 
-# ## 一、自定义函数
+def get_gum_line_pts(gum_line_path):
+    """
+    读取牙龈线文件，pts格式
+    """
+    f = open(gum_line_path)
+    pts = []
 
-# ### 1.获取模型信息
+    is_generate_by_streamflow = False  # 是否由前台界面生成
+
+    for num, line in enumerate(f):
+        if 0 == num and line.strip() == "BEGIN_0":
+            is_generate_by_streamflow = True
+            continue
+        if line.strip() == "BEGIN" or line.strip() == "END":
+            continue
+        if is_generate_by_streamflow:
+            line = line.strip()
+            if line == "END_0":
+                pts.append(pts[0])
+            else:
+                splitted_line = line.split()
+                point = [float(i) for i in splitted_line][:3]  # 只取点坐标，去掉法向量
+                assert len(point) == 3, "点的坐标为x,y,z"
+                pts.append(point)
+        else:
+            line = line.strip()
+            splitted_line = line.split()
+            point = [float(i) for i in splitted_line]
+            assert len(point) == 3, "点的坐标为x,y,z"
+            pts.append(point)
+
+    f.close()
+    pts = np.asarray(pts)
+    return pts
+
+
+def get_target_pts(pts_path):
+    """
+    获取真实的牙龈线点
+    """
+    target_pts = np.loadtxt(pts_path)
+    return target_pts
+
+
+# ### step2 对点集A建立KD_Tree
 
 # In[2]:
 
 
-def get_edges(faces):
+def create_tree(array):
     """
-    根据面得到相应的边
-    @faces: 模型的所有面
-    return: 模型的边
+    根据点集建立kd_tree
     """
-    edge2key = dict()
-    edges = []
-    edges_count = 0
-    for face_id, face in enumerate(faces):
-        faces_edges = []
-        for i in range(3):
-            cur_edge = (face[i], face[(i + 1) % 3])
-            faces_edges.append(cur_edge)
-        for idx, edge in enumerate(faces_edges):
-            edge = tuple(sorted(list(edge)))
-            if edge not in edge2key:
-                edge2key[edge] = edges_count
-                edges_count += 1
-                edges.append(list(edge))
-    return edges
+    tree = KDTree(array)
+    return tree
 
 
+# ### step3 预测结果生成对应的点集$B$  
+# 边标签--->点标签
+
+
+# In[3]:
 def parse_obje(obj_file):
     """
     解析obj文件， 获取点，边，面
     @obj_file: obj模型文件路径
     return: 模型的点，边，面信息
     """
-    
+
     vs = []
     faces = []
     edges = []
@@ -71,13 +99,13 @@ def parse_obje(obj_file):
                 try:
                     faces.append([int(c) - 1 for c in splitted_line[1:]])
                 except ValueError:
-                    faces.append([int(c.split('/')[0]) - 1 for c in splitted_line[1:]])                   
+                    faces.append([int(c.split('/')[0]) - 1 for c in splitted_line[1:]])
             elif splitted_line[0] == 'e':
                 if len(splitted_line) >= 4:
                     edge_v = [int(c) - 1 for c in splitted_line[1:-1]]
                     edge_c = int(splitted_line[-1])
-                    edge_v.append(edge_c)                 # class
-                    edges.append(edge_v)           
+                    edge_v.append(edge_c)  # class
+                    edges.append(edge_v)
             else:
                 continue
 
@@ -86,13 +114,8 @@ def parse_obje(obj_file):
     # if len(edges) == 0:
     #     edges = get_edges(faces)
     edges = np.array(edges)
-        
+
     return vs, faces, edges
-
-
-# ### 2.根据边标记对面进行标记
-
-# In[3]:
 
 
 def label_face_by_edge(faces, edges, edge_labels):
@@ -103,20 +126,18 @@ def label_face_by_edge(faces, edges, edge_labels):
     @edge_labels: 模型边对应的标签
     return: 面的标签
     """
-    edge_dict = {}    # key: str([pt1, pt2]) value: label
+    edge_dict = {}  # key: str([pt1, pt2]) value: label
     for ei, edge in enumerate(edges):
         key = tuple(edge)
         edge_dict[key] = edge_labels[ei]
     # print(edge_dict)
     face_labels = np.array(len(faces) * [[-1, -1, -1]])
     for i, face in enumerate(faces):
-        # faces_edges = []
         for j in range(3):
             cur_edge = [face[j], face[(j + 1) % 3]]
             cur_label = edge_dict[tuple(sorted(cur_edge))]
             face_labels[i][j] = cur_label
-            
-        # face_labels.append(faces_edges)
+
     face_labels = np.where(np.sum(face_labels, axis=1) < 2, 1, 2)
 
     optimizer_face_labels(faces, face_labels)  # 对面标签进行优化  膨胀操作 填充
@@ -153,31 +174,7 @@ def optimizer_face_labels(faces, face_labels):
             # print("face: {}, label:{} nb_labels: {}, 众数: {}".format(i, face_labels[i], nb_labels, np.argmax(counts)))
             face_labels[i] = np.argmax(counts)
 
-# ### 3.利用边对点进行标记
 
-# In[4]:
-
-
-def label_pts_by_edges(vs, edges, edge_labels):
-    """
-    根据边标签，对点进行标注
-    @vs: 模型的点
-    @edge: 模型的边
-    @edge_labels: 模型边对应的标签
-    return: 模型点的标签
-    """
-    pts_labels = np.array(len(vs) * [[-1, -1]])
-    for ei, edge in enumerate(edges):
-        edge_label = edge_labels[ei]
-        pt1 = edge[0]
-        pt2 = edge[1]
-        pts_labels[pt1][edge_label] = edge_label
-        pts_labels[pt2][edge_label] = edge_label
-    
-    return pts_labels
-
-
-# In[5]:
 def find_faces_by_2point(faces, id1, id2):
     """
     根据两个点确定以两点所在边为公共边的两个面
@@ -198,7 +195,6 @@ def find_faces_by_2point(faces, id1, id2):
     return intersection_faces
 
 
-# In[6]:
 def get_pts_from_edges(edges, threshold=30):
     circle_pts = [[]]
     count = 0
@@ -264,7 +260,6 @@ def drop_cycle(edge, max_length=20):
 
     return np.asarray(drop_list)
 
-
 # def label_pts_by_edges_and_faces(vs, edges, faces, face_labels):
 #     """
 #     根据边和面标签，对点进行标注，一条边对应两个面，如果两个面标签不同，则保留点
@@ -296,7 +291,6 @@ def label_pts_by_edges_and_faces(vs, edges, faces, face_labels):
     @face_labels: 模型面对应的标签
     return: 模型边界点
     """
-    # pts_labels = np.array(len(vs) * [False])
     edge_idx = []
     for ei, edge in enumerate(edges):
         pt1 = edge[0]
@@ -385,57 +379,7 @@ def get_faces_by_point(faces, point_id):
     face_ids = point_faces[:, 0]
     return face_ids
 
-
-# ### 4.边标签投影到原始模型
-
-# In[7]:
-def label_origin_edge(predict_edges, predict_labels, predict_vs, origin_edges, origin_vs):
-    """
-    根据预测的边及标签，对原始模型的边进行标注
-    @predict_edges: 预测模型对应的边
-    @predict_labels: 预测模型对应的标签
-    @origin_edges: 原始模型的边
-    return: 原始模型边对应的标签
-    """
-    predict_edge_pts = predict_vs[predict_edges].reshape(-1, 6)
-
-    tree = spatial.KDTree(predict_edge_pts)
-
-    origin_edge_pts = origin_vs[origin_edges].reshape(-1, 6)
-
-    origin_labels = []
-    for i, edge in enumerate(origin_edge_pts):
-        # if i % 50000 == 0:
-        #     print(i, "is finded!")
-        dist, idx = tree.query(edge)
-        origin_labels.append(predict_labels[idx])
-    
-    return origin_labels
-
-
-# ### 5.点投影到原模型
-
-# In[8]:
-
-
-def project_points(predict_pts, origin_vs):
-    """
-    根据预测的边，筛选出边界点，将点投影回原模型
-    @predict_pts: 边界点
-    @origin_vs: 原始模型所有点
-    return: 返回原始模型的边界点
-    """
-    tree = spatial.KDTree(origin_vs)
-    
-    origin_pts = []
-    for i, pt in enumerate(predict_pts):
-        dist, idx = tree.query(pt)
-        origin_pts.append(origin_vs[idx])
-        
-    origin_pts = np.asarray(origin_pts)
-    return origin_pts
-    
-
+# In[4]:
 # ### 6.分开保存模型 便于显示
 # In[9]:
 def save_model_part(save_path, vs, faces, face_labels, model1_name="mesh1.obj", model2_name="mesh2.obj"):
@@ -454,9 +398,9 @@ def save_model_part(save_path, vs, faces, face_labels, model1_name="mesh1.obj", 
 
     for idx, face in enumerate(faces):
         if face_labels[idx] == 1:
-            mesh1.write("f " + str(face[0]+1) + " " + str(face[1]+1) + " " + str(face[2]+1) + "\n")
+            mesh1.write("f " + str(face[0] + 1) + " " + str(face[1] + 1) + " " + str(face[2] + 1) + "\n")
         if face_labels[idx] == 2:
-            mesh2.write("f " + str(face[0]+1) + " " + str(face[1]+1) + " " + str(face[2]+1) + "\n")
+            mesh2.write("f " + str(face[0] + 1) + " " + str(face[1] + 1) + " " + str(face[2] + 1) + "\n")
 
     mesh1.close()
     mesh2.close()
@@ -477,100 +421,86 @@ def save_pts_to_vtk(pts, save_path="./test.vtk"):
     import vtkplotter as vtkp
     vtk_point = vtkp.Points(pts.reshape(-1, 3))
     vtkp.write(vtk_point, save_path, binary=False)
-#     print("vtk file is saved in ", save_path)
 
 
-# ## 二、主函数
-# 
-
-# In[12]:
+# In[5]:
 
 
-def save_predict(predict_model, predict_path):
-    """
-    对预测的模型进行分析，找出牙龈线点，并对原始模型进行分割
-    @predict_model: 预测的模型
-    @save_path: 结果保存路径
-    return: None
-    """
-    # ------加载模型 获取信息------
-    # ## 预测模型
-    predict_vs, predict_faces, predict_edges = parse_obje(predict_model)
+def get_predict_pts(model_path):
+    predict_vs, predict_faces, predict_edges = parse_obje(model_path)
+
     if len(predict_edges) == 0:
-        print("{} is no result!".format(predict_model))
-        return
+        print("{} is no result!".format(model_path))
+        return np.array([])
 
-    origin_model_basename = os.path.basename(predict_model)[:-6]
+    origin_model_basename = os.path.basename(model_path)[:-6]
+    predict_path = os.path.split(model_path)[0]
     save_path = os.path.join(predict_path, origin_model_basename)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
+
     predict_labels = predict_edges[:, -1]
     predict_edges = predict_edges[:, :-1]
-    
+
     # ## 标记预测的面
     predict_face_labels = label_face_by_edge(predict_faces, predict_edges, predict_labels)
-
     save_model_part(save_path, predict_vs, predict_faces, predict_face_labels, "predict1.obj", "predict2.obj")
-    
-    # ------处理预测模型------
-    # # 方案一 直接通过边解析点
-    # predict_pts_labels = label_pts_by_edges(predict_vs, predict_edges, predict_labels)
-    # predict_gum_pt_ids = np.where((predict_pts_labels[:,0]==0) & (predict_pts_labels[:,1]==1))[0]
-    # predict_gum_pts = predict_vs[predict_gum_pt_ids]
-    # print("predict_gum_pts: ", len(predict_gum_pts))
-    # save_pts_to_vtk(predict_gum_pts, os.path.join(save_path, "predict.vtk"))
-    
-    # ## 方案二 通过面的标签来判断
+
+    # ## 通过面的标签来判断
     predict_gum_pts = label_pts_by_edges_and_faces(predict_vs, predict_edges, predict_faces, predict_face_labels)
     # print("predict_gum_pts: ", len(predict_gum_pts))
     np.savetxt(os.path.join(save_path, "predict.pts"), predict_gum_pts)
     save_pts_to_vtk(predict_gum_pts, os.path.join(save_path, "predict.vtk"))
 
-
-# ## 三、批量处理
-
-# In[15]:
+    return predict_gum_pts
 
 
-def show_predict_batch(predict_model_list, predict_path):
-    """
-    批量处理预测模型
-    @predict_model_list: 预测的模型列表
-    @predict_path: 预测模型存放路径
-    return: None
-    """
-    for i, predict_model in enumerate(tqdm(predict_model_list)):
-        try:
-            save_predict(predict_model, predict_path)
-        except KeyError:
-            print("predict_model: ", predict_model)
-        except Exception as e:
-            raise e
+# ### step4 遍历点集$B$ 找出点到集合$A$最大距离
+
+# In[6]:
 
 
-# In[16]:
+def calculate_dist(tree, predict_pts):
+    max_dist = 0
+    max_index = 0
+    for idx, predict_pt in enumerate(predict_pts):
+        dist, index = tree.query(predict_pt, k=1)
+        if dist > max_dist:
+            max_dist = dist
+            max_index = idx
+
+    return max_dist, max_index
 
 
-def parallel_show_predict(model_list, predict_path, n_workers=8):
-    """
-    多进程处理
-    """
-    if len(model_list) < n_workers:
-        n_workers = len(model_list)
-    chunk_len = len(model_list) // n_workers
-
-    chunk_lists = [model_list[i:i+chunk_len] for i in range(0, (n_workers-1)*chunk_len, chunk_len)]
-    chunk_lists.append(model_list[(n_workers - 1)*chunk_len:])
-    
-    process_list = [Process(target=show_predict_batch, args=(chunk_list, predict_path, )) for chunk_list in chunk_lists]
-    for process in process_list:
-        process.start()
-    for process in process_list:
-        process.join()
+# In[7]:
 
 
-# In[17]:
-def show_predict(predict1, predict2, pts, max_dist_pts=None):
+def get_max_dist(pts_file, predict_model):
+    # target_pts = get_target_pts(pts_file)
+    target_pts = get_gum_line_pts(pts_file)
+
+    tree = create_tree(target_pts)
+
+    # TODO 可以替换成其他方法得到的分割点
+    model_name = os.path.splitext(os.path.basename(predict_model))[0][:-2]
+    save_dir = os.path.split(predict_model)[0]
+    predict_save_path = os.path.join(save_dir, model_name + "/predict.pts")
+    if os.path.isfile(predict_save_path):
+        predict_pts = np.loadtxt(predict_save_path)
+    else:
+        predict_pts = get_predict_pts(predict_model)
+
+    if len(predict_pts) == 0:
+        return np.inf, np.inf   # 无结果
+
+    max_dist, max_index = calculate_dist(tree, predict_pts)
+
+    return max_dist, predict_pts[max_index]
+
+
+# In[8]:
+def show_predict(predict1, predict2, pts, target_pts, max_dist_pts=None):
+    from vedo import load, show, Point
     """
     显示预测结果
     @predict1: 牙齿部分
@@ -581,59 +511,55 @@ def show_predict(predict1, predict2, pts, max_dist_pts=None):
     a = load(predict1).c(('blue'))
     b = load(predict2).c(('magenta'))
     c = load(pts).pointSize(10).c(('green'))
+    t = load(target_pts).pointSize(5).c(("red"))
     if max_dist_pts:
-        p1 = Point(max_dist_pts, r=20, c='yellow')
-        show(a, b, c, p1)
+        p1 = Point(max_dist_pts, r=15, c='yellow')
+        show(a, b, c, t, p1)
     else:
-        show(a, b, c)
+        show(a, b, c, t)
 
 
+# In[12]:
 if __name__ == "__main__":
+    pts_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/pts"
+    predict_model_dir = "/home/heygears/work/predict_results"
+    threshold = 2
 
-    predict_dir = "/home/heygears/work/predict_results"
+    model_paths = glob.glob(os.path.join(predict_model_dir, "*.obj"))
+    error_models = {}
 
-    # 解析结果
-    predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))
-    parallel_show_predict(predict_model_list, predict_dir, n_workers=8)
+    for idx, model_path in enumerate(model_paths):
+        model_name = os.path.splitext(os.path.basename(model_path))[0][:-2]
+        pts_file = os.path.join(pts_dir, model_name + ".pts")
+        if os.path.isfile(pts_file):
+            max_dist, max_pts = get_max_dist(pts_file, model_path)
+            if max_dist is np.inf and max_pts is np.inf:
+                continue
+            if max_dist > threshold:
+                error_models[os.path.splitext(os.path.basename(pts_file))[0]] = [max_dist, max_pts.tolist()]
+            print("{}, file: {}, dist: {}".format(idx + 1, os.path.basename(pts_file), max_dist))
 
-    # 显示结果
-    file_list = [os.path.join(predict_dir, file_path) for file_path in os.listdir(predict_dir)
-                 if os.path.isdir(os.path.join(predict_dir, file_path))]
+    print("******一共{}个模型的距离超过阈值{}，占总模型数{}的百分比为：{}*********\n".
+          format(len(error_models), threshold, len(model_paths), len(error_models) / len(model_paths)))
+
+    # show model
+    file_list = [os.path.join(predict_model_dir, file_path) for file_path in os.listdir(predict_model_dir)
+                 if os.path.isdir(os.path.join(predict_model_dir, file_path))]
 
     for i, file in enumerate(file_list):
-        print("{} file path is: {}".format(i + 1, file))
-        predict1_path = os.path.join(file, "predict1.obj")
-        predict2_path = os.path.join(file, "predict2.obj")
-        predict_pts = os.path.join(file, "predict.vtk")
-        show_predict(predict1_path, predict2_path, predict_pts)
-
-    # ----- 按键控制 --------
-    # length = len(file_list)
-    # i = 0
-    # while True:
-    #     file = file_list[i]
-    #     print("\n第{}个 file path is: {}".format(i + 1, file))
-    #     predict1_path = os.path.join(file, "predict1.obj")
-    #     predict2_path = os.path.join(file, "predict2.obj")
-    #     predict_pts = os.path.join(file, "predict.vtk")
-    #     show_predict(predict1_path, predict2_path, predict_pts)
-    #
-    #     print("*****A(a):上一张; D(d):下一张; Q(q):退出; 按完键后回车表示确定！！！")
-    #     line = sys.stdin.readline()
-    #     if line == "a\n" or line == "A\n":
-    #         if i > 0:
-    #             i -= 1
-    #         else:
-    #             print("已经到最前面一张了，请按D(d)到下一张，按Q(q)退出")
-    #             i = 0
-    #     if line == "d\n" or line == "D\n":
-    #         if i < length - 1:
-    #             i += 1
-    #         else:
-    #             print("已经到最后面一张了，请按A(a)到下一张，按Q(q)退出")
-    #             i = length - 1
-    #     if line == "q\n" or line == "Q\n":
-    #         break
+        if os.path.basename(file) in error_models:
+            print("{} file path is: {}, dist: {}".format(i + 1, file, error_models[os.path.basename(file)][0]))
+            predict1_path = os.path.join(file, "predict1.obj")
+            predict2_path = os.path.join(file, "predict2.obj")
+            predict_pts = os.path.join(file, "predict.vtk")
+            # >>> target vtk
+            model_name = os.path.basename(file)
+            pts_file = os.path.join(pts_dir, model_name + ".pts")
+            target_pts = get_gum_line_pts(pts_file)
+            target_pts_save_path = os.path.join(file, "target.vtk")
+            save_pts_to_vtk(target_pts, target_pts_save_path)
+            # <<< target vtk
+            show_predict(predict1_path, predict2_path, predict_pts, target_pts_save_path, error_models[os.path.basename(file)][1])
 
 
 

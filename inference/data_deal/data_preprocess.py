@@ -157,9 +157,9 @@ def parallel_stl_2_obj(stl_list, obj_save_path, n_workers=8):
 
 
 if __name__ == "__main__":
-    stl_dir = "./stl"
-    obj_save_dir = "./obj"
-    down_obj_save_dir = "./down_obj"
+    stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Pts_5044"
+    obj_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Pts_5044_obj"
+    down_obj_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Pts_5044_down_obj"
     target_faces = 5000
 
     if not os.path.isdir(obj_save_dir):

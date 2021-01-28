@@ -40,17 +40,17 @@ def get_mesh_path(file: str, num_aug: int):
     return load_file
 
 
+class MeshPrep(object):
+    def __getitem__(self, item):
+        return eval('self.' + item)
+
+
 def from_scratch(file):
     """
     file: obj文件路径
     opt: 可选项，配置参数
     return: 输出解析增强后的mesh_data数据
     """
-
-    class MeshPrep:
-        def __getitem__(self, item):
-            return eval('self.' + item)
-
     mesh_data = MeshPrep()
     mesh_data.vs = mesh_data.edges = None
     mesh_data.faces = None
@@ -396,6 +396,7 @@ def extract_features(mesh):
 
 
 def compute_edge_curvature(mesh):
+    # Reference: https://doi.org/10.1145/3394486.3403272 CurvaNet
     face_normals, face_areas = compute_face_normals_and_areas(mesh, mesh.faces)  # 计算点的法向量
     c_ij = []
     c_ji = []
@@ -405,9 +406,9 @@ def compute_edge_curvature(mesh):
         normal_i = compute_point_normal(mesh.faces, face_normals, point_i)
         normal_j = compute_point_normal(mesh.faces, face_normals, point_j)
         e_ij = mesh.vs[point_j] - mesh.vs[point_i]
-        c_ij.append(2 * normal_i.dot(e_ij / (np.sqrt((e_ij ** 2).sum()) + + sys.float_info.epsilon)))
+        c_ij.append(2 * normal_i.dot(e_ij / (np.sqrt((e_ij ** 2).sum()) + sys.float_info.epsilon)))
         e_ji = mesh.vs[point_i] - mesh.vs[point_j]
-        c_ji.append(2 * normal_j.dot(e_ji / (np.sqrt((e_ji ** 2).sum()) + + sys.float_info.epsilon)))
+        c_ji.append(2 * normal_j.dot(e_ji / (np.sqrt((e_ji ** 2).sum()) + sys.float_info.epsilon)))
     c_ij = np.asarray(c_ij).reshape(-1, len(mesh.edges))
     c_ji = np.asarray(c_ji).reshape(-1, len(mesh.edges))
     # print("c_ij:", c_ij.shape, "c_ji: ", c_ji.shape)

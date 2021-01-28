@@ -7,7 +7,8 @@ from mesh_net.network import MeshUnion
 from mesh_net.mesh_process import fill_mesh
 
 
-class Mesh:
+# @torch.jit.script
+class Mesh(object):
     def __init__(self, file=None, export_folder="", hold_history=False, phase="test"):
         self.vs = self.v_mask = self.filename = self.features = self.edge_areas = None
         self.edges = self.gemm_edges = self.sides = None
@@ -120,6 +121,7 @@ class Mesh:
                             new_file.write('\n')
                     else:
                         new_file.write(line)
+
         # print("edge_key: {}, history_data: {}".format(edge_key, len(self.history_data['edges_mask'])))
         os.remove(file)
         move(abs_path, file)

@@ -2,7 +2,8 @@ import torch
 import time
 import numpy as np
 import os
-from mesh_net import network
+from mesh_net import network_bak
+# from mesh_net import network
 from mesh_net.mesh import Mesh
 import pickle
 from config import config
@@ -72,7 +73,8 @@ def run_test():
 
     # *** 2. model
     # define network
-    net = network.define_classifier(config)
+    # net = network.define_classifier(config)
+    net = network_bak.define_classifier(config)
     if isinstance(net, torch.nn.DataParallel):
         net = net.module
     device = torch.device('cuda:{}'.format(config.gpu_ids[0])) if config.gpu_ids else torch.device('cpu')
@@ -98,7 +100,7 @@ def run_test():
     # *** 4. loop predict
     for i, model_file in enumerate(test_obj_lists):
         data = process_data(model_file, mean, std, config)
-        print("Predict {} th file: {}".format((i + 1), data["filename"]))
+        print("Predict {}th file: {}".format((i + 1), data["filename"]))
         try:
             start = time.time()
             if data["edge_features"].shape[1] == 0:
@@ -112,13 +114,13 @@ def run_test():
             # predict
             out = net(features, mesh)
             pred_class = out.data.max(1)[1].cpu()
-
+            # np.savetxt("/home/heygears/work/github/MeshCNN/001", pred_class.numpy())
             # 导出结果
             export_segmentation(pred_class.cpu(), mesh)
 
-            # compare result
-            ori_class = np.loadtxt("/home/heygears/work/github/MeshCNN/001")
-            print("***result is ture: ***", (ori_class == pred_class.numpy()).all())
+            # # compare result
+            # ori_class = np.loadtxt("/home/heygears/work/github/MeshCNN/001")
+            # print("***result is ture: ***", (ori_class == pred_class.numpy()).all())
 
             end = time.time()
             run_time = end - start
@@ -128,7 +130,7 @@ def run_test():
             with open('error_model.txt', mode='a') as filename:
                 filename.write(repr(e))
                 filename.write(" ")
-                filename.write(str(data["filename"][0]))
+                filename.write(str(data["filename"]))
                 filename.write('\n')  # 换行
 
     print("-----------------\npredict done!")

@@ -26,3 +26,29 @@ ValueError('input edges must greater than feature shape, please check your model
 
 flops: 9898035000.0, params: 2277850.0
 
+
+file: CHN47_VS_SET_VSc2_Subsetup25_Mandibular.pts, dist: 3.5755107479657524
+file: XE3VA_VS_SET_VSc3_Subsetup25_Mandibular.pts, dist: 3.249306692737722
+file: LDWYS_VS_SET_VSc4_Subsetup15_Mandibular.pts, dist: 2.2079808706108257
+file: H6CDN_VS_SET_VSc4_Subsetup5_Maxillar.pts, dist: 1.6757897293790944
+file: TQW78_VS_SET_VSc3_Subsetup30_Maxillar.pts, dist: 2.7256364149530476
+file: B7HZ5_VS_SET_VSc9_Subsetup41_Mandibular.pts, dist: 2.6642354612954753
+file: 6VKPA_VS_SET_VSc1_Subsetup12_Mandibular.pts, dist: 6.091880531862845
+file: GDJY1_VS_SET_VSc4_Subsetup1_Maxillar.pts, dist: 2.0977704400851738
+file: W2RSQ_VS_SET_VSc5_Subsetup28_Maxillar.pts, dist: 1.6384746465908717
+file: W2RSQ_VS_SET_VSc5_Subsetup20_Maxillar.pts, dist: 1.9840471452186532
+file: APDXA_VS_SET_VSc2_Subsetup7_Mandibular.pts, dist: 1.6593740638178403
+file: 1GCAU_VS_SET_VSc4_Subsetup11_Mandibular.pts, dist: 2.799213696404944
+file: B7HZ5_VS_SET_VSc2_Subsetup52_Mandibular.pts, dist: 2.623839882156193
+file: 3TUMG_VS_SET_VSc2_Subsetup15_Maxillar.pts, dist: 1.603305170125641
+file: VD61P_VS_SET_VSc1_Subsetup3_Maxillar.pts, dist: 1.6669533418368987
+file: F4P42_VS_SET_VSc2_Subsetup4_Mandibular.pts, dist: 1.5043412916620975
+file: VD61P_VS_SET_VSc1_Subsetup6_Maxillar.pts, dist: 4.227538585340318
+file: 9NTNW_VS_SET_VSc3_Subsetup26_Maxillar.pts, dist: 1.8027343841777181
+file: AW776_VS_SET_VSc1_Subsetup16_Mandibular.pts, dist: 2.407099921530457
+file: 1GCAU_VS_SET_VSc4_Subsetup7_Maxillar.pts, dist: 2.746611373466485
+file: L5RZF_VS_SET_VSc6_Subsetup2_Mandibular_actMatrix.pts, dist: 1.5042085529715783
+file: FRY2W_VS_SET_VSc1_Subsetup18_Maxillar.pts, dist: 1.6324687010342775
+file: VD61P_VS_SET_VSc1_Subsetup19_Maxillar.pts, dist: 2.5041265304954297
+file: TEUEX_VS_SET_VSc1_Subsetup20_Mandibular.pts, dist: 1.7865624382812526
+

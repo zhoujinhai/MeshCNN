@@ -11,7 +11,7 @@ class config(object):
     nclasses = 2                   # 类别数
 
     # ---- device ----
-    gpu_ids = []                   # gpu:[0]  cpu:[]
+    gpu_ids = [0]                   # gpu:[0]  cpu:[]
 
     # ---- 类别和平均值文件 ----
     class_file = "./class_features_info/classes.txt"
@@ -21,7 +21,7 @@ class config(object):
     # # 模型路径
     model_path = "./model_weight/200_net.pth"
     # # 测试集存放路径
-    test_dir = "test_models"
+    test_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/down_obj"
     # # 模型结果保存路径
-    export_folder = './results'
+    export_folder = '/home/heygears/work/predict_results'
 

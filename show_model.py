@@ -259,7 +259,7 @@ class MyCell(torch.nn.Module):
 
 
 class MyRNNLoop(torch.nn.Module):
-    def __init__(self, script_gate):
+    def __init__(self, script_gate, x, h):
         super(MyRNNLoop, self).__init__()
         self.cell = torch.jit.trace(MyCell(script_gate), (x, h))
 
@@ -271,7 +271,7 @@ class MyRNNLoop(torch.nn.Module):
 
 
 class WrapRNN(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, script_gate):
         super(WrapRNN, self).__init__()
         self.loop = torch.jit.script(MyRNNLoop(script_gate))
 
@@ -513,37 +513,135 @@ if __name__ == "__main__":
     #     if os.path.isfile(no_seg_stl_path) and not os.path.isfile(os.path.join(no_seg_dir, base_name)):
     #         shutil.move(no_seg_stl_path, no_seg_dir)
 
-    # test torchScript
-
-    my_cell = MyCell(MyDecisionGate())
-    x = torch.rand(3, 4)
-    h = torch.rand(3, 4)
+    # # test torchScript
     #
-    # trace
-    traced_cell = torch.jit.trace(my_cell, (x, h))
-    print("trace code: \n", traced_cell.code)
-
-    # script
-    script_gate = torch.jit.script(MyDecisionGate())
-    my_cell = MyCell(script_gate)
-    script_cell = torch.jit.script(my_cell)
-    print("script code: \n", script_cell.code)
-
-    # mixing scripting and tracing
-    rnn_loop = torch.jit.script(MyRNNLoop(script_gate))
-    print("rnn_loop code: \n", rnn_loop.code)
-
-    traced = torch.jit.trace(WrapRNN(), (torch.rand(1, 3, 4)))
-    print(traced.code)
-    traced.save("./wrapped_rnn.zip")
-    loaded = torch.jit.load("./wrapped_rnn.zip")
-    print(loaded)
-    print(loaded.code)
-    z = torch.rand(1, 3, 4)
-    print(loaded(z))
+    # my_cell = MyCell(MyDecisionGate())
+    # x = torch.rand(3, 4)
+    # h = torch.rand(3, 4)
+    # #
+    # # trace
+    # traced_cell = torch.jit.trace(my_cell, (x, h))
+    # print("trace code: \n", traced_cell.code)
+    #
+    # # script
+    # script_gate = torch.jit.script(MyDecisionGate())
+    # my_cell = MyCell(script_gate)
+    # script_cell = torch.jit.script(my_cell)
+    # print("script code: \n", script_cell.code)
+    #
+    # # mixing scripting and tracing
+    # rnn_loop = torch.jit.script(MyRNNLoop(script_gate))
+    # print("rnn_loop code: \n", rnn_loop.code)
+    #
+    # traced = torch.jit.trace(WrapRNN(), (torch.rand(1, 3, 4)))
+    # print(traced.code)
+    # traced.save("./wrapped_rnn.zip")
+    # loaded = torch.jit.load("./wrapped_rnn.zip")
+    # print(loaded)
+    # print(loaded.code)
+    # z = torch.rand(1, 3, 4)
+    # print(loaded(z))
 
     # torch.jit.save(traced, "./test.pt")
     # loaded = torch.jit.load("./test.pt")
     # print(loaded(z))
+
+    # @torch.jit.script
+    # class Mesh(object):
+    #     def __init__(self):
+    #         self.gemm_edges = None
+    #         self.sides = None
+    #         self.faces = None
+    #         self.pool_count = 1
+    #
+    # class MyModule(torch.nn.Module):
+    #     def __init__(self, mesh):
+    #         super(MyModule, self).__init__()
+    #         self.mesh = mesh
+    #
+    #     def forward(self, x):
+    #         out = x + self.mesh.pool_count
+    #         return out
+    #
+    #
+    # mesh = Mesh()
+    # m_1 = torch.jit.script(MyModule(mesh))
+    # print(m_1.code)
+    #
+    # print(mesh.pool_count)
+    # model = MyModule(mesh)
+    # print(model(torch.tensor(3)))
+
+    # from typing import Tuple
+    # @torch.jit.script
+    # def foo(x: int, tup: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
+    #     t0, t1 = tup
+    #     return t0 + t1 + x
+    # m = foo(3, (torch.tensor(2), torch.tensor(1)))
+    # print(foo.code, "\n", m)
+
+    from typing import Dict, List, Tuple
+
+    # class EmptyDataStructures(torch.nn.Module):
+    #     def __init__(self):
+    #         super(EmptyDataStructures, self).__init__()
+    #
+    #     def forward(self, x):
+    #         # This annotates the list to be a `List[Tuple[int, float]]`
+    #         my_list: List[Tuple[int, float]] = []
+    #         for i in range(10):
+    #             my_list.append((i, x.item()))
+    #
+    #         my_dict: Dict[str, int] = {}
+    #         return my_list, my_dict
+    #
+    #
+    # x = torch.jit.script(EmptyDataStructures())
+    # print(x.code)
+
+    # from typing import Optional
+    #
+    # class M(torch.nn.Module):
+    #     z: Optional[int]
+    #
+    #     def __init__(self, z):
+    #         super(M, self).__init__()
+    #         # If `z` is None, its type cannot be inferred, so it must
+    #         # be specified (above)
+    #         self.z = z
+    #
+    #     def forward(self, x, y, z):
+    #         # type: (Optional[int], Optional[int], Optional[int]) -> int
+    #         if x is None:
+    #             x = 1
+    #             x = x + 1
+    #
+    #         # Refinement for an attribute by assigning it to a local
+    #         z = self.z
+    #         if y is not None and z is not None:
+    #             x = y + z
+    #
+    #         # Refinement via an `assert`
+    #         assert z is not None
+    #         x += z
+    #         return x
+    #
+    #
+    # module = torch.jit.script(M(2))
+    # print(module.code)
+    # module = torch.jit.script(M(None))
+    # print(module.code)
+
+    import glob
+    import os
+    import shutil
+
+    correct_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error/modify_correct/5"
+    with open("./error_model.txt", "r") as f:
+        for line in f:
+            line = line.strip()
+            file_path = os.path.join(correct_dir, line+".pts")
+            if not os.path.isfile(file_path):
+                print(file_path)
 
     pass

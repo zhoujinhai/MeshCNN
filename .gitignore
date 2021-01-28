@@ -10,6 +10,8 @@ datasets
 runs
 hgapi
 deal_data
+inference/results
+evaluation/test_data.md
 error_model.txt
 nohup.out
 show_model.py

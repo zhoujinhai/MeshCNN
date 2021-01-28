@@ -161,10 +161,10 @@ def parallel_stl_2_obj(stl_list, obj_save_path, n_workers=8):
 
 
 if __name__ == "__main__":
-    pts_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/pts"
-    stl_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/stl"
-    obj_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/obj"
-    test_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/down_obj"
+
+    stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/stl"
+    obj_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/obj"
+    test_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/down_obj"
     target_faces = 5000
 
     if not os.path.isdir(obj_save_dir):
@@ -172,18 +172,8 @@ if __name__ == "__main__":
     if not os.path.isdir(test_dir):
         os.makedirs(test_dir)
 
-    pts_lists = glob.glob(os.path.join(pts_dir, "*.pts"))
-    stl_list = []
-    print(len(pts_lists))
-    for pts_file in pts_lists:
-        base_name = os.path.basename(pts_file)
-        file_name = os.path.splitext(base_name)[0]
-        stl_file = os.path.join(stl_dir, file_name + ".stl")
-        if os.path.isfile(stl_file):
-            stl_list.append(stl_file)
-
-    # stl_list = glob.glob(os.path.join(stl_dir, "*.stl"))
-    # print(stl_list)
+    stl_list = glob.glob(os.path.join(stl_dir, "*.stl"))
+    print("need deal {} data".format(len(stl_list)))
     #
     # #  stl to obj
     parallel_stl_2_obj(stl_list, obj_save_dir, 8)
