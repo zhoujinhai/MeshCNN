@@ -3,7 +3,7 @@ from shutil import move
 import torch
 import numpy as np
 import os
-from mesh_net.network import MeshUnion
+from mesh_net.mesh_union import MeshUnion
 from mesh_net.mesh_process import fill_mesh
 
 

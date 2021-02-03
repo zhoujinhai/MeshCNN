@@ -21,7 +21,7 @@ class config(object):
     # # 模型路径
     model_path = "./model_weight/200_net.pth"
     # # 测试集存放路径
-    test_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/down_obj"
+    test_dir = "./test_models"
     # # 模型结果保存路径
-    export_folder = '/home/heygears/work/predict_results'
+    export_folder = './results'
 

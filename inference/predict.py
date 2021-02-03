@@ -76,6 +76,7 @@ def run_test():
     # net = network.define_classifier(config)
     net = network_bak.define_classifier(config)
     if isinstance(net, torch.nn.DataParallel):
+        print("net*************")
         net = net.module
     device = torch.device('cuda:{}'.format(config.gpu_ids[0])) if config.gpu_ids else torch.device('cpu')
     # load model weight
@@ -85,6 +86,7 @@ def run_test():
         del state_dict._metadata
     net.load_state_dict(state_dict)
     net = net.eval()
+    # torch.save(net, "./model_weight/predict.pth")  # 保存网络和权重
     # script_model = torch.jit.script(net)
     # print(script_model.code)
 
