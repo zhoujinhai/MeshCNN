@@ -447,9 +447,20 @@ if __name__ == "__main__":
     # print(loss)
 
     # # # 从共享文件夹中提取数据
-    # stl_save_dir = "/home/heygears/work/Tooth_data_prepare/tooth/first_test_error/"
-    # stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/errorModel-pts"
-    # error_dir = "/home/heygears/work/Tooth_data_prepare/tooth/second_batch_data/error/test_error"
+    import os
+    import shutil
+
+    stl_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/stl"
+    error_txt = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error_label1.txt"
+    error_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error_stl"
+
+    with open(error_txt, "r") as f:
+        for line in f:
+            line = line.strip()
+            stl_file = os.path.join(stl_save_dir, line + ".stl")
+            if os.path.isfile(stl_file):
+                shutil.copyfile(stl_file, os.path.join(error_dir, line + ".stl"))
+                print(stl_file)
     #
     # error_model_stl = glob.glob(os.path.join(error_dir, "*.obj"))
     # print(len(error_model_stl))
@@ -476,18 +487,6 @@ if __name__ == "__main__":
     #             print(stl_path)
     #             if os.path.isfile(stl_path):
     #                 shutil.copyfile(stl_path, os.path.join(stl_save_dir, line+".pts"))
-
-    # label_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/label"
-    # pts_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/pts"
-    # stl_dir = "/home/heygears/work/Tooth_data_prepare/tooth/error_test/stl"
-    # files = os.walk(label_dir)
-    # for file in files:
-    #     for item in file[2]:
-    #         file_path = os.path.join(file[0], item)
-    #         if file_path.find(".pts") != -1:
-    #             shutil.move(file_path, pts_dir)
-    #         if file_path.find(".stl") != -1:
-    #             shutil.move(file_path, stl_dir)
 
     # stl_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/error/stl"
     # train_dir = "/home/heygears/work/Tooth_data_prepare/tooth/three_batch_data/error/file/train"
@@ -632,16 +631,16 @@ if __name__ == "__main__":
     # module = torch.jit.script(M(None))
     # print(module.code)
 
-    import glob
-    import os
-    import shutil
-
-    correct_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error/modify_correct/5"
-    with open("./error_model.txt", "r") as f:
-        for line in f:
-            line = line.strip()
-            file_path = os.path.join(correct_dir, line+".pts")
-            if not os.path.isfile(file_path):
-                print(file_path)
+    # import glob
+    # import os
+    # import shutil
+    #
+    # correct_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error/modify_correct/5"
+    # with open("./error_model.txt", "r") as f:
+    #     for line in f:
+    #         line = line.strip()
+    #         file_path = os.path.join(correct_dir, line+".pts")
+    #         if not os.path.isfile(file_path):
+    #             print(file_path)
 
     pass

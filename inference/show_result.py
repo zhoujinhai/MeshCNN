@@ -590,7 +590,7 @@ def show_predict(predict1, predict2, pts, max_dist_pts=None):
 
 if __name__ == "__main__":
 
-    predict_dir = "/home/heygears/work/predict_results"
+    predict_dir = "/home/heygears/work/modify/predict_results"
 
     # 解析结果
     predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))
