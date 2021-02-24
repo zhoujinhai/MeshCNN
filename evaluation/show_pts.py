@@ -2,6 +2,7 @@ import glob
 import os
 import vedo
 from vedo import load, show
+import vtkplotter as vtkp
 import numpy as np
 import random
 
