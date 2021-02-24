@@ -13,6 +13,7 @@ from scipy import spatial
 import glob
 from multiprocessing import Process
 from tqdm import tqdm
+import vedo
 from vedo import load, show, Point
 import math
 import sys
@@ -474,9 +475,8 @@ def save_pts_to_vtk(pts, save_path="./test.vtk"):
     @save_path: 保存路径
     return: None
     """
-    import vtkplotter as vtkp
-    vtk_point = vtkp.Points(pts.reshape(-1, 3))
-    vtkp.write(vtk_point, save_path, binary=False)
+    vtk_point = vedo.Points(pts.reshape(-1, 3))
+    vedo.write(vtk_point, save_path, binary=False)
 #     print("vtk file is saved in ", save_path)
 
 
@@ -590,7 +590,7 @@ def show_predict(predict1, predict2, pts, max_dist_pts=None):
 
 if __name__ == "__main__":
 
-    predict_dir = "/home/heygears/work/predict_results"
+    predict_dir = "/home/heygears/jinhai_zhou/work/predict_results"
 
     # 解析结果
     predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))

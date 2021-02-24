@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-class MeshUnion:
+class MeshUnion(object):
     def __init__(self, n, device=torch.device('cpu')):
         self.__size = n
         self.rebuild_features = self.rebuild_features_average

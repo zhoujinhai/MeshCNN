@@ -4,7 +4,7 @@ Usage: blender --background --python data_preprocess.py
 """
 
 import sys
-sys.path.append(r"/home/heygears/work/package/hgapi")
+sys.path.append(r"/home/heygears/jinhai_zhou/work/package/hgapi")
 import hgapi
 # from hgapi import hgapi
 
@@ -162,9 +162,9 @@ def parallel_stl_2_obj(stl_list, obj_save_path, n_workers=8):
 
 if __name__ == "__main__":
 
-    stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/stl"
-    obj_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/obj"
-    test_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/down_obj"
+    stl_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/modify/stl"
+    obj_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/modify/obj"
+    test_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/modify/down_obj"
     target_faces = 5000
 
     if not os.path.isdir(obj_save_dir):

@@ -7,6 +7,7 @@ from mesh_net import network_bak
 from mesh_net.mesh import Mesh
 import pickle
 from config import config
+torch.backends.cudnn.enabled = False
 
 
 def data_pad(input_arr, target_length, val=0, dim=1):
@@ -65,18 +66,61 @@ def process_data(model_path, mean, std, opt):
     return meta
 
 
+def parse_obje(obj_file):
+    """
+    解析obj文件， 获取点，边，面
+    @obj_file: obj模型文件路径
+    return: 模型的点，边，面信息
+    """
+
+    vs = []
+    faces = []
+    edges = []
+
+    with open(obj_file) as f:
+        for line in f:
+            line = line.strip()
+            splitted_line = line.split()
+            if not splitted_line:
+                continue
+            elif splitted_line[0] == 'v':
+                vs.append([float(v) for v in splitted_line[1:]])
+            elif splitted_line[0] == 'f':
+                try:
+                    faces.append([int(c) - 1 for c in splitted_line[1:]])
+                except ValueError:
+                    faces.append([int(c.split('/')[0]) - 1 for c in splitted_line[1:]])
+            elif splitted_line[0] == 'e':
+                if len(splitted_line) >= 4:
+                    edge_v = [int(c) - 1 for c in splitted_line[1:-1]]
+                    edge_c = int(splitted_line[-1])
+                    edge_v.append(edge_c)  # class
+                    edges.append(edge_v)
+            else:
+                continue
+
+    vs = np.array(vs)
+    faces = np.array(faces, dtype=int)
+    # if len(edges) == 0:
+    #     edges = get_edges(faces)
+    edges = np.array(edges)
+
+    return vs, faces, edges
+
+
 def run_test():
     print('Running Test')
     # *** 1. config
     config.nclasses = get_n_class(config.class_file)
     mean, std, config.input_nc = get_mean_std(config.mean_std_file)
-
     # *** 2. model
     # define network
     # net = network.define_classifier(config)
+    print("****")
     net = network_bak.define_classifier(config)
+    print("----")
     if isinstance(net, torch.nn.DataParallel):
-        print("net*************")
+        # print("net*************")
         net = net.module
     device = torch.device('cuda:{}'.format(config.gpu_ids[0])) if config.gpu_ids else torch.device('cpu')
     # load model weight
@@ -101,6 +145,12 @@ def run_test():
 
     # *** 4. loop predict
     for i, model_file in enumerate(test_obj_lists):
+        # base_name, ext = os.path.splitext(os.path.basename(model_file))
+        # model_path_file = os.path.join(config.export_folder, base_name + "_0" + ext)
+        # if os.path.isfile(model_path_file):
+        #     predict_vs, predict_faces, predict_edges = parse_obje(model_path_file)
+        #     if len(predict_edges) != 0:
+        #         continue
         data = process_data(model_file, mean, std, config)
         print("Predict {}th file: {}".format((i + 1), data["filename"]))
         try:
@@ -118,7 +168,7 @@ def run_test():
             pred_class = out.data.max(1)[1].cpu()
             # np.savetxt("/home/heygears/work/github/MeshCNN/001", pred_class.numpy())
             # 导出结果
-            export_segmentation(pred_class.cpu(), mesh)
+            export_segmentation(pred_class, mesh)
 
             # # compare result
             # ori_class = np.loadtxt("/home/heygears/work/github/MeshCNN/001")
@@ -126,7 +176,7 @@ def run_test():
 
             end = time.time()
             run_time = end - start
-            print("Predict result :{}, run time is {}ms".format(pred_class, run_time*1000))
+            # print("Predict result :{}, run time is {}ms".format(pred_class, run_time*1000))
         except Exception as e:
             print("error{}", repr(e))
             with open('error_model.txt', mode='a') as filename:

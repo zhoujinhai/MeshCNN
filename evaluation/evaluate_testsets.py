@@ -12,6 +12,7 @@ from scipy.spatial import KDTree
 import glob
 import math
 import sys
+import vedo
 
 
 def get_gum_line_pts(gum_line_path):
@@ -379,6 +380,7 @@ def get_faces_by_point(faces, point_id):
     face_ids = point_faces[:, 0]
     return face_ids
 
+
 # In[4]:
 # ### 6.分开保存模型 便于显示
 # In[9]:
@@ -418,9 +420,9 @@ def save_pts_to_vtk(pts, save_path="./test.vtk"):
     @save_path: 保存路径
     return: None
     """
-    import vtkplotter as vtkp
-    vtk_point = vtkp.Points(pts.reshape(-1, 3))
-    vtkp.write(vtk_point, save_path, binary=False)
+    vtk_point = vedo.Points(pts.reshape(-1, 3))
+    vedo.write(vtk_point, save_path, binary=False)
+#     print("vtk file is saved in ", save_path)
 
 
 # In[5]:
@@ -476,7 +478,6 @@ def calculate_dist(tree, predict_pts):
 
 
 def get_max_dist(pts_file, predict_model):
-    # target_pts = get_target_pts(pts_file)
     target_pts = get_gum_line_pts(pts_file)
 
     tree = create_tree(target_pts)
@@ -521,12 +522,12 @@ def show_predict(predict1, predict2, pts, target_pts, max_dist_pts=None):
 
 # In[12]:
 if __name__ == "__main__":
-    pts_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/correct/pts"
-    predict_model_dir = "/home/heygears/work/predict_results"
+    pts_dir = "/data/GumLine_Data_5044/pts/"
+    predict_model_dir = "/home/heygears/jinhai_zhou/work/predict_results/"
     threshold = 2
 
     model_paths = glob.glob(os.path.join(predict_model_dir, "*.obj"))
-    error_models = {}
+    error_models = dict()
 
     for idx, model_path in enumerate(model_paths):
         model_name = os.path.splitext(os.path.basename(model_path))[0][:-2]
@@ -542,9 +543,14 @@ if __name__ == "__main__":
     print("******一共{}个模型的距离超过阈值{}，占总模型数{}的百分比为：{}*********\n".
           format(len(error_models), threshold, len(model_paths), len(error_models) / len(model_paths)))
 
-    # show model
-    file_list = [os.path.join(predict_model_dir, file_path) for file_path in os.listdir(predict_model_dir)
-                 if os.path.isdir(os.path.join(predict_model_dir, file_path))]
+    # save error_models
+    with open("error_label.txt", "w") as f:
+        for key in error_models.keys():
+            f.write(key)
+            f.write("\n")
+
+    # show model  或者保存 error_models
+    file_list = [os.path.join(predict_model_dir, file_path) for file_path in error_models.keys()]
 
     for i, file in enumerate(file_list):
         if os.path.basename(file) in error_models:

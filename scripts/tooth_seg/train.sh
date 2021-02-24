@@ -9,11 +9,11 @@ python train.py \
 --ncf 32 64 128 256 \
 --ninput_edges 7500 \
 --pool_res 7000 5000 3500 \
---resblocks 2 \
---batch_size 1 \
+--resblocks 3 \
+--batch_size 2 \
 --lr 0.001 \
 --num_aug 20 \
 --slide_verts 0.2 \
---save_epoch_freq 10 \
+--save_epoch_freq 50 \
 --niter 100 \
 --niter_decay 200

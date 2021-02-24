@@ -6,7 +6,6 @@ from mesh_net.mesh import Mesh
 import pickle
 from config import config
 
-
 def data_pad(input_arr, target_length, val=0, dim=1):
     shp = input_arr.shape
     npad = [(0, 0) for _ in range(len(shp))]

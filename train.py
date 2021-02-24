@@ -4,7 +4,7 @@ from data import DataLoader
 from models import create_model
 from util.writer import Writer
 from val import run_val
-from apex import amp
+# from apex import amp
 
 import warnings
 warnings.filterwarnings("ignore", category=Warning)
@@ -15,7 +15,6 @@ if __name__ == '__main__':
     dataset = DataLoader(opt)
     dataset_size = len(dataset)
     print('#training meshes = %d' % dataset_size)
-
     model = create_model(opt)
     writer = Writer(opt)
     total_steps = 0
@@ -26,7 +25,7 @@ if __name__ == '__main__':
         epoch_start_time = time.time()
         iter_data_time = time.time()
         epoch_iter = 0
-
+        t_data = 0
         for i, data in enumerate(dataset):
             iter_start_time = time.time()
             if total_steps % opt.print_freq == 0:

@@ -52,3 +52,43 @@ file: FRY2W_VS_SET_VSc1_Subsetup18_Maxillar.pts, dist: 1.6324687010342775
 file: VD61P_VS_SET_VSc1_Subsetup19_Maxillar.pts, dist: 2.5041265304954297
 file: TEUEX_VS_SET_VSc1_Subsetup20_Mandibular.pts, dist: 1.7865624382812526
 
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR XX8V3_VS_SET_VSc1_Subsetup8_Maxillar.obj
+CUDA error: invalid texture reference 83PZZ_VS_SET_VSc2_Subsetup13_Mandibular.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 1UE74_VS_SET_VSc4_Subsetup24_Mandibular.obj
+CUDA error: invalid texture reference 618ZM_VS_SET_VSc2_Subsetup4_Mandibular.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 35LZJ_VS_SET_VSc4_Subsetup3_Mandibular.obj
+CUDA error: invalid texture reference 3UQMP_VS_SET_VSc2_Subsetup7_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR FRY2W_VS_SET_VSc1_Subsetup22_Maxillar.obj
+CUDA error: invalid texture reference 21N74_VS_SET_VSc4_Subsetup18_Mandibular.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 98E84_VS_SET_VSc3_Subsetup10_Maxillar.obj
+CUDA error: invalid texture reference ADK7T_VS_SET_VSc3_Subsetup12_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 16UQU_VS_SET_VSc2_Subsetup11_Maxillar.obj
+CUDA error: invalid texture reference 4AVLE_VS_SET_VSc3_Subsetup7_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 6ZBP9_VS_SET_VSc1_Subsetup12_Maxillar.obj
+CUDA error: invalid texture reference 57VLZ_VS_SET_VSc1_Subsetup6_Mandibular.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 3YDUM_VS_SET_VSc1_Subsetup6_Maxillar.obj
+CUDA error: invalid texture reference XZXK9_VS_SET_VSc2_Subsetup19_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR QAWDV_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+CUDA error: invalid texture reference WR29Q_VS_SET_VSc1_Subsetup25_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 15QG1_VS_SET_VSc2_Subsetup14_Maxillar.obj
+CUDA error: invalid texture reference APDXA_VS_SET_VSc2_Subsetup7_Mandibular.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 1UE74_VS_SET_VSc4_Subsetup20_Mandibular.obj
+CUDA error: invalid texture reference 1TZ5D_VS_SET_VSc4_Subsetup10_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR EHQQY_VS_SET_VSc1_Subsetup26_Mandibular.obj
+CUDA error: invalid texture reference FSRVE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR RMNC8_VS_SET_VSc2_Subsetup3_Mandibular.obj
+CUDA error: invalid texture reference JLW3K_VS_SET_VSc2_Subsetup11_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR 3ZWJK_VS_SET_VSc1_Subsetup7_Mandibular.obj
+CUDA error: invalid texture reference ACRN2_VS_SET_VSc1_Subsetup5_Maxillar.obj
+cuDNN error: CUDNN_STATUS_MAPPING_ERROR RLMAN_VS_SET_VSc6_Subsetup16_Mandibular.obj
+CUDA error: invalid texture reference CDVJ3_VS_SET_VSc2_Subsetup1_Maxillar.obj
+CUDA out of memory. Tried to allocate 536.00 MiB (GPU 0; 7.79 GiB total capacity; 5.77 GiB already allocated; 530.06 MiB free; 6.06 GiB reserved in total by PyTorch) 988PR_VS_SET_VSc1_Subsetup14_Maxillar.obj
+CUDA out of memory. Tried to allocate 188.00 MiB (GPU 0; 7.79 GiB total capacity; 6.05 GiB already allocated; 182.06 MiB free; 6.40 GiB reserved in total by PyTorch) S6B8Z_VS_SET_VSc1_Subsetup4_Mandibular.obj
+CUDA out of memory. Tried to allocate 216.00 MiB (GPU 0; 7.79 GiB total capacity; 6.20 GiB already allocated; 174.06 MiB free; 6.41 GiB reserved in total by PyTorch) 4BFTX_VS_SET_VSc1_Subsetup7_Maxillar.obj
+CUDA out of memory. Tried to allocate 216.00 MiB (GPU 0; 7.79 GiB total capacity; 6.20 GiB already allocated; 156.06 MiB free; 6.43 GiB reserved in total by PyTorch) A18QZ_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+CUDA out of memory. Tried to allocate 216.00 MiB (GPU 0; 7.79 GiB total capacity; 6.20 GiB already allocated; 154.06 MiB free; 6.43 GiB reserved in total by PyTorch) FRY2W_VS_SET_VSc1_Subsetup18_Maxillar.obj
+CUDA out of memory. Tried to allocate 602.00 MiB (GPU 0; 7.79 GiB total capacity; 5.44 GiB already allocated; 398.06 MiB free; 6.19 GiB reserved in total by PyTorch) SXN2N_VS_SET_VSc1_Subsetup43_Maxillar.obj
+CUDA out of memory. Tried to allocate 602.00 MiB (GPU 0; 7.79 GiB total capacity; 5.44 GiB already allocated; 600.06 MiB free; 5.99 GiB reserved in total by PyTorch) 69JJJ_VS_SET_VSc1_Subsetup12_Maxillar.obj
+CUDA out of memory. Tried to allocate 602.00 MiB (GPU 0; 7.79 GiB total capacity; 5.44 GiB already allocated; 200.06 MiB free; 6.38 GiB reserved in total by PyTorch) 9F8FJ_VS_SET_VSc2_Subsetup7_Maxillar.obj
+CUDA out of memory. Tried to allocate 402.00 MiB (GPU 0; 7.79 GiB total capacity; 5.31 GiB already allocated; 398.06 MiB free; 6.19 GiB reserved in total by PyTorch) AD2L5_VS_SET_VSc1_Subsetup12_Maxillar.obj
+CUDA out of memory. Tried to allocate 602.00 MiB (GPU 0; 7.79 GiB total capacity; 5.44 GiB already allocated; 100.06 MiB free; 6.48 GiB reserved in total by PyTorch) 7UKMN_VS_SET_VSc2_Subsetup14_Mandibular.obj
