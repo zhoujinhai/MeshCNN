@@ -2,8 +2,7 @@ import torch
 import time
 import numpy as np
 import os
-from mesh_net import network_bak
-# from mesh_net import network
+from mesh_net import network
 from mesh_net.mesh import Mesh
 import pickle
 from config import config
@@ -117,7 +116,7 @@ def run_test():
     # define network
     # net = network.define_classifier(config)
     print("****")
-    net = network_bak.define_classifier(config)
+    net = network.define_classifier(config)
     print("----")
     if isinstance(net, torch.nn.DataParallel):
         # print("net*************")

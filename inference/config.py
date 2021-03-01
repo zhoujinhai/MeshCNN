@@ -19,9 +19,10 @@ class config(object):
 
     # ---- file path ----
     # # 模型路径
+    mesh_net = "./class_features_info/meshCNN_2_teeth_gums.pth"
     model_path = "../checkpoints/tooth_seg_20210212/200_net.pth"  # "./model_weight/200_net.pth"
     # # 测试集存放路径
-    test_dir = "/data/GumLine_Data_5044/down_obj"
+    test_dir = "./test_models"
     # # 模型结果保存路径
-    export_folder = "/home/heygears/jinhai_zhou/work/predict_results/"
+    export_folder = "./results"
 

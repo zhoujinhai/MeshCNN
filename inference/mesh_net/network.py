@@ -58,17 +58,17 @@ class MeshConv(nn.Module):
     def __init__(self, in_channels, out_channels, k=5, bias=True):
         super(MeshConv, self).__init__()
         self.conv = nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=(1, k), bias=bias)
-        # self.k = k
+        self.k = k
+
+    # def __call__(self, edge_f, mesh):
+    #     return self.forward(edge_f, mesh)
 
     def forward(self, x, mesh):
         x = x.squeeze(-1)
         g = torch.cat([self.pad_gemm(i.gemm_edges, i.edges_count, x.shape[2], x.device) for i in mesh], 0)
-        # gemm_edge_lists = [self.pad_gemm(mesh[0].gemm_edges, mesh[0].edges_count, x.shape[2], x.device)]  # just one
-        # g = torch.cat(gemm_edge_lists, 0)
-        # g = x
-
+        # build 'neighborhood image' and apply convolution
         g = self.create_GeMM(x, g)
-        x = self.conv(g)
+        x = self.conv(g)  # TODO g.half())
         return x
 
     def flatten_gemm_inds(self, gi):
@@ -90,8 +90,8 @@ class MeshConv(nn.Module):
         """
         gi_shape = gi.shape
         # pad the first row of every sample in batch with zeros
-        # padding = torch.zeros((x.shape[0], x.shape[1], 1), requires_grad=True, device=x.device)
-        padding = torch.zeros((x.shape[0], x.shape[1], 1), device=x.device)
+        padding = torch.zeros((x.shape[0], x.shape[1], 1), requires_grad=True, device=x.device)
+        # padding = padding.to(x.device)
         x = torch.cat((padding, x), dim=2)
         gi = gi + 1  # shift
 
@@ -115,20 +115,17 @@ class MeshConv(nn.Module):
         f = torch.stack([f[:, :, :, 0], x_1, x_2, x_3, x_4], dim=3)
         return f
 
-    def pad_gemm(self, gemm_edges, edges_count: int, xsz, device):
+    def pad_gemm(self, gemm_edges, edges_count, xsz, device):
         """ extracts one-ring neighbors (4x) -> m.gemm_edges
         which is of size #edges x 4
         add the edge_id itself to make #edges x 5
         then pad to desired size e.g., xsz x 5
         """
-        # padded_gemm = torch.tensor(gemm_edges, device=device).float()
-        padded_gemm = torch.tensor(gemm_edges).cuda().float()
+        padded_gemm = torch.tensor(gemm_edges, device=device).float()
         padded_gemm = padded_gemm.requires_grad_()
-        # padded_gemm = torch.cat((torch.arange(edges_count, device=device).float().unsqueeze(1), padded_gemm), dim=1)
-        padded_gemm = torch.cat((torch.arange(edges_count).cuda().float().unsqueeze(1), padded_gemm), dim=1)
+        padded_gemm = torch.cat((torch.arange(edges_count, device=device).float().unsqueeze(1), padded_gemm), dim=1)
         # pad using F
-        # padded_gemm = F.pad(padded_gemm, (0, 0, 0, xsz - edges_count), "constant", 0)
-        padded_gemm = F.pad(padded_gemm, [0, 0, 0, int(xsz - edges_count)], "constant", 0.0)
+        padded_gemm = F.pad(padded_gemm, [0, 0, 0, xsz - edges_count], "constant", 0.0)
         padded_gemm = padded_gemm.unsqueeze(0)
         return padded_gemm
 
@@ -137,44 +134,43 @@ class MeshPool(nn.Module):
 
     def __init__(self, target):
         super(MeshPool, self).__init__()
-        self.out_target = target
-        self.fe = None
-        self.updated_fe = None
+        self.__out_target = target
+        self.__fe = None
+        self.__updated_fe = None
         self.__meshes = None
         self.__merge_edges = [-1, -1]
 
     def forward(self, fe, meshes):
-        pool_target = self.out_target
-        print(pool_target)
-        self.updated_fe = [[] for _ in range(len(meshes))]
-        self.fe = fe
-        # print("self.fe: ", fe, fe.size())
+        pool_target = self.__out_target
+        # print(pool_target)
+        self.__updated_fe = [[] for _ in range(len(meshes))]
+        self.__fe = fe
         self.__meshes = meshes
         # iterate over batch
         for mesh_index in range(len(meshes)):
             self.__pool_main(mesh_index)
-        out_features = torch.cat(self.updated_fe).view(len(meshes), -1, self.out_target)
+        out_features = torch.cat(self.__updated_fe).view(len(meshes), -1, self.__out_target)
         # print("out_features: {}, len(meshes): {}".format(out_features.size(), len(meshes)))
-        self.out_target = pool_target
+        self.__out_target = pool_target
         return out_features
 
     def __pool_main(self, mesh_index):
         mesh = self.__meshes[mesh_index]
-        queue = self.__build_queue(self.fe[mesh_index, :, :mesh.edges_count], mesh.edges_count)
+        queue = self.__build_queue(self.__fe[mesh_index, :, :mesh.edges_count], mesh.edges_count)
 
         mask = np.ones(mesh.edges_count, dtype=np.bool)
-        edge_groups = MeshUnion(mesh.edges_count, self.fe.device)
-        while mesh.edges_count > self.out_target:
+        edge_groups = MeshUnion(mesh.edges_count, self.__fe.device)
+        while mesh.edges_count > self.__out_target:
             if len(queue) < 1:
-                self.out_target = mesh.edges_count
+                self.__out_target = mesh.edges_count
                 continue
             value, edge_id = heappop(queue)
             edge_id = int(edge_id)
             if mask[edge_id]:
                 self.__pool_edge(mesh, edge_id, mask, edge_groups)
         mesh.clean(mask, edge_groups)
-        fe = edge_groups.rebuild_features(self.fe[mesh_index], mask, self.out_target)
-        self.updated_fe[mesh_index] = fe
+        fe = edge_groups.rebuild_features(self.__fe[mesh_index], mask, self.__out_target)
+        self.__updated_fe[mesh_index] = fe
 
     def __pool_edge(self, mesh, edge_id, mask, edge_groups):
 
@@ -194,12 +190,12 @@ class MeshPool(nn.Module):
             return False
 
     def __clean_side(self, mesh, edge_id, mask, edge_groups, side):
-        if mesh.edges_count <= self.out_target:
+        if mesh.edges_count <= self.__out_target:
             return False
         invalid_edges = MeshPool.__get_invalids(mesh, edge_id, edge_groups, side)
-        while len(invalid_edges) != 0 and mesh.edges_count > self.out_target:
+        while len(invalid_edges) != 0 and mesh.edges_count > self.__out_target:
             self.__remove_triplete(mesh, mask, edge_groups, invalid_edges)
-            if mesh.edges_count <= self.out_target:
+            if mesh.edges_count <= self.__out_target:
                 return False
             if self.has_boundaries(mesh, edge_id):
                 return False
@@ -347,8 +343,8 @@ class DownConv(nn.Module):
         if pool:
             self.pool = MeshPool(pool)
 
-    def forward(self, f, m):
-        fe, meshes = f, m
+    def forward(self, x):
+        fe, meshes = x
         x1 = self.conv1(fe, meshes)
         if self.bn:
             x1 = self.bn[0](x1)
@@ -379,16 +375,18 @@ class MeshEncoder(nn.Module):
                 pool = pools[i + 1]
             else:
                 pool = 0
+            # test_script = torch.jit.script(DownConv(convs[i], convs[i + 1], blocks=blocks, pool=pool))
+            # print(test_script.code)
             self.convs.append(DownConv(convs[i], convs[i + 1], blocks=blocks, pool=pool))
 
-        self.convs = nn.ModuleList(self.convs)    # torchscript need add __constants__ = ['convs'] begin the __init__
+        self.convs = nn.ModuleList(self.convs)
         reset_params(self)
 
-    def forward(self, f, m):
-        fe, meshes = f, m
+    def forward(self, x):
+        fe, meshes = x
         encoder_outs = []
         for conv in self.convs:
-            fe, before_pool = conv(fe, meshes)
+            fe, before_pool = conv((fe, meshes))
             encoder_outs.append(before_pool)
 
         return fe, encoder_outs
@@ -432,7 +430,7 @@ class MeshUnpool(nn.Module):
         unroll_mat = unroll_mat.to(features.device)
         for mesh in meshes:
             mesh.unroll_gemm()
-        return torch.matmul(features, unroll_mat)
+        return torch.matmul(features, unroll_mat)   # TODO unroll_mat.half())
 
 
 class UpConv(nn.Module):
@@ -499,8 +497,8 @@ class MeshDecoder(nn.Module):
         self.up_convs = nn.ModuleList(self.up_convs)
         reset_params(self)
 
-    def forward(self, f, m, encoder_outs=None):
-        fe, meshes = f, m
+    def forward(self, x, encoder_outs=None):
+        fe, meshes = x
         for i, up_conv in enumerate(self.up_convs):
             before_pool = None
             if encoder_outs is not None:
@@ -509,8 +507,8 @@ class MeshDecoder(nn.Module):
         fe = self.final_conv((fe, meshes))
         return fe
 
-    def __call__(self, f, m, encoder_outs=None):
-        return self.forward(f, m, encoder_outs)
+    def __call__(self, x, encoder_outs=None):
+        return self.forward(x, encoder_outs)
 
 
 class MeshEncoderDecoder(nn.Module):
@@ -527,8 +525,8 @@ class MeshEncoderDecoder(nn.Module):
         self.decoder = MeshDecoder(unrolls, up_convs, blocks=blocks, transfer_data=transfer_data)
 
     def forward(self, x, meshes):
-        fe, before_pool = self.encoder(x, meshes)
-        fe = self.decoder(fe, meshes, before_pool)
+        fe, before_pool = self.encoder((x, meshes))
+        fe = self.decoder((fe, meshes), before_pool)
         return fe
 
 
@@ -544,18 +542,13 @@ def define_classifier(opt):
     return init_net(net, opt.init_type, opt.init_gain, opt.gpu_ids)
 
 
-if __name__ == "__main__":
-    pool_res = [7500, 7000, 5000, 3500]
-    down_convs = [7, 32, 64, 128, 256]
-    up_convs = [256, 128, 64, 32, 2]
-    blocks = 3
+"""
+opt: Namespace(arch='meshunet', batch_size=1, checkpoints_dir='./checkpoints', 
+dataroot='datasets/tooth_seg', dataset_mode='segmentation', 
+export_folder='./checkpoints/tooth_seg_20201231_add_data_with_curvature/meshes',  fc_n=100, gpu_ids=[], 
+init_gain=0.02, init_type='normal', input_nc=7, is_train=False,  max_dataset_size=inf, 
+name='tooth_seg_20201231_add_data_with_curvature', ncf=[32, 64, 128, 256],  nclasses=2, ninput_edges=7500, 
+norm='batch', num_aug=1, num_groups=16, num_threads=3, phase='test', pool_res=[7000, 5000, 3500], 
+resblocks=3, results_dir='./results/', seed=None, serial_batches=False, which_epoch='200')
 
-    net = MeshEncoderDecoder(pool_res, down_convs, up_convs, blocks=blocks,
-                             transfer_data=True)
-    state_dict = torch.load("../model_weight/200_net.pth", map_location=str("cpu"))
-    if hasattr(state_dict, '_metadata'):
-        del state_dict._metadata
-    net.load_state_dict(state_dict)
-    net = net.eval()
-    encoder = torch.jit.script(net)
-    print(encoder.code)
+"""

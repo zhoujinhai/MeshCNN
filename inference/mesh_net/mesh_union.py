@@ -26,7 +26,8 @@ class MeshUnion(object):
 
     def rebuild_features_average(self, features, mask, target_edges):
         self.prepare_groups(features, mask)
-        fe = torch.matmul(features.squeeze(-1), self.groups)
+        # TODO print("features half: ", features.dtype, self.groups.half().dtype)
+        fe = torch.matmul(features.squeeze(-1), self.groups)  # self.groups.half())
         occurrences = torch.sum(self.groups, 0).expand(fe.shape)
         fe = fe / occurrences
         padding_b = target_edges - fe.shape[1]

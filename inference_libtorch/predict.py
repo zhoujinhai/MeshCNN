@@ -2,7 +2,7 @@ import torch
 import time
 import numpy as np
 import os
-from mesh_net import network_bak
+from mesh_net import network
 # from mesh_net import network
 from mesh_net.mesh import Mesh
 import pickle
@@ -74,7 +74,7 @@ def run_test():
     # *** 2. model
     # define network
     # net = network.define_classifier(config)
-    net = network_bak.define_classifier(config)
+    net = network.define_classifier(config)
     if isinstance(net, torch.nn.DataParallel):
         net = net.module
     device = torch.device('cuda:{}'.format(config.gpu_ids[0])) if config.gpu_ids else torch.device('cpu')
