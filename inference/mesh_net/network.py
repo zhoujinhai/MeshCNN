@@ -348,14 +348,14 @@ class DownConv(nn.Module):
         x1 = self.conv1(fe, meshes)
         if self.bn:
             x1 = self.bn[0](x1)
-        x1 = F.relu(x1)
+        x1 = F.relu(x1, inplace=True)
         x2 = x1
         for idx, conv in enumerate(self.conv2):
             x2 = conv(x1, meshes)
             if self.bn:
                 x2 = self.bn[idx + 1](x2)
             x2 = x2 + x1
-            x2 = F.relu(x2)
+            x2 = F.relu(x2, inplace=True)
             x1 = x2
         x2 = x2.squeeze(3)
         before_pool = None
@@ -467,7 +467,7 @@ class UpConv(nn.Module):
         x1 = self.conv1(x1, meshes)
         if self.bn:
             x1 = self.bn[0](x1)
-        x1 = F.relu(x1)
+        x1 = F.relu(x1, inplace=True)
         x2 = x1
         for idx, conv in enumerate(self.conv2):
             x2 = conv(x1, meshes)
@@ -475,7 +475,7 @@ class UpConv(nn.Module):
                 x2 = self.bn[idx + 1](x2)
             if self.residual:
                 x2 = x2 + x1
-            x2 = F.relu(x2)
+            x2 = F.relu(x2, inplace=True)
             x1 = x2
         x2 = x2.squeeze(3)
         return x2
@@ -518,10 +518,8 @@ class MeshEncoderDecoder(nn.Module):
         super(MeshEncoderDecoder, self).__init__()
         self.transfer_data = transfer_data
         self.encoder = MeshEncoder(pools, down_convs, blocks=blocks)
-        print("pools: ", pools)
         unrolls = pools[:-1].copy()
         unrolls.reverse()
-        print("unrolls: ", unrolls)
         self.decoder = MeshDecoder(unrolls, up_convs, blocks=blocks, transfer_data=transfer_data)
 
     def forward(self, x, meshes):
