@@ -4,7 +4,7 @@ import torch
 import numpy as np
 
 import sys
-sys.path.append(r"/home/heygears/jinhai_zhou/work/package/hgapi")
+sys.path.append("/home/heygears/jinhai_zhou/work/package/hgapi")
 import hgapi
 
 
@@ -470,18 +470,6 @@ if __name__ == "__main__":
     #         if os.path.isfile(stl_file):
     #             shutil.copyfile(stl_file, os.path.join(error_dir, line + ".stl"))
     #             print(stl_file)
-
-    stl_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/stl"
-    error_txt = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error_label1.txt"
-    error_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error_stl"
-
-    with open(error_txt, "r") as f:
-        for line in f:
-            line = line.strip()
-            stl_file = os.path.join(stl_save_dir, line + ".stl")
-            if os.path.isfile(stl_file):
-                shutil.copyfile(stl_file, os.path.join(error_dir, line + ".stl"))
-                print(stl_file)
     #
     # error_model_stl = glob.glob(os.path.join(error_dir, "*.obj"))
     # print(len(error_model_stl))

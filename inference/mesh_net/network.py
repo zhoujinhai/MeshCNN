@@ -38,11 +38,9 @@ def init_weights(net, init_type, init_gain):
 
 
 def init_net(net, init_type, init_gain, gpu_ids):
-    if len(gpu_ids) > 0:
-        assert(torch.cuda.is_available())
+    if len(gpu_ids) > 0 and torch.cuda.is_available():
         net.cuda(gpu_ids[0])
-        net = net.cuda()
-        net = torch.nn.DataParallel(net, gpu_ids)
+        net = torch.nn.DataParallel(net.cuda(), gpu_ids)
     if init_type != 'none':
         init_weights(net, init_type, init_gain)
     return net
@@ -69,6 +67,8 @@ class MeshConv(nn.Module):
         # build 'neighborhood image' and apply convolution
         g = self.create_GeMM(x, g)
         x = self.conv(g)  # TODO g.half())
+
+        del g
         return x
 
     def flatten_gemm_inds(self, gi):
@@ -362,21 +362,23 @@ class DownConv(nn.Module):
         if self.pool:
             before_pool = x2
             x2 = self.pool(x2, meshes)
+
+        del fe
+        del meshes
+        del x1
         return x2, before_pool
 
 
 class MeshEncoder(nn.Module):
-    def __init__(self, pools, convs, blocks=0):  # , fcs=None, global_pool=None):
+    def __init__(self, pools, convs, blocks=0):
         super(MeshEncoder, self).__init__()
-        # self.fcs = None
         self.convs = []
         for i in range(len(convs) - 1):
             if i + 1 < len(pools):
                 pool = pools[i + 1]
             else:
                 pool = 0
-            # test_script = torch.jit.script(DownConv(convs[i], convs[i + 1], blocks=blocks, pool=pool))
-            # print(test_script.code)
+
             self.convs.append(DownConv(convs[i], convs[i + 1], blocks=blocks, pool=pool))
 
         self.convs = nn.ModuleList(self.convs)
@@ -388,11 +390,11 @@ class MeshEncoder(nn.Module):
         for conv in self.convs:
             fe, before_pool = conv((fe, meshes))
             encoder_outs.append(before_pool)
-
+        del meshes
         return fe, encoder_outs
 
-    # def __call__(self, x):
-    #     return self.forward(x)
+    def __call__(self, x):
+        return self.forward(x)
 
 
 class MeshUnpool(nn.Module):
@@ -430,6 +432,9 @@ class MeshUnpool(nn.Module):
         unroll_mat = unroll_mat.to(features.device)
         for mesh in meshes:
             mesh.unroll_gemm()
+
+        del occurrences
+        del groups
         return torch.matmul(features, unroll_mat)   # TODO unroll_mat.half())
 
 
@@ -460,6 +465,7 @@ class UpConv(nn.Module):
     def forward(self, x, from_down=None):
         from_up, meshes = x
         x1 = self.up_conv(from_up, meshes).squeeze(3)
+        del from_up
         if self.unroll:
             x1 = self.unroll(x1, meshes)
         if self.transfer_data:
@@ -478,6 +484,8 @@ class UpConv(nn.Module):
             x2 = F.relu(x2, inplace=True)
             x1 = x2
         x2 = x2.squeeze(3)
+        del meshes
+        del x1
         return x2
 
 
@@ -505,6 +513,7 @@ class MeshDecoder(nn.Module):
                 before_pool = encoder_outs[-(i+2)]
             fe = up_conv((fe, meshes), before_pool)
         fe = self.final_conv((fe, meshes))
+        del meshes
         return fe
 
     def __call__(self, x, encoder_outs=None):
@@ -516,7 +525,6 @@ class MeshEncoderDecoder(nn.Module):
     """
     def __init__(self, pools, down_convs, up_convs, blocks=0, transfer_data=True):
         super(MeshEncoderDecoder, self).__init__()
-        self.transfer_data = transfer_data
         self.encoder = MeshEncoder(pools, down_convs, blocks=blocks)
         unrolls = pools[:-1].copy()
         unrolls.reverse()
@@ -525,6 +533,7 @@ class MeshEncoderDecoder(nn.Module):
     def forward(self, x, meshes):
         fe, before_pool = self.encoder((x, meshes))
         fe = self.decoder((fe, meshes), before_pool)
+
         return fe
 
 

@@ -65,14 +65,14 @@ class InferenceClass(object):
         print("load config successed!")
 
         # *** 2. load model
-        frame = inspect.currentframe()
-        gpu_tracker = MemTracker(frame)
-        gpu_tracker.track()
+        # frame = inspect.currentframe()
+        # gpu_tracker = MemTracker(frame)
+        # gpu_tracker.track()
         self.device = torch.device('cuda:{}'.format(config.gpu_ids[0])) if config.gpu_ids else torch.device('cpu')
-        self.net = torch.load(config.mesh_net).eval()  # , map_location=str(self.device))
+        self.net = torch.load(config.mesh_net, map_location=str(self.device))
         # self.net = self.net.half()  # TODO half()
-        self.net = self.net.to(self.device)
-        gpu_tracker.track()
+        self.net = self.net.eval()
+        # gpu_tracker.track()
 
         print("load model successed!")
 
@@ -96,37 +96,42 @@ class InferenceClass(object):
 
     def inference(self, model_path):
         with torch.no_grad():
+            # frame = inspect.currentframe()
+            # gpu_tracker = MemTracker(frame)
+            # gpu_tracker.track()
             # *** 3. process data
             self.process_data(model_path, config)
+            # gpu_tracker.track()
 
             # *** 4. predict
-            #try:
-            start = time.time()
-            if self.meta["edge_features"].shape[1] == 0:
-                raise ValueError("input edges must greater than feature shape,"
-                                 " please check your model")
+            try:
+                start = time.time()
+                if self.meta["edge_features"].shape[1] == 0:
+                    raise ValueError("input edges must greater than feature shape,"
+                                     " please check your model")
 
-            features = torch.from_numpy(self.meta['edge_features']).float().unsqueeze(0)
-            # features = features.half()  # TODO half()
-            # print("features after half: ", features.dtype)
-            features = features.to(self.device).requires_grad_(False)
-            mesh = [self.meta['mesh']]
+                features = torch.from_numpy(self.meta['edge_features']).float().unsqueeze(0)
+                # features = features.half()  # TODO half()
+                # print("features after half: ", features.dtype)
+                features = features.to(self.device).requires_grad_(False)
+                mesh = [self.meta['mesh']]
 
-            # predict
-            out = self.net(features, mesh)
-            print("out: ", out.dtype)
-            pred_class = out.data.cpu()  # .max(1)[1].cpu()
-            # 导出结果
-            # export_segmentation(pred_class.max(1)[1], mesh)
+                # predict
+                out = self.net(features, mesh)
 
-            end = time.time()
-            run_time = end - start
-            print("Predict result :{}, \nrun time is {}ms".format(pred_class, run_time * 1000))
+                print("out: ", out.dtype)
+                pred_class = out.data.cpu()  # .max(1)[1].cpu()
+                # 导出结果
+                # export_segmentation(pred_class.max(1)[1], mesh)
 
-            return pred_class.tolist()
+                end = time.time()
+                run_time = end - start
+                print("Predict result :{}, \nrun time is {}ms".format(pred_class, run_time * 1000))
 
-        # except Exception as e:
-        #     print("predict {} exited with error {}".format(self.meta["filename"], repr(e)))
+                return pred_class.tolist()
+
+            except Exception as e:
+                print("predict {} exited with error {}".format(self.meta["filename"], repr(e)))
 
 
 if __name__ == '__main__':
