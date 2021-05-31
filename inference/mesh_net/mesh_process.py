@@ -4,13 +4,13 @@ import sys
 import ntpath
 
 
-def fill_mesh(mesh2fill, file: str):
+def fill_mesh(mesh2fill, file: str, n_target_edges):
     """
     mesh2fill: mesh data  (dict)
     file: obj文件路径
     opt: 可选参数
     """
-    mesh_data = from_scratch(file)
+    mesh_data = from_scratch(file, n_target_edges)
     mesh2fill.vs = mesh_data['vs']
     mesh2fill.edges = mesh_data['edges']
     mesh2fill.faces = mesh_data["faces"]
@@ -45,7 +45,7 @@ class MeshPrep(object):
         return eval('self.' + item)
 
 
-def from_scratch(file):
+def from_scratch(file, n_target_edges):
     """
     file: obj文件路径
     opt: 可选项，配置参数
@@ -64,7 +64,7 @@ def from_scratch(file):
     mesh_data.vs, faces = fill_from_file(mesh_data, file)
     mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
     faces, face_areas = remove_non_manifolds(mesh_data, faces)
-    faces, face_areas = remove_boundary(mesh_data, faces, face_areas)   # if edge > 7500, remove some boundary face
+    faces, face_areas = remove_boundary(faces, face_areas, n_target_edges)   # if edge > 7500, remove some boundary face
     build_gemm(mesh_data, faces, face_areas)
     mesh_data.faces = faces
     mesh_data.features = extract_features(mesh_data)
@@ -126,7 +126,7 @@ def remove_non_manifolds(mesh, faces):
     return faces[mask], face_areas[mask]
 
 
-def remove_boundary(mesh_data, faces, face_areas):
+def remove_boundary(faces, face_areas, n_target_edges):
     mask = np.ones(len(faces), dtype=bool)
     edge_cnt = dict()
 
@@ -142,7 +142,7 @@ def remove_boundary(mesh_data, faces, face_areas):
                 edge_cnt[edge] = 1
             else:
                 edge_cnt[edge] += 1
-    n = len(edge_cnt) - 7500
+    n = len(edge_cnt) - n_target_edges
     for face_id, face in enumerate(faces):
         faces_edges = []
         for i in range(3):

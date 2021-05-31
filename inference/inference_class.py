@@ -83,7 +83,7 @@ class InferenceClass(object):
         self.meta = dict()
 
     def process_data(self, model_path, opt):
-        mesh = Mesh(file=model_path, export_folder=opt.export_folder, hold_history=True, phase="test")
+        mesh = Mesh(file=model_path, export_folder=opt.export_folder, hold_history=True, phase="test", target_edges=opt.ninput_edges)
         meta = dict()
         meta["filename"] = mesh.filename
         meta['mesh'] = mesh
@@ -95,11 +95,7 @@ class InferenceClass(object):
 
         if edge_features.shape[1] <= opt.ninput_edges:
             edge_features = data_pad(edge_features, opt.ninput_edges)
-            meta['edge_features'] = (edge_features - self.mean) / self.std
-        else:
-            # edge_features = edge_features[:, :opt.ninput_edges]
-            meta['edge_features'] = (edge_features - self.mean) / self.std
-            # meta["edge_features"] = np.array([])
+        meta['edge_features'] = (edge_features - self.mean) / self.std
 
         self.meta = meta
 
@@ -116,9 +112,9 @@ class InferenceClass(object):
                 # gpu_tracker.track()
 
                 # *** 4. predict
-                if len(self.meta["faces"]) > 5000:
-                    raise ValueError("input faces must less than or equal to 5000,"
-                                     " please check your down sample obj model")
+                if len(self.meta["edges"]) > config.ninput_edges:
+                    raise ValueError("input faces must less than or equal to {},"
+                                     " please check your down sample obj model".format(config.ninput_edges))
 
                 features = torch.from_numpy(self.meta['edge_features']).float().unsqueeze(0)
                 # features = features.half()  # TODO half()
