@@ -11,6 +11,7 @@ runs
 hgapi
 deal_data
 inference/results
+inference/AI_pts
 evaluation/test_data.md
 error_model.txt
 nohup.out

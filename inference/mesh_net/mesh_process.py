@@ -64,6 +64,7 @@ def from_scratch(file):
     mesh_data.vs, faces = fill_from_file(mesh_data, file)
     mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
     faces, face_areas = remove_non_manifolds(mesh_data, faces)
+    faces, face_areas = remove_boundary(mesh_data, faces, face_areas)   # if edge > 7500, remove some boundary face
     build_gemm(mesh_data, faces, face_areas)
     mesh_data.faces = faces
     mesh_data.features = extract_features(mesh_data)
@@ -123,6 +124,44 @@ def remove_non_manifolds(mesh, faces):
             for idx, edge in enumerate(faces_edges):
                 edges_set.add(edge)
     return faces[mask], face_areas[mask]
+
+
+def remove_boundary(mesh_data, faces, face_areas):
+    mask = np.ones(len(faces), dtype=bool)
+    edge_cnt = dict()
+
+    for face_id, face in enumerate(faces):
+        faces_edges = []
+        for i in range(3):
+            cur_edge = (face[i], face[(i + 1) % 3])
+            faces_edges.append(cur_edge)
+        for idx, edge in enumerate(faces_edges):
+            edge = tuple(sorted(list(edge)))
+            faces_edges[idx] = edge
+            if edge not in edge_cnt:
+                edge_cnt[edge] = 1
+            else:
+                edge_cnt[edge] += 1
+    n = len(edge_cnt) - 7500
+    for face_id, face in enumerate(faces):
+        faces_edges = []
+        for i in range(3):
+            cur_edge = (face[i], face[(i + 1) % 3])
+            faces_edges.append(cur_edge)
+        for idx, edge in enumerate(faces_edges):
+            edge = tuple(sorted(list(edge)))
+            faces_edges[idx] = edge
+            if edge_cnt[edge] != 2 and n > 0:
+                mask[face_id] = False
+                n -= 1
+                break
+            else:
+                mask[face_id] = True
+    if len(edge_cnt) > 7500:
+        # print("len", len(edge_cnt))
+        return faces[mask], face_areas[mask]
+    else:
+        return faces, face_areas
 
 
 def compute_face_normals_and_areas(mesh, faces):
@@ -185,7 +224,9 @@ def build_gemm(mesh, faces, face_areas):
     edges = []
     edges_count = 0
     nb_count = []
+
     for face_id, face in enumerate(faces):
+
         faces_edges = []
         for i in range(3):
             cur_edge = (face[i], face[(i + 1) % 3])
@@ -193,26 +234,37 @@ def build_gemm(mesh, faces, face_areas):
         for idx, edge in enumerate(faces_edges):
             edge = tuple(sorted(list(edge)))
             faces_edges[idx] = edge
+
             if edge not in edge2key:
                 edge2key[edge] = edges_count
-                edges.append(list(edge))
                 edge_nb.append([-1, -1, -1, -1])
                 sides.append([-1, -1, -1, -1])
                 mesh.ve[edge[0]].append(edges_count)
                 mesh.ve[edge[1]].append(edges_count)
                 mesh.edge_areas.append(0)
                 nb_count.append(0)
+                edges.append(list(edge))
                 edges_count += 1
+
             mesh.edge_areas[edge2key[edge]] += face_areas[face_id] / 3
         for idx, edge in enumerate(faces_edges):
             edge_key = edge2key[edge]
-            edge_nb[edge_key][nb_count[edge_key]] = edge2key[faces_edges[(idx + 1) % 3]]
-            edge_nb[edge_key][nb_count[edge_key] + 1] = edge2key[faces_edges[(idx + 2) % 3]]
+            nb_edge1 = faces_edges[(idx + 1) % 3]
+            nb_edge2 = faces_edges[(idx + 2) % 3]
+            if nb_edge1 in edge2key:
+                edge_nb[edge_key][nb_count[edge_key]] = edge2key[nb_edge1]
+            if nb_edge2 in edge2key:
+                edge_nb[edge_key][nb_count[edge_key] + 1] = edge2key[nb_edge2]
             nb_count[edge_key] += 2
         for idx, edge in enumerate(faces_edges):
             edge_key = edge2key[edge]
-            sides[edge_key][nb_count[edge_key] - 2] = nb_count[edge2key[faces_edges[(idx + 1) % 3]]] - 1
-            sides[edge_key][nb_count[edge_key] - 1] = nb_count[edge2key[faces_edges[(idx + 2) % 3]]] - 2
+            nb_edge1 = faces_edges[(idx + 1) % 3]
+            nb_edge2 = faces_edges[(idx + 2) % 3]
+            if nb_edge1 in edge2key:
+                sides[edge_key][nb_count[edge_key] - 2] = nb_count[edge2key[nb_edge1]] - 1
+            if nb_edge2 in edge2key:
+                sides[edge_key][nb_count[edge_key] - 1] = nb_count[edge2key[nb_edge2]] - 2
+
     mesh.edges = np.array(edges, dtype=np.int32)
     mesh.gemm_edges = np.array(edge_nb, dtype=np.int64)
     mesh.sides = np.array(sides, dtype=np.int64)

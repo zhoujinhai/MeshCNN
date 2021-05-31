@@ -12,6 +12,7 @@ class Mesh(object):
     def __init__(self, file=None, export_folder="", hold_history=False, phase="test"):
         self.vs = self.v_mask = self.filename = self.features = self.edge_areas = None
         self.edges = self.gemm_edges = self.sides = None
+        # self.edge_cnt = None
         self.faces = None
         self.pool_count = 0
         fill_mesh(self, file)  # 给self赋值 包括vs,edges,gemm_edges,features等
@@ -20,7 +21,7 @@ class Mesh(object):
         if hold_history:
             self.init_history()  # 历史数据  'groups'， 'gemm_edges'等
         self.phase = phase
-        self.export()  # 导出到指定路径
+        # self.export()  # 导出到指定路径
 
     def extract_features(self):
         return self.features
@@ -70,6 +71,20 @@ class Mesh(object):
         self.ve = new_ve
         self.__clean_history(groups, torch_mask)
         self.pool_count += 1
+
+    def get_vs_faces_edges(self):
+        faces = []
+        vs = self.vs[self.v_mask]
+        gemm = np.array(self.gemm_edges)
+        new_indices = np.zeros(self.v_mask.shape[0], dtype=np.int32)
+        new_indices[self.v_mask] = np.arange(0, np.ma.where(self.v_mask)[0].shape[0])
+        for edge_index in range(len(gemm)):
+            cycles = self.__get_cycle(gemm, edge_index)
+            for cycle in cycles:
+                faces.append(self.__cycle_to_face(cycle, new_indices))
+        faces = np.array(faces)
+        edges = new_indices[self.edges]
+        return vs, faces, edges
 
     def export(self, file=None, vcolor=None):
 

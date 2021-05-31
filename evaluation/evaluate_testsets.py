@@ -462,7 +462,8 @@ def get_predict_pts(model_path):
 # In[6]:
 
 
-def calculate_dist(tree, predict_pts):
+def calculate_dist(target_pts, predict_pts):
+    tree = create_tree(target_pts)
     max_dist = 0
     max_index = 0
     for idx, predict_pt in enumerate(predict_pts):
@@ -475,12 +476,8 @@ def calculate_dist(tree, predict_pts):
 
 
 # In[7]:
-
-
 def get_max_dist(pts_file, predict_model):
     target_pts = get_gum_line_pts(pts_file)
-
-    tree = create_tree(target_pts)
 
     # TODO 可以替换成其他方法得到的分割点
     model_name = os.path.splitext(os.path.basename(predict_model))[0][:-2]
@@ -494,7 +491,7 @@ def get_max_dist(pts_file, predict_model):
     if len(predict_pts) == 0:
         return np.inf, np.inf   # 无结果
 
-    max_dist, max_index = calculate_dist(tree, predict_pts)
+    max_dist, max_index = calculate_dist(target_pts, predict_pts)
 
     return max_dist, predict_pts[max_index]
 

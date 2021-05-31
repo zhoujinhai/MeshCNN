@@ -24,8 +24,6 @@ import sys
 # ### 1.获取模型信息
 
 # In[2]:
-
-
 def get_edges(faces):
     """
     根据面得到相应的边
@@ -324,7 +322,7 @@ def label_pts_by_edges_and_faces(vs, edges, faces, face_labels):
             y = a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
             x = math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) * math.sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2])
             # 计算三点形成的夹角
-            theta = math.acos(y / x) / math.pi * 180  # 不存在重合点 所以x可以不用判零
+            theta = math.acos(y / x) / math.pi * 180  # 不存在重合点 x可以不用判零
             if theta > 50:
                 curvature = compute_pt_curvature(vs, edges, faces, face_normals, cur_pt)
                 if max(curvature) > 0:
@@ -493,6 +491,7 @@ def save_predict(predict_model, predict_path):
     @save_path: 结果保存路径
     return: None
     """
+    print("predict_model: \n", predict_model, "predict_path: \n", predict_path)
     # ------加载模型 获取信息------
     # ## 预测模型
     predict_vs, predict_faces, predict_edges = parse_obje(predict_model)
@@ -590,7 +589,7 @@ def show_predict(predict1, predict2, pts, max_dist_pts=None):
 
 if __name__ == "__main__":
 
-    predict_dir = "/home/heygears/jinhai_zhou/work/predict_results"
+    predict_dir = "./results"
 
     # 解析结果
     predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))

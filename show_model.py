@@ -8,6 +8,98 @@ sys.path.append("/home/heygears/jinhai_zhou/work/package/hgapi")
 import hgapi
 
 
+# ---- hgapi ----
+# 模型摆正
+def stlHandlerRead(fName):
+    # 一、找出最大面后旋转,找出正面方向
+    mesh = hgapi.Mesh()
+    stlHandler = hgapi.STLFileHandler()
+    print("stlHandlerRead > Read:", stlHandler.Read(fName, mesh))
+    norm1 = hgapi.Vector3()  # 坐标值v1.x(), v1.y(), v1.z()
+    centroid1 = hgapi.Vector3()
+    od = hgapi.OrientationDetection()
+    planarFaceSet = hgapi.IntVector()
+    od.FindPlanarBase2(mesh, norm1, centroid1, 0.9995, planarFaceSet)
+    rotation1 = hgapi.Matrix4.Rotation(norm1, hgapi.Vector3(0.0, 0.0, -1.0))
+    mesh.Transform(rotation1)
+
+    dir = hgapi.Vector2()
+    center = hgapi.Vector2()
+    od = hgapi.OrientationDetection()
+    od.Find2DHeadDirection(mesh, dir, center, True)
+    handler = hgapi.STLFileHandler()
+    rotation2 = hgapi.Matrix4.Rotation(hgapi.Vector3(dir), hgapi.Vector3(0.0, 1.0, 0.0))
+    mesh.Transform(rotation2)
+
+    # 二、平移至0.0 0.0 0.0
+    handler = hgapi.STLFileHandler()
+    min_bound = hgapi.Vector3(mesh.GetBound().GetMinBound().x(),
+                              mesh.GetBound().GetMinBound().y(),
+                              mesh.GetBound().GetMinBound().z())
+    translation = hgapi.Matrix4.Translation(-min_bound)
+    mesh.Transform(translation)
+    return mesh
+
+
+# 模型投影
+def generatePreview():
+    fName = r"/home/heygears/work/Tooth_data_prepare/8AP1S/VS_SET_VSc2_Subsetup8_Maxillar.stl"
+    mesh = stlHandlerRead(fName)
+    rasterizer = hgapi.Rasterizer()
+    print("rasterizer.Init", rasterizer.Init())
+    entityArray = hgapi.EntityVector()
+    entityArray.push_back(mesh)
+    sharedImage = hgapi.SharedImageVector()
+    # LEFT(1)，RIGHT(2)，FRONT(4)，BACK(8)，BOTTOM(16)，TOP(32)，TOP_LEFT(64)，TOP_RIGHT(128)，TOP_FRONT(256)，
+    # TOP_BACK(512)，BOTTOM_LEFT(1024)，BOTTOM_RIGHT(2048)，BOTTOM_FRONT(4096)，BOTTOM_BACK(8192)
+    rasterizer.GeneratePreview(entityArray, 0.1, 32, sharedImage)
+    pngHandler = hgapi.PNGHandler()
+    print("Export:", pngHandler.Export("test.png", sharedImage[0]))
+
+
+# 模型简化
+def simplify():
+    file_name = "/home/heygears/work/Tooth_data_prepare/tooth/stl/1PT7E_VS_SET_VSc2_Subsetup11_Mandibular.stl"
+    mesh = hgapi.Mesh()
+    stlHandler = hgapi.STLFileHandler()
+    print("stlHandlerRead > Read:", stlHandler.Read(file_name, mesh))
+    hgapi.MeshSimplify_Simplify(mesh, 5000)
+    print("simplify: ", stlHandler.Write("./down.stl", mesh))
+
+
+# 模型去掉孤立小岛和夹治具
+def healing(mesh_path, save_path):
+    mesh_healing = hgapi.MeshHealing()
+    mesh = hgapi.Mesh()
+    stl_handler = hgapi.STLFileHandler()
+    stl_handler.Read(mesh_path, mesh)
+    mesh_healing.RemoveSmallerIslands(mesh)
+    mesh_healing.RemoveDanglingFace(mesh)
+    stl_handler.Write(save_path, mesh)
+
+
+# 生成牙龈线 v3
+def generateGumline(model_path):
+    # 读取模型
+    mesh = hgapi.Mesh()
+    stl_handler = hgapi.stlFileHandler()
+    print("Read model: ", stl_handler.Read(model_path, mesh))
+
+    # 提取牙龈线点
+    gumline = hgapi.GumLine()
+    option = hgapi.GumLineExtractionOption()
+    print("Extract gumline: ", hgapi.GumLineExtraction.ExtractGumLine(mesh, gumline, option))
+
+    # 点转成线
+    polyline = hgapi.Polyline()
+    print("ToPolyline：", gumline.ToPolyline(polyline))
+
+    # 报存牙龈线
+    pts_handler = hgapi.PTSHandler()
+    print("write_pts", pts_handler.Export("./test.pts", polyline))
+
+
+# ---- MeshCNN ----
 def get_edges(faces):
     """
     根据面得到相应的边
@@ -105,71 +197,6 @@ def show_origin(origin1, origin2, pts1, pts2):
     show(a, b, c, d)
 
 
-def stlHandlerRead(fName):
-    # 一、找出最大面后旋转,找出正面方向
-    mesh = hgapi.Mesh()
-    stlHandler = hgapi.STLFileHandler()
-    print("stlHandlerRead > Read:", stlHandler.Read(fName, mesh))
-    norm1 = hgapi.Vector3()  # 坐标值v1.x(), v1.y(), v1.z()
-    centroid1 = hgapi.Vector3()
-    od = hgapi.OrientationDetection()
-    planarFaceSet = hgapi.IntVector()
-    od.FindPlanarBase2(mesh, norm1, centroid1, 0.9995, planarFaceSet)
-    rotation1 = hgapi.Matrix4.Rotation(norm1, hgapi.Vector3(0.0, 0.0, -1.0))
-    mesh.Transform(rotation1)
-
-    dir = hgapi.Vector2()
-    center = hgapi.Vector2()
-    od = hgapi.OrientationDetection()
-    od.Find2DHeadDirection(mesh, dir, center, True)
-    handler = hgapi.STLFileHandler()
-    rotation2 = hgapi.Matrix4.Rotation(hgapi.Vector3(dir), hgapi.Vector3(0.0, 1.0, 0.0))
-    mesh.Transform(rotation2)
-
-    # 二、平移至0.0 0.0 0.0
-    handler = hgapi.STLFileHandler()
-    min_bound = hgapi.Vector3(mesh.GetBound().GetMinBound().x(),
-                              mesh.GetBound().GetMinBound().y(),
-                              mesh.GetBound().GetMinBound().z())
-    translation = hgapi.Matrix4.Translation(-min_bound)
-    mesh.Transform(translation)
-    return mesh
-
-
-def generatePreview():
-    fName = r"/home/heygears/work/Tooth_data_prepare/8AP1S/VS_SET_VSc2_Subsetup8_Maxillar.stl"
-    mesh = stlHandlerRead(fName)
-    rasterizer = hgapi.Rasterizer()
-    print("rasterizer.Init", rasterizer.Init())
-    entityArray = hgapi.EntityVector()
-    entityArray.push_back(mesh)
-    sharedImage = hgapi.SharedImageVector()
-    # LEFT(1)，RIGHT(2)，FRONT(4)，BACK(8)，BOTTOM(16)，TOP(32)，TOP_LEFT(64)，TOP_RIGHT(128)，TOP_FRONT(256)，
-    # TOP_BACK(512)，BOTTOM_LEFT(1024)，BOTTOM_RIGHT(2048)，BOTTOM_FRONT(4096)，BOTTOM_BACK(8192)
-    rasterizer.GeneratePreview(entityArray, 0.1, 32, sharedImage)
-    pngHandler = hgapi.PNGHandler()
-    print("Export:", pngHandler.Export("test.png", sharedImage[0]))
-
-
-def simplify():
-    file_name = "/home/heygears/work/Tooth_data_prepare/tooth/stl/1PT7E_VS_SET_VSc2_Subsetup11_Mandibular.stl"
-    mesh = hgapi.Mesh()
-    stlHandler = hgapi.STLFileHandler()
-    print("stlHandlerRead > Read:", stlHandler.Read(file_name, mesh))
-    hgapi.MeshSimplify_Simplify(mesh, 5000)
-    print("simplify: ", stlHandler.Write("./down.stl", mesh))
-
-
-def healing(mesh_path, save_path):
-    mesh_healing = hgapi.MeshHealing()
-    mesh = hgapi.Mesh()
-    stl_handler = hgapi.STLFileHandler()
-    stl_handler.Read(mesh_path, mesh)
-    mesh_healing.RemoveSmallerIslands(mesh)
-    mesh_healing.RemoveDanglingFace(mesh)
-    stl_handler.Write(save_path, mesh)
-
-
 def get_gum_line_pts(gum_line_path):
     """
     读取牙龈线文件，pts格式
@@ -234,49 +261,6 @@ def pad(input_arr, target_length, val=0, dim=1):
     npad = [(0, 0) for _ in range(len(shp))]
     npad[dim] = (0, target_length - shp[dim])
     return np.pad(input_arr, pad_width=npad, mode='constant', constant_values=val)
-
-
-# # test torchScript
-class MyDecisionGate(torch.nn.Module):
-    def forward(self, x):
-        if x.sum() > 0:
-            return x
-        else:
-            return -x
-
-
-class MyCell(torch.nn.Module):
-    def __init__(self, dg):
-        super(MyCell, self).__init__()
-        self.dg = dg
-        self.linear = torch.nn.Linear(4, 4)
-
-    def forward(self, x, h):
-        x = self.dg(self.linear(x))
-        new_h = torch.tanh(x + h)
-        return new_h, new_h
-
-
-class MyRNNLoop(torch.nn.Module):
-    def __init__(self, script_gate, x, h):
-        super(MyRNNLoop, self).__init__()
-        self.cell = torch.jit.trace(MyCell(script_gate), (x, h))
-
-    def forward(self, xs):
-        h, y = torch.zeros(3, 4), torch.zeros(3, 4)
-        for i in range(xs.size(0)):
-            y, h = self.cell(xs[i], h)
-        return y, h
-
-
-class WrapRNN(torch.nn.Module):
-    def __init__(self, script_gate):
-        super(WrapRNN, self).__init__()
-        self.loop = torch.jit.script(MyRNNLoop(script_gate))
-
-    def forward(self, xs):
-        y, h = self.loop(xs)
-        return torch.relu(y)
 
 
 if __name__ == "__main__":
@@ -446,19 +430,6 @@ if __name__ == "__main__":
     # print(loss)
 
     # # # 从共享文件夹中提取数据
-    import os
-    import shutil
-    print("hello")
-    import vedo
-    import numpy as np
-    gum_line_pts = np.array([1, 2, 3, 4, 5, 6])
-    save_path = "./test.vtk"
-    vtk_point = vedo.Points(gum_line_pts.reshape(-1, 3))
-    vedo.write(vtk_point, save_path, binary=False)
-    print("vtk file is saved in ", save_path)
-    print("*****")
-    p = vedo.load("./test.vtk").pointSize(10).c(('green'))
-    vedo.show(p)
     # stl_save_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/stl"
     # error_txt = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error_label1.txt"
     # error_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error_stl"
@@ -520,136 +491,5 @@ if __name__ == "__main__":
     #     print(no_seg_stl_path)
     #     if os.path.isfile(no_seg_stl_path) and not os.path.isfile(os.path.join(no_seg_dir, base_name)):
     #         shutil.move(no_seg_stl_path, no_seg_dir)
-
-    # # test torchScript
-    #
-    # my_cell = MyCell(MyDecisionGate())
-    # x = torch.rand(3, 4)
-    # h = torch.rand(3, 4)
-    # #
-    # # trace
-    # traced_cell = torch.jit.trace(my_cell, (x, h))
-    # print("trace code: \n", traced_cell.code)
-    #
-    # # script
-    # script_gate = torch.jit.script(MyDecisionGate())
-    # my_cell = MyCell(script_gate)
-    # script_cell = torch.jit.script(my_cell)
-    # print("script code: \n", script_cell.code)
-    #
-    # # mixing scripting and tracing
-    # rnn_loop = torch.jit.script(MyRNNLoop(script_gate))
-    # print("rnn_loop code: \n", rnn_loop.code)
-    #
-    # traced = torch.jit.trace(WrapRNN(), (torch.rand(1, 3, 4)))
-    # print(traced.code)
-    # traced.save("./wrapped_rnn.zip")
-    # loaded = torch.jit.load("./wrapped_rnn.zip")
-    # print(loaded)
-    # print(loaded.code)
-    # z = torch.rand(1, 3, 4)
-    # print(loaded(z))
-
-    # torch.jit.save(traced, "./test.pt")
-    # loaded = torch.jit.load("./test.pt")
-    # print(loaded(z))
-
-    # @torch.jit.script
-    # class Mesh(object):
-    #     def __init__(self):
-    #         self.gemm_edges = None
-    #         self.sides = None
-    #         self.faces = None
-    #         self.pool_count = 1
-    #
-    # class MyModule(torch.nn.Module):
-    #     def __init__(self, mesh):
-    #         super(MyModule, self).__init__()
-    #         self.mesh = mesh
-    #
-    #     def forward(self, x):
-    #         out = x + self.mesh.pool_count
-    #         return out
-    #
-    #
-    # mesh = Mesh()
-    # m_1 = torch.jit.script(MyModule(mesh))
-    # print(m_1.code)
-    #
-    # print(mesh.pool_count)
-    # model = MyModule(mesh)
-    # print(model(torch.tensor(3)))
-
-    # from typing import Tuple
-    # @torch.jit.script
-    # def foo(x: int, tup: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
-    #     t0, t1 = tup
-    #     return t0 + t1 + x
-    # m = foo(3, (torch.tensor(2), torch.tensor(1)))
-    # print(foo.code, "\n", m)
-
-    from typing import Dict, List, Tuple
-
-    # class EmptyDataStructures(torch.nn.Module):
-    #     def __init__(self):
-    #         super(EmptyDataStructures, self).__init__()
-    #
-    #     def forward(self, x):
-    #         # This annotates the list to be a `List[Tuple[int, float]]`
-    #         my_list: List[Tuple[int, float]] = []
-    #         for i in range(10):
-    #             my_list.append((i, x.item()))
-    #
-    #         my_dict: Dict[str, int] = {}
-    #         return my_list, my_dict
-    #
-    #
-    # x = torch.jit.script(EmptyDataStructures())
-    # print(x.code)
-
-    # from typing import Optional
-    #
-    # class M(torch.nn.Module):
-    #     z: Optional[int]
-    #
-    #     def __init__(self, z):
-    #         super(M, self).__init__()
-    #         # If `z` is None, its type cannot be inferred, so it must
-    #         # be specified (above)
-    #         self.z = z
-    #
-    #     def forward(self, x, y, z):
-    #         # type: (Optional[int], Optional[int], Optional[int]) -> int
-    #         if x is None:
-    #             x = 1
-    #             x = x + 1
-    #
-    #         # Refinement for an attribute by assigning it to a local
-    #         z = self.z
-    #         if y is not None and z is not None:
-    #             x = y + z
-    #
-    #         # Refinement via an `assert`
-    #         assert z is not None
-    #         x += z
-    #         return x
-    #
-    #
-    # module = torch.jit.script(M(2))
-    # print(module.code)
-    # module = torch.jit.script(M(None))
-    # print(module.code)
-
-    # import glob
-    # import os
-    # import shutil
-    #
-    # correct_dir = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/error/modify_correct/5"
-    # with open("./error_model.txt", "r") as f:
-    #     for line in f:
-    #         line = line.strip()
-    #         file_path = os.path.join(correct_dir, line+".pts")
-    #         if not os.path.isfile(file_path):
-    #             print(file_path)
 
     pass

@@ -1,0 +1,120 @@
+FileNotFoundError(2, 'No such file or directory') E:\code\Server223\MeshCNN\inference\cache\test.obj
+FileNotFoundError(2, 'No such file or directory') E:\code\Server223\MeshCNN\inference\cache\test.obj
+FileNotFoundError(2, 'No such file or directory') E:\code\Server223\MeshCNN\inference\cache\test.obj
+FileNotFoundError(2, 'No such file or directory') E:\code\Server223\MeshCNN\inference\cache\test.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\9NJPM_VS_SET_VSc3_Subsetup5_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+IndexError('tuple index out of range') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+FileNotFoundError(2, 'No such file or directory') 
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\9NJPM_VS_SET_VSc3_Subsetup5_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+IndexError('too many indices for array') E:\code\Server223\MeshCNN\inference\cache\NM1XG_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\4BE7T_VS_SET_VSc1_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\B7PEU_VS_SET_VSc4_Subsetup18_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\GQ5BT_VS_SET_VSc2_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\H4BS5_VS_SET_VSc2_Subsetup14_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\H4BS5_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\JCJM8_VS_SET_VSc2_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\KK595_VS_SET_VSc1_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\PDW3X_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\PHT7D_VS_SET_VSc2_Subsetup35_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\T4JHC_VS_SET_VSc2_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\YYPY3_VS_SET_VSc1_Subsetup17_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\4BE7T_VS_SET_VSc1_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\9NJPM_VS_SET_VSc3_Subsetup5_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\B7PEU_VS_SET_VSc4_Subsetup18_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\GQ5BT_VS_SET_VSc2_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\H4BS5_VS_SET_VSc2_Subsetup14_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\H4BS5_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\JCJM8_VS_SET_VSc2_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\KK595_VS_SET_VSc1_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+IndexError('too many indices for array') E:\code\Server223\MeshCNN\inference\cache\NM1XG_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\PDW3X_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\PHT7D_VS_SET_VSc2_Subsetup35_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\T4JHC_VS_SET_VSc2_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\YYPY3_VS_SET_VSc1_Subsetup17_Mandibular.obj
+FileNotFoundError(2, 'No such file or directory') 
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/GQ5BT_VS_SET_VSc2_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/H4BS5_VS_SET_VSc2_Subsetup14_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/H4BS5_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/JCJM8_VS_SET_VSc2_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/KK595_VS_SET_VSc1_Subsetup10_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/4BE7T_VS_SET_VSc1_Subsetup8_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
+IndexError('too many indices for array: array is 2-dimensional, but 28 were indexed',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/NM1XG_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/PDW3X_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/PHT7D_VS_SET_VSc2_Subsetup35_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/9NJPM_VS_SET_VSc3_Subsetup5_Maxillar.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/T4JHC_VS_SET_VSc2_Subsetup2_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/B7PEU_VS_SET_VSc4_Subsetup18_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000 (The offending index is 0)',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/YYPY3_VS_SET_VSc1_Subsetup17_Mandibular.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000 (The offending index is 0)',) /data/Test_5044/down_obj/C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj

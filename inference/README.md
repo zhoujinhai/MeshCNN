@@ -1,74 +1,57 @@
-## 模型预测
+借助`aiohttp`模块将inference_class.py打包成一个web服务，用于预测。
 
-### 1.文件说明
-- class_features_info     存放类别文件以及特征均值和方差文件
-    - classes.txt:        类别文件
-    - mean_std_cache.p    训练生成的特征均值及方差
-    
-- data_deal               数据预处理
-    - data_preprocess.py  原始stl模型转为obj格式并下采样
-    - hgapi               用于协助数据处理的工具
-    
-- mesh_net                AI网络结构及模型处理
-    - mesh.py             牙模类
-    - mesh_process.py     牙模处理脚本
-    - network.py          AI网络结构
-    
-- model_weight            AI模型权重存放路径
-    - 200_net.pth         AI模型权重
-    
-- results                 预测结果存放路径
+### 1. 启动服务所需配置
 
-- test_models             待预测牙模存放路径
+| 依赖    | 版本        | 说明              |
+| ------- | ----------- | ----------------- |
+| python  | 3.7.4       |                   |
+| torch   | 1.5.0       | python第三方库    |
+| aiohttp | 3.7.4.post0 | python第三方库    |
+| cuda    | 10.2        | 使用GPU才需要安装 |
 
-- config.py               AI模型相关配置
+- 安装python
 
-- predict.py              预测脚本
+  可借助anaconda3进行安装，具体可以参照https://www.cnblogs.com/xiaxuexiaoab/p/14544511.html第8个安装anconda3，新建一个python版本为3.7.4的虚拟环境。
 
-- show_result.py          查看预测结果脚本
+- 安装torch
 
-### 2. 预测流程
-- step1
+   进入虚拟环境，然后执行以下命令进行安装
 
-    利用data_preprocess.py处理stl模型，将其转换为obj格式，并下采样到指定路径
-    
-    修改文件第7行中`hgapi`所在路径及以下内容
-    ```python
-    stl_dir = "./stl"            # stl模型存放路径
-    obj_save_dir = "./obj"       # obj模型存放路径
-    down_obj_save_dir = "./down_obj"      # 下采样后模型存放路径
-    target_faces = 5000          # 下采样面片的个数
-    ```
-    然后运行
-    ```bash
-    $ blender --background --python data_preprocess.py
-    ```
-    
-- step2
+  ```python
+  pip install torch==1.5.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
+  ```
 
-    第一步中下采样后的模型放入`test_models`目录下
-     
-- step3
+  如果安装失败，可以在<a href="\\10.99.11.210\MeshCNN\software">服务器210</a>找到对应版本的`torch-1.5.0-cp37-cp37m-*.whl`文件，然后运行
 
-    运行预测脚本
-    ```bash
-    $ python predict.py
-    ```
-  
-- step4
+  ```python
+  pip install torch-1.5.0-cp37-cp37m-*.whl
+  ```
 
-    检测结果自动保存在`./results`目录下
-    
-- step5
+- 安装aiohttp
 
-    查看检测结果
-    ```bash
-    $ python show_result.py
-    ```
-  
-### 3. 相关依赖
-  - blender      2.90.1
-  - python       >= 3.6.5
-     - vedo        2020.4.1
-     - torch        >= 1.2.0
-    
+   ```python
+  pip install aiohttp -i https://pypi.tuna.tsinghua.edu.cn/simple
+   ```
+
+- 安装cuda
+
+  具体可以参照https://www.cnblogs.com/xiaxuexiaoab/p/14544511.html第6个安装cuda
+
+### 2 使用说明
+
+#### 2.1 启动服务
+
+```bash
+$ python webserver.py
+```
+
+#### 2.2 客户端测试
+
+在`example_webclient.py`中配置好IP地址和端口号，然后运行以下命令
+
+```bash
+$ python example_webclient.py
+```
+
+
+

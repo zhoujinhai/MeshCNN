@@ -460,14 +460,21 @@ class UpConv(nn.Module):
                 self.bn.append(nn.InstanceNorm2d(out_channels))
             self.bn = nn.ModuleList(self.bn)
         if unroll:
+            print("UNROLL", unroll)
             self.unroll = MeshUnpool(unroll)
 
     def forward(self, x, from_down=None):
         from_up, meshes = x
+        # if (from_down is not None) and (from_down is not None):
+        #     print("----", from_up.shape, from_down.shape)
         x1 = self.up_conv(from_up, meshes).squeeze(3)
+
         del from_up
-        if self.unroll:
+        if self.unroll and from_down.shape[2] > x1.shape[2]:
             x1 = self.unroll(x1, meshes)
+        # if from_down.shape[2] > x1.shape[2]:
+        #     from_down = from_down[:, :, :x1.shape[2]]
+        # print(x1.shape, from_down.shape, from_down[:, :, :x1.shape[2]].shape)
         if self.transfer_data:
             x1 = torch.cat((x1, from_down), 1)
         x1 = self.conv1(x1, meshes)
@@ -511,6 +518,7 @@ class MeshDecoder(nn.Module):
             before_pool = None
             if encoder_outs is not None:
                 before_pool = encoder_outs[-(i+2)]
+
             fe = up_conv((fe, meshes), before_pool)
         fe = self.final_conv((fe, meshes))
         del meshes

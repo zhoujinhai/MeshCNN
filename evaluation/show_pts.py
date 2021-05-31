@@ -2,7 +2,7 @@ import glob
 import os
 import vedo
 from vedo import load, show
-import vtkplotter as vtkp
+
 import numpy as np
 import random
 
@@ -78,7 +78,7 @@ def show_model(dir_path, mode=1, file_name=None):
 
 if __name__ == "__main__":
 
-    dir_path = "/run/user/1000/gvfs/smb-share:server=10.99.11.210,share=meshcnn/Test_5044/"  # pts和stl文件存放目录
+    dir_path = r"\\10.99.11.210\MeshCNN\Test_5044"  # pts和stl文件存放目录
     file_name = ["1_459650_1_U_15", "8YZRK_VS_SET_VSc3_Subsetup10_Mandibular"]   # 指定显示的文件名
     # file_name = []
     # with open("./error_label.txt", "r") as f:
