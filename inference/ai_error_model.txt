@@ -92,29 +92,333 @@ ValueError('input edges must greater than feature shape, please check your model
 ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\T4JHC_VS_SET_VSc2_Subsetup2_Mandibular.obj
 ValueError('input edges must greater than feature shape, please check your model') E:\code\Server223\MeshCNN\inference\cache\YYPY3_VS_SET_VSc1_Subsetup17_Mandibular.obj
 FileNotFoundError(2, 'No such file or directory') 
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/GQ5BT_VS_SET_VSc2_Subsetup8_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/H4BS5_VS_SET_VSc2_Subsetup14_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/H4BS5_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/JCJM8_VS_SET_VSc2_Subsetup10_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/KK595_VS_SET_VSc1_Subsetup10_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/4BE7T_VS_SET_VSc1_Subsetup8_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/6DS6F_VS_SET_VSc2_Subsetup28_Maxillar.obj
-IndexError('too many indices for array: array is 2-dimensional, but 28 were indexed',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/NM1XG_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/PDW3X_VS_SET_VSc2_Subsetup_Retainer_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/PHT7D_VS_SET_VSc2_Subsetup35_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/9NJPM_VS_SET_VSc3_Subsetup5_Maxillar.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/T4JHC_VS_SET_VSc2_Subsetup2_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/B7PEU_VS_SET_VSc4_Subsetup18_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
-RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000 (The offending index is 0)',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
-ValueError('input edges must greater than feature shape, please check your model',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/YYPY3_VS_SET_VSc1_Subsetup17_Mandibular.obj
-RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000 (The offending index is 0)',) /data/Test_5044/down_obj/C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('528 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('528 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('528 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+FileNotFoundError(2, 'No such file or directory') 
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+FileNotFoundError(2, 'No such file or directory') 
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup17_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup1_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup2_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup5_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup8_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\12Q4Z_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\12Q4Z_VS_SET_VSc2_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\12Q4Z_VS_SET_VSc2_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup17_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup17_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup1_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup2_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\11J8F_VS_SET_VSc1_Subsetup5_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\4BG9R_VS_SET_VSc2_Subsetup9_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5DKHT_VS_SET_VSc3_Subsetup5_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5HH3Z_VS_SET_VSc4_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\692NM_VS_SET_VSc2_Subsetup4_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8EH79_VS_SET_VSc3_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8M8K9_VS_SET_VSc4_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup36_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup52_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\4BG9R_VS_SET_VSc2_Subsetup9_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5DKHT_VS_SET_VSc3_Subsetup5_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5HH3Z_VS_SET_VSc4_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\692NM_VS_SET_VSc2_Subsetup4_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8EH79_VS_SET_VSc3_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8M8K9_VS_SET_VSc4_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup36_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup52_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\BX7U7_VS_SET_VSc1_Subsetup7_Maxillar.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('183 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CJFLZ_VS_SET_VSc1_Subsetup23_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\4BG9R_VS_SET_VSc2_Subsetup9_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5DKHT_VS_SET_VSc3_Subsetup5_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5HH3Z_VS_SET_VSc4_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\692NM_VS_SET_VSc2_Subsetup4_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8EH79_VS_SET_VSc3_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8M8K9_VS_SET_VSc4_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup36_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup52_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\BX7U7_VS_SET_VSc1_Subsetup7_Maxillar.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('183 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CJFLZ_VS_SET_VSc1_Subsetup23_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F3X9F_VS_SET_VSc2_Subsetup19_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F4P42_VS_SET_VSc2_Subsetup8_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F7NBH_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\FET3D_VS_SET_VSc3_Subsetup28_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F4P42_VS_SET_VSc2_Subsetup8_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F7NBH_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\FET3D_VS_SET_VSc3_Subsetup28_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup25_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup30_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\HZVQR_VS_SET_VSc2_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup25_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup30_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\HZVQR_VS_SET_VSc2_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\MHSX9_VS_SET_VSc2_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\N9YSJ_VS_SET_VSc2_Subsetup21_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\NK7AF_VS_SET_VSc2_Subsetup5_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\R8N9D_VS_SET_VSc3_Subsetup6_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup25_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup30_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\HZVQR_VS_SET_VSc2_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\MHSX9_VS_SET_VSc2_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\N9YSJ_VS_SET_VSc2_Subsetup21_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\NK7AF_VS_SET_VSc2_Subsetup5_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\R8N9D_VS_SET_VSc3_Subsetup6_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\REXNE_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RMNC8_VS_SET_VSc2_Subsetup17_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\SN3QH_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\REXNE_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RMNC8_VS_SET_VSc2_Subsetup17_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\SN3QH_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TCPMB_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TPJKL_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U1S6Y_VS_SET_VSc1_Subsetup15_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U8RPE_VS_SET_VSc2_Subsetup11_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\UUT8Y_VS_SET_VSc1_Subsetup12_Maxillar.obj
+ValueError('600 is not in list') E:\code\Server223\MeshCNN\inference\cache\WBAJ4_VS_SET_VSc2_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TCPMB_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TPJKL_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U1S6Y_VS_SET_VSc1_Subsetup15_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U8RPE_VS_SET_VSc2_Subsetup11_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\UUT8Y_VS_SET_VSc1_Subsetup12_Maxillar.obj
+ValueError('600 is not in list') E:\code\Server223\MeshCNN\inference\cache\WBAJ4_VS_SET_VSc2_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\4BG9R_VS_SET_VSc2_Subsetup9_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5DKHT_VS_SET_VSc3_Subsetup5_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5HH3Z_VS_SET_VSc4_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\692NM_VS_SET_VSc2_Subsetup4_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8EH79_VS_SET_VSc3_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8M8K9_VS_SET_VSc4_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup36_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup52_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\BX7U7_VS_SET_VSc1_Subsetup7_Maxillar.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('183 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CJFLZ_VS_SET_VSc1_Subsetup23_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F3X9F_VS_SET_VSc2_Subsetup19_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F4P42_VS_SET_VSc2_Subsetup8_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F7NBH_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\FET3D_VS_SET_VSc3_Subsetup28_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup25_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup30_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\HZVQR_VS_SET_VSc2_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\MHSX9_VS_SET_VSc2_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\N9YSJ_VS_SET_VSc2_Subsetup21_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\NK7AF_VS_SET_VSc2_Subsetup5_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\R8N9D_VS_SET_VSc3_Subsetup6_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\REXNE_VS_SET_VSc3_Subsetup7_Mandibular.obj
+ValueError('600 is not in list') E:\code\Server223\MeshCNN\inference\cache\WBAJ4_VS_SET_VSc2_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\4BG9R_VS_SET_VSc2_Subsetup9_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5DKHT_VS_SET_VSc3_Subsetup5_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5HH3Z_VS_SET_VSc4_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\692NM_VS_SET_VSc2_Subsetup4_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8EH79_VS_SET_VSc3_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8M8K9_VS_SET_VSc4_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup36_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup52_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\BX7U7_VS_SET_VSc1_Subsetup7_Maxillar.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('183 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CJFLZ_VS_SET_VSc1_Subsetup23_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F3X9F_VS_SET_VSc2_Subsetup19_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F4P42_VS_SET_VSc2_Subsetup8_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F7NBH_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\FET3D_VS_SET_VSc3_Subsetup28_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup25_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup30_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\HZVQR_VS_SET_VSc2_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\MHSX9_VS_SET_VSc2_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\N9YSJ_VS_SET_VSc2_Subsetup21_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\NK7AF_VS_SET_VSc2_Subsetup5_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\R8N9D_VS_SET_VSc3_Subsetup6_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\REXNE_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RMNC8_VS_SET_VSc2_Subsetup17_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\SN3QH_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TCPMB_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TPJKL_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U1S6Y_VS_SET_VSc1_Subsetup15_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U8RPE_VS_SET_VSc2_Subsetup11_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\UUT8Y_VS_SET_VSc1_Subsetup12_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\1MK3S_VS_SET_VSc1_Subsetup19_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\282WW_VS_SET_VSc2_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\2TZ3Q_VS_SET_VSc1_Subsetup6_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\3KUVJ_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\4BG9R_VS_SET_VSc2_Subsetup9_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5DKHT_VS_SET_VSc3_Subsetup5_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5HH3Z_VS_SET_VSc4_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\5TTC4_VS_SET_VSc1_Subsetup2_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\692NM_VS_SET_VSc2_Subsetup4_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\6DS6F_VS_SET_VSc2_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\7XR1S_VS_SET_VSc2_Subsetup10_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8EH79_VS_SET_VSc3_Subsetup3_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\8M8K9_VS_SET_VSc4_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup36_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\B7HZ5_VS_SET_VSc9_Subsetup52_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\BX7U7_VS_SET_VSc1_Subsetup7_Maxillar.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('183 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CJFLZ_VS_SET_VSc1_Subsetup23_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\EQYE7_VS_SET_VSc1_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F3X9F_VS_SET_VSc2_Subsetup19_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F4P42_VS_SET_VSc2_Subsetup8_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\F7NBH_VS_SET_VSc1_Subsetup_Retainer_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\FET3D_VS_SET_VSc3_Subsetup28_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup25_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\GK2YW_VS_SET_VSc2_Subsetup30_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\HZVQR_VS_SET_VSc2_Subsetup11_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\MHSX9_VS_SET_VSc2_Subsetup14_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\N9YSJ_VS_SET_VSc2_Subsetup21_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\NK7AF_VS_SET_VSc2_Subsetup5_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\R8N9D_VS_SET_VSc3_Subsetup6_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\REXNE_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RG6RE_VS_SET_VSc1_Subsetup18_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\RMNC8_VS_SET_VSc2_Subsetup17_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\SN3QH_VS_SET_VSc3_Subsetup7_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TCPMB_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\TPJKL_VS_SET_VSc1_Subsetup10_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U1S6Y_VS_SET_VSc1_Subsetup15_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\U8RPE_VS_SET_VSc2_Subsetup11_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\UUT8Y_VS_SET_VSc1_Subsetup12_Maxillar.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup14_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup15_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup1_Mandibular_actMatrix.obj
+ValueError('712 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+ValueError('1357 is not in list') E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj
+ValueError('1357 is not in list') E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj
+ValueError('1357 is not in list',) /data/Test_5044/down_obj_5/CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj

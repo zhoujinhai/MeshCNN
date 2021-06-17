@@ -88,7 +88,7 @@ class InferenceClass(object):
         meta["filename"] = mesh.filename
         meta['mesh'] = mesh
         meta["vs"], meta["faces"], meta["edges"] = mesh.get_vs_faces_edges()
-        # print("mesh info: ", len(meta["vs"]), len(meta["faces"]), len(meta["edges"]))
+        print("mesh info: ", len(meta["vs"]), len(meta["faces"]), len(meta["edges"]))
 
         # get edge features
         edge_features = mesh.extract_features()
@@ -159,7 +159,7 @@ class InferenceClass(object):
 
 
 if __name__ == '__main__':
-    test_file = "/data/Test_5044/down_obj/YYPY3_VS_SET_VSc1_Subsetup17_Mandibular.obj"
+    test_file = "/data/Test_5044/down_obj_5/CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj"
     test_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), test_file)
     print("Test file: ", test_file)
     inference_class = InferenceClass()

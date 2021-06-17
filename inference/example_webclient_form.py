@@ -41,10 +41,10 @@ def run_test(web_ip, web_port, filename, loop):
 
 
 if __name__ == '__main__':
-    file_dir = "E:/code/python_web/MeshCNN/test_models/"
+    file_dir = "./test_models/"
     filenames = os.listdir(file_dir)
     files = [os.path.join(file_dir, filename) for filename in filenames]
-    ip = "192.168.102.116"  # "127.0.0.1"
+    ip = "10.99.11.223"  # "127.0.0.1"
     port = 8000
     start = time.time()
     try:

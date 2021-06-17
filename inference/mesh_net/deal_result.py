@@ -10,6 +10,7 @@ import numpy as np
 from scipy import spatial
 import math
 import sys
+import os
 
 
 # ## 一、自定义函数
@@ -258,94 +259,108 @@ def get_pts_from_edges_vs(edges, vs, threshold=30):
     filter_pts = []
     for idx, circle in enumerate(circle_edges):
         # print(len(circle))
-        if len(circle) <= threshold:
+        if len(circle) < threshold:
             continue
         else:
-            # if circle_pts[idx][0] == circle_pts[idx][-1]:
             filter_edges.append(circle)
-            filter_pts.append(circle_pts[idx])
+            circle_pt = drop_cycle(circle_pts[idx], threshold)
+            filter_pts.append(circle_pt)
 
-    # ---- 3. 合并 ----
-    # 长度为1直接返回, 如果长度大于1，说明有2个或者以上的闭环（3个或以上需要按x顺序合并），这时可以先将各闭环对应的边找出，上一步骤保存即可
-    # 然后利用KDTree找出两个集合中最近的两条边，断开重组（重组时根据x,y值避免缠绕）即删除两条边，构造两条虚拟边
-    n_circle = len(filter_edges)
-    if 0 == n_circle:
-        return []
-    elif 1 == n_circle:
-        pts_ids = []
-        for circle in filter_pts:
-            circle = drop_cycle(circle, threshold)  # 去闭环
-            pts_ids.append(circle)
-        return pts_ids
-    else:
-        # TODO 3个以上根据x的范围进行排序，可过滤掉包含在大圈里面的部分 (这样处理有些有问题 如：APDXA_VS_SET_VSc2_Subsetup4_Maxillar)
-        # 找最近的边,进行破圈
-        last_edges = filter_edges[0]
-        vs_edges = vs[last_edges].reshape(len(last_edges), -1)
-        tree = spatial.KDTree(vs_edges)
-        for i in range(1, n_circle):
-            cur_edges = filter_edges[i]
-            min_dist = np.inf
-            min_index = -1
-            cur_edge = cur_edges[0]
-            cur_e_idx = 0
-            for e_idx, e in enumerate(cur_edges):
-                vs_e = np.append(vs[e[0]], vs[e[1]])
-                dist, dist_idx = tree.query(vs_e)
-                if dist < min_dist:
-                    min_dist = dist
-                    min_index = dist_idx
-                    cur_edge = e
-                    cur_e_idx = e_idx
+    # # save pts
+    # for idx, pts_id in enumerate(filter_pts):
+    #     save_dir = "./test_circle"
+    #     pts = vs[pts_id]
+    #     np.savetxt(os.path.join(save_dir, "predict_class" + str(idx + 1) + ".pts"), pts)
+    #     with open(os.path.join(save_dir, "predict_class" + str(idx + 1) + ".pts"), 'r+') as f:
+    #         content = f.read()
+    #         f.seek(0, 0)
+    #         f.write('BEGIN\n' + content)
+    #     with open(os.path.join(save_dir, "predict_class" + str(idx + 1) + ".pts"), 'a') as f:
+    #         f.write('END\n')
 
-            # 迭代
-            # 上一个闭环中最近的边
-            last_edge = last_edges[min_index]
-            last_edge_y1 = vs[last_edge[0]][1]
-            last_edge_y2 = vs[last_edge[1]][1]
-            last_lower_y_idx = 0 if last_edge_y1 < last_edge_y2 else 1
-            # 本次闭环中最近的边
-            cur_edge_y1 = vs[cur_edge[0]][1]
-            cur_edge_y2 = vs[cur_edge[1]][1]
-            cur_lower_y_idx = 0 if cur_edge_y1 < cur_edge_y2 else 1
-            # 根据y值重新组合两条边
-            edge_1 = [[last_edge[last_lower_y_idx], cur_edge[cur_lower_y_idx]]]
-            edge_2 = [[last_edge[1-last_lower_y_idx], cur_edge[1-cur_lower_y_idx]]]
-            # 重新生成last_edges
-            last_edges = last_edges[:min_index] + last_edges[min_index+1:] + cur_edges[:cur_e_idx] + cur_edges[cur_e_idx+1:]
-            last_edges = last_edges + edge_1 + edge_2
-            if i + 1 < n_circle:  # 小于才重新构建tree
-                vs_edges = vs[last_edges].reshape(len(last_edges), -1)
-                tree = spatial.KDTree(vs_edges)
+    return filter_pts
 
-        # 按边将点拼接成一个闭环
-        circle_pts = [[]]
-        count = 0
-        while len(last_edges) > 0:
-            if len(circle_pts[count]) == 0:
-                circle_pts[count] = list(last_edges[0])
-                last_edges = np.delete(last_edges, 0, axis=0)
-            else:
-                last_id = circle_pts[count][-1]
-                idx = np.where(last_edges == last_id)[0]
-                # 没有找到边
-                if len(idx) == 0:
-                    circle_pts.append([])
-                    count += 1
-                else:
-                    edge = last_edges[idx[0]]
-                    next_id = edge[0] if edge[0] != last_id else edge[1]
-                    circle_pts[count].append(next_id)
-                    last_edges = np.delete(last_edges, idx[0], axis=0)
-        pts_ids = []
-        for circle in circle_pts:
-            # 过滤短的
-            if len(circle) > threshold:
-                # print("{}".format(len(circle)))
-                circle = drop_cycle(circle, threshold)  # 去闭环
-                # print("after drop cycle {}".format(len(circle)))
-                pts_ids.append(circle)
-        return pts_ids
+    # # ---- 3. 合并 ----
+    # # 长度为1直接返回, 如果长度大于1，说明有2个或者以上的闭环（3个或以上需要按x顺序合并），这时可以先将各闭环对应的边找出，上一步骤保存即可
+    # # 然后利用KDTree找出两个集合中最近的两条边，断开重组（重组时根据x,y值避免缠绕）即删除两条边，构造两条虚拟边
+    # n_circle = len(filter_edges)
+    # if 0 == n_circle:
+    #     return []
+    # elif 1 == n_circle:
+    #     pts_ids = []
+    #     for circle in filter_pts:
+    #         circle = drop_cycle(circle, threshold)  # 去闭环
+    #         pts_ids.append(circle)
+    #     return pts_ids
+    # else:
+    #     # TODO 3个以上根据x的范围进行排序，可过滤掉包含在大圈里面的部分 (这样处理有些有问题 如：APDXA_VS_SET_VSc2_Subsetup4_Maxillar)
+    #     # 找最近的边,进行破圈
+    #     last_edges = filter_edges[0]
+    #     vs_edges = vs[last_edges].reshape(len(last_edges), -1)
+    #     tree = spatial.KDTree(vs_edges)
+    #     for i in range(1, n_circle):
+    #         cur_edges = filter_edges[i]
+    #         min_dist = np.inf
+    #         min_index = -1
+    #         cur_edge = cur_edges[0]
+    #         cur_e_idx = 0
+    #         for e_idx, e in enumerate(cur_edges):
+    #             vs_e = np.append(vs[e[0]], vs[e[1]])
+    #             dist, dist_idx = tree.query(vs_e)
+    #             if dist < min_dist:
+    #                 min_dist = dist
+    #                 min_index = dist_idx
+    #                 cur_edge = e
+    #                 cur_e_idx = e_idx
+    #
+    #         # 迭代
+    #         # 上一个闭环中最近的边
+    #         last_edge = last_edges[min_index]
+    #         last_edge_y1 = vs[last_edge[0]][1]
+    #         last_edge_y2 = vs[last_edge[1]][1]
+    #         last_lower_y_idx = 0 if last_edge_y1 < last_edge_y2 else 1
+    #         # 本次闭环中最近的边
+    #         cur_edge_y1 = vs[cur_edge[0]][1]
+    #         cur_edge_y2 = vs[cur_edge[1]][1]
+    #         cur_lower_y_idx = 0 if cur_edge_y1 < cur_edge_y2 else 1
+    #         # 根据y值重新组合两条边
+    #         edge_1 = [[last_edge[last_lower_y_idx], cur_edge[cur_lower_y_idx]]]
+    #         edge_2 = [[last_edge[1-last_lower_y_idx], cur_edge[1-cur_lower_y_idx]]]
+    #         # 重新生成last_edges
+    #         last_edges = last_edges[:min_index] + last_edges[min_index+1:] + cur_edges[:cur_e_idx] + cur_edges[cur_e_idx+1:]
+    #         last_edges = last_edges + edge_1 + edge_2
+    #         if i + 1 < n_circle:  # 小于才重新构建tree
+    #             vs_edges = vs[last_edges].reshape(len(last_edges), -1)
+    #             tree = spatial.KDTree(vs_edges)
+    #
+    #     # 按边将点拼接成一个闭环
+    #     circle_pts = [[]]
+    #     count = 0
+    #     while len(last_edges) > 0:
+    #         if len(circle_pts[count]) == 0:
+    #             circle_pts[count] = list(last_edges[0])
+    #             last_edges = np.delete(last_edges, 0, axis=0)
+    #         else:
+    #             last_id = circle_pts[count][-1]
+    #             idx = np.where(last_edges == last_id)[0]
+    #             # 没有找到边
+    #             if len(idx) == 0:
+    #                 circle_pts.append([])
+    #                 count += 1
+    #             else:
+    #                 edge = last_edges[idx[0]]
+    #                 next_id = edge[0] if edge[0] != last_id else edge[1]
+    #                 circle_pts[count].append(next_id)
+    #                 last_edges = np.delete(last_edges, idx[0], axis=0)
+    #     pts_ids = []
+    #     for circle in circle_pts:
+    #         # 过滤短的
+    #         if len(circle) > threshold:
+    #             # print("{}".format(len(circle)))
+    #             circle = drop_cycle(circle, threshold)  # 去闭环
+    #             # print("after drop cycle {}".format(len(circle)))
+    #             pts_ids.append(circle)
+    #     return pts_ids
 
 
 def drop_cycle(edge, max_length=20):
@@ -373,11 +388,14 @@ def drop_cycle(edge, max_length=20):
     for item in circle_count:
         if item == drop_list[0]:
             continue
-        first_id = drop_list.index(item)
-        last_id = drop_list[::-1].index(item)
-        if first_id + last_id <= max_length:
-            length = len(drop_list)
-            drop_list = drop_list[first_id:length-last_id]
+        try:
+            first_id = drop_list.index(item)
+            last_id = drop_list[::-1].index(item)
+            if first_id + last_id <= max_length:
+                length = len(drop_list)
+                drop_list = drop_list[first_id:length-last_id]
+        except ValueError:
+            continue
 
     return np.asarray(drop_list)
 
@@ -424,12 +442,13 @@ def label_pts_by_edges_and_faces(vs, edges, faces, face_labels):
                 edge_idx.append(ei)
     test_edges = np.asarray(edges[edge_idx])
     # print("test_edges:", len(test_edges))
-    pts_ids = get_pts_from_edges_vs(test_edges, vs, 18)
+    pts_ids = get_pts_from_edges_vs(test_edges, vs, 10)
     # np.savetxt("./pts_ids.txt", pts_ids, fmt="%d")
     # np.savetxt("./vs.txt", vs)
     # pts_ids = get_pts_from_edges(test_edges)
     # print("pts_ids: ", pts_ids)
-    pts_idx = np.array([], dtype=int)
+
+    res_vs = np.array([])
     face_normals, face_areas = compute_face_normals_and_areas(vs, faces)  # 计算面的法向量
     for idx, pts_id in enumerate(pts_ids):
         # idx = np.append(idx, pts_id)
@@ -451,9 +470,11 @@ def label_pts_by_edges_and_faces(vs, edges, faces, face_labels):
                 if max(curvature) > 0:
                     temp.append(cur_pt)
         temp.append(pts_id[-1])
-        pts_idx = np.append(pts_idx, temp)
+        res_vs = np.append(res_vs, vs[temp])
+        if idx != len(pts_ids) - 1:
+            res_vs = np.append(res_vs, np.array([0, 0, 0]))
 
-    return vs[pts_idx]
+    return res_vs
 
 
 def compute_face_normals_and_areas(vs, faces):
@@ -539,7 +560,6 @@ def label_origin_edge(predict_edges, predict_labels, predict_vs, origin_edges, o
 
 # In[8]:
 
-
 def project_points(predict_pts, origin_vs):
     """
     根据预测的边，筛选出边界点，将点投影回原模型
@@ -564,7 +584,7 @@ def get_predict_pts(predict_vs, predict_faces, predict_edges, predict_labels):
     # print("predict_face_labels:", len(predict_face_labels))
     # ## 方案二 通过面的标签来判断
     predict_gum_pts = label_pts_by_edges_and_faces(predict_vs, predict_edges, predict_faces, predict_face_labels)
-    return predict_gum_pts
+    return predict_gum_pts.reshape(-1, 3)
 
 
 
