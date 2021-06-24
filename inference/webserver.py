@@ -70,22 +70,33 @@ class MeshWebServer(object):
 
                 if os.path.isfile(file_path):
                     file = file_path
+                    predict_method = 1
                 else:
                     if obj_data != "":
-                        os.makedirs(self._cache_dir, exist_ok=True)
-                        del_file_list = os.listdir(self._cache_dir)  # 存在文件的话先清空
-                        for f in del_file_list:
-                            file_path = os.path.join(self._cache_dir, f)
-                            if os.path.isfile(file_path):
-                                os.remove(file_path)
+                        # # 方式一：保存数据至本地文件 对应self._engine.inference(file)
+                        # os.makedirs(self._cache_dir, exist_ok=True)
+                        # del_file_list = os.listdir(self._cache_dir)  # 存在文件的话先清空
+                        # for f in del_file_list:
+                        #     file_path = os.path.join(self._cache_dir, f)
+                        #     if os.path.isfile(file_path):
+                        #         os.remove(file_path)
+                        #
+                        # file = os.path.join(self._cache_dir, filename)
+                        # with open(file, "wb") as f:
+                        #     f.write(obj_data)
 
-                        file = os.path.join(self._cache_dir, filename)
-                        with open(file, "wb") as f:
-                            f.write(obj_data)
+                        # 方式二: 直接解析
+                        obj_data = obj_data.decode()
+                        file = ""
+                        predict_method = 2
                     else:
                         file = ""
+                        predict_method = 1
                 async with self._lock:
-                    predict_class = self._engine.inference(file)
+                    if 1 == predict_method:
+                        predict_class = self._engine.inference(file)
+                    else:
+                        predict_class = self._engine.inference_obj(obj_data)
                     # respond = dict(text=predict_class[0][1][-1], returnCode="Successed!", filename=filename)  # 边标签概率
                     # respond = dict(text=predict_class[0][-1], returnCode="Successed!", filename=filename)  # 边标签/牙龈线点
                     if len(predict_class) < 1:
@@ -109,14 +120,27 @@ class MeshWebServer(object):
                     file_path = os.path.join(self._cache_dir, f)
                     if os.path.isfile(file_path):
                         os.remove(file_path)
-                file = os.path.join(self._cache_dir, filename)
-                with open(file, 'wb') as f:
-                    while True:
-                        chunk = await field.read_chunk()  # 默认是8192个字节。
-                        if not chunk:
-                            break
-                        size += len(chunk)
-                        f.write(chunk)
+
+                # 方式一：直接解析data  对应self._engine.inference_obj(obj_data.decode())
+                obj_data = "".encode()
+                while True:
+                    chunk = await field.read_chunk()  # 默认是8192个字节。
+                    # print("chunk: ", type(chunk), chunk)
+                    if not chunk:
+                        break
+                    obj_data += chunk
+
+                # 方式二：保存至本地 对应self._engine.inference(file)
+                # file = os.path.join(self._cache_dir, filename)
+                # with open(file, 'wb') as f:
+                #     while True:
+                #         chunk = await field.read_chunk()  # 默认是8192个字节。
+                #         # print("chunk: ", type(chunk), chunk)
+                #         if not chunk:
+                #             break
+                #         size += len(chunk)
+                #         obj_data += chunk
+                #         f.write(chunk)
 
                 # # ----小文件----
                 # data = await request.post()
@@ -137,7 +161,8 @@ class MeshWebServer(object):
                 #     f.write(content)
 
                 async with self._lock:
-                    predict_class = self._engine.inference(file)
+                    # predict_class = self._engine.inference(file)  # 预测保存的文件
+                    predict_class = self._engine.inference_obj(obj_data.decode())
                     # respond = dict(text=predict_class[0][1][-1], returnCode="Successed!", filename=filename)  # 边标签概率
                     # respond = dict(text=predict_class[0][-1], returnCode="Successed!", filename=filename)  # 边标签/牙龈线点
                     if len(predict_class) < 1:

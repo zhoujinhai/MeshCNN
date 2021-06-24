@@ -421,4 +421,15 @@ ValueError('input faces must less than or equal to 7500, please check your down 
 ValueError('712 is not in list') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
 ValueError('1357 is not in list') E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj
 ValueError('1357 is not in list') E:\code\Server223\MeshCNN\inference\cache\CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj
-ValueError('1357 is not in list',) /data/Test_5044/down_obj_5/CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+AssertionError() E:\code\Server223\MeshCNN\inference\cache\test.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\test.obj
+RuntimeError('CUDA out of memory. Tried to allocate 202.00 MiB (GPU 0; 6.00 GiB total capacity; 424.73 MiB already allocated; 3.90 GiB free; 460.00 MiB reserved in total by PyTorch)') \\10.99.11.210\MeshCNN\Test_5044\down_obj\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 6423 and 5000') \\10.99.11.210\MeshCNN\Test_5044\down_obj\C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj
+RuntimeError('cuDNN error: CUDNN_STATUS_INTERNAL_ERROR') \\10.99.11.210\MeshCNN\Test_5044\down_obj_5\17Y9F_VS_SET_VSc2_Subsetup13_Maxillar.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\test.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') \\10.99.11.210\MeshCNN\Test_5044\down_obj_5\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
+ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj

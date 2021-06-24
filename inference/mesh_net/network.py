@@ -472,11 +472,9 @@ class UpConv(nn.Module):
         x1 = self.up_conv(from_up, meshes).squeeze(3)
 
         del from_up
-        if self.unroll and from_down.shape[2] > x1.shape[2]:
+        # if self.unroll and from_down.shape[2] > x1.shape[2]:  # 放宽条件
+        if self.unroll:
             x1 = self.unroll(x1, meshes)
-        # if from_down.shape[2] > x1.shape[2]:
-        #     from_down = from_down[:, :, :x1.shape[2]]
-        # print(x1.shape, from_down.shape, from_down[:, :, :x1.shape[2]].shape)
         if self.transfer_data:
             x1 = torch.cat((x1, from_down), 1)
         x1 = self.conv1(x1, meshes)

@@ -9,13 +9,13 @@ from mesh_net.mesh_process import fill_mesh
 
 # @torch.jit.script
 class Mesh(object):
-    def __init__(self, file=None, export_folder="", hold_history=False, phase="test", target_edges=7500):
+    def __init__(self, file=None, export_folder="", hold_history=False, phase="test", target_edges=7500, is_obj=False):
         self.vs = self.v_mask = self.filename = self.features = self.edge_areas = None
         self.edges = self.gemm_edges = self.sides = None
         self.target_edges = target_edges
         self.faces = None
         self.pool_count = 0
-        fill_mesh(self, file, target_edges)  # 给self赋值 包括vs,edges,gemm_edges,features等
+        fill_mesh(self, file, target_edges, is_obj)  # 给self赋值 包括vs,edges,gemm_edges,features等
         self.export_folder = export_folder
         self.history_data = None
         if hold_history:

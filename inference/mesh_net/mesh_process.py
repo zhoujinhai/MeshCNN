@@ -4,13 +4,13 @@ import sys
 import ntpath
 
 
-def fill_mesh(mesh2fill, file: str, n_target_edges):
+def fill_mesh(mesh2fill, file: str, n_target_edges, is_obj=False):
     """
     mesh2fill: mesh data  (dict)
     file: obj文件路径
     opt: 可选参数
     """
-    mesh_data = from_scratch(file, n_target_edges)
+    mesh_data = from_scratch(file, n_target_edges, is_obj)
     mesh2fill.vs = mesh_data['vs']
     mesh2fill.edges = mesh_data['edges']
     mesh2fill.faces = mesh_data["faces"]
@@ -45,7 +45,37 @@ class MeshPrep(object):
         return eval('self.' + item)
 
 
-def from_scratch(file, n_target_edges):
+def from_scratch(file, n_target_edges, is_obj=False):
+    """
+    file: obj文件路径
+    opt: 可选项，配置参数
+    return: 输出解析增强后的mesh_data数据
+    """
+    mesh_data = MeshPrep()
+    mesh_data.vs = mesh_data.edges = None
+    mesh_data.faces = None
+    mesh_data.gemm_edges = mesh_data.sides = None
+    mesh_data.edges_count = None
+    mesh_data.ve = None
+    mesh_data.v_mask = None
+    mesh_data.filename = None
+    mesh_data.edge_lengths = None
+    mesh_data.edge_areas = []
+    if is_obj:
+        mesh_data.vs, faces = fill_from_obj(mesh_data, file)
+    else:
+        mesh_data.vs, faces = fill_from_file(mesh_data, file)
+    mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
+    _, face_areas = compute_face_normals_and_areas(mesh_data, faces)
+    # faces, face_areas = remove_non_manifolds(mesh_data, faces)
+    # faces, face_areas = remove_boundary(faces, face_areas, n_target_edges)   # if edge > 7500, remove some boundary face
+    build_gemm(mesh_data, faces, face_areas)
+    mesh_data.faces = faces
+    mesh_data.features = extract_features(mesh_data)
+    return mesh_data
+
+
+def from_scratch_obj(file, n_target_edges):
     """
     file: obj文件路径
     opt: 可选项，配置参数
@@ -63,8 +93,9 @@ def from_scratch(file, n_target_edges):
     mesh_data.edge_areas = []
     mesh_data.vs, faces = fill_from_file(mesh_data, file)
     mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
-    faces, face_areas = remove_non_manifolds(mesh_data, faces)
-    faces, face_areas = remove_boundary(faces, face_areas, n_target_edges)   # if edge > 7500, remove some boundary face
+    _, face_areas = compute_face_normals_and_areas(mesh_data, faces)
+    # faces, face_areas = remove_non_manifolds(mesh_data, faces)
+    # faces, face_areas = remove_boundary(faces, face_areas, n_target_edges)   # if edge > 7500, remove some boundary face
     build_gemm(mesh_data, faces, face_areas)
     mesh_data.faces = faces
     mesh_data.features = extract_features(mesh_data)
@@ -94,6 +125,34 @@ def fill_from_file(mesh, file):
                                for ind in face_vertex_ids]
             faces.append(face_vertex_ids)
     f.close()
+    vs = np.asarray(vs)
+    faces = np.asarray(faces, dtype=int)
+    assert np.logical_and(faces >= 0, faces < len(vs)).all()
+    return vs, faces
+
+
+def fill_from_obj(mesh, obj_data):
+    """
+    解析obj str格式，得到对应的vs和faces
+    """
+    mesh.filename = "test.obj"
+    mesh.fullfilename = "test.obj"
+    vs, faces = [], []
+    data = obj_data.split("\n")
+    for line in data:
+        if line is "":
+            continue
+        splitted_line = line.split(" ")
+        if splitted_line[0] == 'v':
+            vs.append([float(v) for v in splitted_line[1:4]])
+        elif splitted_line[0] == 'f':
+            face_vertex_ids = [int(c.split('/')[0]) for c in splitted_line[1:]]
+            assert len(face_vertex_ids) == 3
+            # 下标从0开始
+            face_vertex_ids = [(ind - 1) if (ind >= 0) else (len(vs) + ind)
+                               for ind in face_vertex_ids]
+            faces.append(face_vertex_ids)
+
     vs = np.asarray(vs)
     faces = np.asarray(faces, dtype=int)
     assert np.logical_and(faces >= 0, faces < len(vs)).all()
@@ -143,6 +202,7 @@ def remove_boundary(faces, face_areas, n_target_edges):
             else:
                 edge_cnt[edge] += 1
     n = len(edge_cnt) - n_target_edges
+    # print(len(edge_cnt), n)
     for face_id, face in enumerate(faces):
         faces_edges = []
         for i in range(3):

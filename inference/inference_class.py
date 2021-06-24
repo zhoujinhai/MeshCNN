@@ -82,8 +82,8 @@ class InferenceClass(object):
 
         self.meta = dict()
 
-    def process_data(self, model_path, opt):
-        mesh = Mesh(file=model_path, export_folder=opt.export_folder, hold_history=True, phase="test", target_edges=opt.ninput_edges)
+    def process_data(self, model_path, opt, is_obj=False):
+        mesh = Mesh(file=model_path, export_folder=opt.export_folder, hold_history=True, phase="test", target_edges=opt.ninput_edges, is_obj=is_obj)
         meta = dict()
         meta["filename"] = mesh.filename
         meta['mesh'] = mesh
@@ -98,6 +98,39 @@ class InferenceClass(object):
         meta['edge_features'] = (edge_features - self.mean) / self.std
 
         self.meta = meta
+
+    def inference_obj(self, obj_data):
+        with torch.no_grad():
+            try:
+                # *** 3. process data
+                start = time.time()
+                self.process_data(obj_data, config, is_obj=True)
+
+                # *** 4. predict
+                if len(self.meta["edges"]) > config.ninput_edges:
+                    raise ValueError("input faces must less than or equal to {},"
+                                     " please check your down sample obj model".format(config.ninput_edges))
+
+                features = torch.from_numpy(self.meta['edge_features']).float().unsqueeze(0)
+                # features = features.half()  # TODO half()
+                # print("features after half: ", features.dtype)
+                features = features.to(self.device).requires_grad_(False)
+                mesh = [self.meta['mesh']]
+
+                # predict
+                out = self.net(features, mesh)
+
+                pred_class = out.data.max(1)[1].cpu()
+
+                end = time.time()
+                run_time = end - start
+                print("Predict result :{}, \nrun time is: {}ms".format("success!", run_time * 1000))
+
+                return pred_class.tolist()
+
+            except Exception as e:
+                print("predict error: ", e)
+                return []
 
     def inference(self, model_path):
         with torch.no_grad():
@@ -130,36 +163,41 @@ class InferenceClass(object):
                 # export_segmentation(pred_class, mesh)
 
                 # 获取pts
-                predict_labels = pred_class[0].numpy()
+                # predict_labels = pred_class[0].numpy()
                 # print("predict_labels: ", predict_labels, len(predict_labels))
                 # print(self.meta["edge_cnt"])
-                predict_gum_pts = deal_result.get_predict_pts(self.meta["vs"], self.meta["faces"],
-                                                              self.meta["edges"], predict_labels)
+                # np.savetxt("./vs.txt", self.meta["vs"], fmt="%6f")
+                # np.savetxt("./faces.txt", self.meta["faces"], fmt="%d")
+                # np.savetxt("./edges.txt", self.meta["edges"], fmt="%d")
+                # np.savetxt(r"D:\Debug_dir\test\label.txt", predict_labels, fmt="%d")
+                # predict_gum_pts = deal_result.get_predict_pts(self.meta["vs"], self.meta["faces"],
+                #                                               self.meta["edges"], predict_labels)
 
                 end = time.time()
                 run_time = end - start
-                print("Predict result :{}, \nrun time is: {}ms".format(pred_class, run_time * 1000))
+                print("Predict result :{}, \nrun time is: {}ms".format("success!", run_time * 1000))
                 # pts_path = os.path.splitext(os.path.basename(model_path))[0] + ".pts"
                 # np.savetxt(os.path.join("./AI_pts", pts_path), predict_gum_pts)
                 # np.savetxt(pts_path, predict_gum_pts)
 
                 # 返回边标签
-                # return pred_class.tolist()
+                return pred_class.tolist()
                 # 返回牙龈线点
-                return predict_gum_pts.tolist()
+                # return predict_gum_pts.tolist()
 
             except Exception as e:
                 print("predict {} exited with error {}".format(self.meta["filename"], repr(e)))
-                with open('./ai_error_model.txt', mode='a') as filename:
-                    filename.write(repr(e))
-                    filename.write(" ")
-                    filename.write(str(model_path))
-                    filename.write('\n')  # 换行
+                # with open('./ai_error_model.txt', mode='a') as filename:
+                #     filename.write(repr(e))
+                #     filename.write(" ")
+                #     filename.write(str(model_path))
+                #     filename.write('\n')  # 换行
                 return []
 
 
 if __name__ == '__main__':
-    test_file = "/data/Test_5044/down_obj_5/CTAT9_VS_SET_VSc1_Subsetup6_Mandibular.obj"
+    # test_file = "/data/Test_5044/down_obj/C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj"
+    test_file = r"D:\Debug_dir\test\test.obj"
     test_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), test_file)
     print("Test file: ", test_file)
     inference_class = InferenceClass()

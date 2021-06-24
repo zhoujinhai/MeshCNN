@@ -437,6 +437,7 @@ def label_pts_by_edges_and_faces(vs, edges, faces, face_labels):
         pt1 = edge[0]
         pt2 = edge[1]
         face_ids = find_faces_by_2point(faces, pt1, pt2)
+        # TODO 对于边界边会误删
         if len(face_ids) == 2:
             if face_labels[face_ids[0][0]] != face_labels[face_ids[1][0]]:
                 edge_idx.append(ei)
