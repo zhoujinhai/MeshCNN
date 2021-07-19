@@ -196,9 +196,9 @@ class InferenceClass(object):
 
 
 if __name__ == '__main__':
-    # test_file = "/data/Test_5044/down_obj/C2SFP_VS_SET_VSc1_Subsetup_Retainer_Mandibular.obj"
-    test_file = r"D:\Debug_dir\test\test.obj"
-    test_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), test_file)
+    test_file = "/data/Test_5044/down_obj/TQW78_VS_SET_VSc3_Subsetup22_Maxillar.obj"
+    # test_file = r"D:/Debug_dir/test/BSGB2__VS_SET_VSc2_Subsetup2_Maxillar.obj"
+    # test_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), test_file)
     print("Test file: ", test_file)
     inference_class = InferenceClass()
     for i in range(1):

@@ -408,6 +408,7 @@ class MeshUnpool(nn.Module):
         return self.forward(features, meshes)
 
     def pad_groups(self, group, unroll_start):
+
         start, end = group.shape
         padding_rows = unroll_start - start
         padding_cols = self.unroll_target - end
@@ -449,6 +450,7 @@ class UpConv(nn.Module):
         self.unroll = None
         self.transfer_data = transfer_data
         self.up_conv = MeshConv(in_channels, out_channels)
+
         if transfer_data:
             self.conv1 = MeshConv(2 * out_channels, out_channels)
         else:
@@ -472,11 +474,19 @@ class UpConv(nn.Module):
         x1 = self.up_conv(from_up, meshes).squeeze(3)
 
         del from_up
-        # if self.unroll and from_down.shape[2] > x1.shape[2]:  # 放宽条件
+
+        # print(from_down.shape, x1.shape)
         if self.unroll:
             x1 = self.unroll(x1, meshes)
+        # print(from_down.shape, x1.shape)
         if self.transfer_data:
+            # # 放宽条件
+            # if from_down.shape[2] > x1.shape[2]:
+            #     up_pool = MeshUnpool(from_down.shape[2])
+            #     x1 = up_pool(x1, meshes)
+            # print(from_down.shape, x1.shape)
             x1 = torch.cat((x1, from_down), 1)
+
         x1 = self.conv1(x1, meshes)
         if self.bn:
             x1 = self.bn[0](x1)

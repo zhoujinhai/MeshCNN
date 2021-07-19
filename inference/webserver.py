@@ -6,7 +6,7 @@ import os
 import base64
 
 
-def image_from_base64(base64_utf8):
+def decode_from_base64(base64_utf8):
     decode_data = base64.decodebytes(base64_utf8.encode('utf-8'))
     return decode_data
 
@@ -28,7 +28,7 @@ def throttle(func):
 
 
 class MeshWebServer(object):
-    def __init__(self, max_request=1, cache_dir=None):
+    def __init__(self, max_request=4, cache_dir=None):
         self._app = web.Application()
         self._engine = InferenceClass()
         self._concurrency = asyncio.BoundedSemaphore(max_request)
@@ -57,8 +57,11 @@ class MeshWebServer(object):
         if content_type == "application/json":
             try:
                 data = await request.json()
-                if 'obj' in data:
-                    obj_data = image_from_base64(data['obj'])
+                if 'obj_base64' in data:
+                    obj_data = decode_from_base64(data['obj_base64'])
+                    obj_data = obj_data.decode()
+                if "obj" in data:
+                    obj_data = data["obj"]
                 if 'filename' in data:
                     filename = data['filename']
                 else:
@@ -86,7 +89,6 @@ class MeshWebServer(object):
                         #     f.write(obj_data)
 
                         # 方式二: 直接解析
-                        obj_data = obj_data.decode()
                         file = ""
                         predict_method = 2
                     else:

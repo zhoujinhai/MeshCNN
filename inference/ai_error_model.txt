@@ -433,3 +433,4 @@ RuntimeError('cuDNN error: CUDNN_STATUS_INTERNAL_ERROR') \\10.99.11.210\MeshCNN\
 ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\test.obj
 ValueError('input faces must less than or equal to 7500, please check your down sample obj model') \\10.99.11.210\MeshCNN\Test_5044\down_obj_5\N9G99_VS_SET_VSc3_Subsetup16_Mandibular.obj
 ValueError('input faces must less than or equal to 7500, please check your down sample obj model') E:\code\Server223\MeshCNN\inference\cache\C2SFP_VS_SET_VSc1_Subsetup10_Mandibular.obj
+RuntimeError('Sizes of tensors must match except in dimension 2. Got 5427 and 5000 (The offending index is 0)',) /home/heygears/jinhai_zhou/work/MeshCNN/inference/cache/test.obj
