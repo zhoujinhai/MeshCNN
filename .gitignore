@@ -17,3 +17,4 @@ error_model.txt
 nohup.out
 show_model.py
 test.png
+*.pth

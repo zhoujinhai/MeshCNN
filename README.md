@@ -69,6 +69,25 @@ Some segmentation result examples:
 
 <img src="/docs/imgs/shrec__10_0.png" height="150px"/> <img src="/docs/imgs/shrec__14_0.png" height="150px"/> <img src="/docs/imgs/shrec__2_0.png" height="150px"/> 
 
+### 3D shape Segmentation on Tooth
+- DataSets
+
+see ./deal_data/readme.md
+
+- train
+```bash
+bash ./scripts/tooth_seg/train.sh
+```
+
+可视化训练过程：
+```bash
+tensorboard --logdir runs
+```
+
+- inference
+
+see ./inference/README.md
+
 ### Additional Datasets
 The same scripts also exist for COSEG segmentation in ```scripts/coseg_seg``` and cubes classification in ```scripts/cubes```. 
 

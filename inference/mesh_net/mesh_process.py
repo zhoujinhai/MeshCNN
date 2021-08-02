@@ -67,6 +67,7 @@ def from_scratch(file, n_target_edges, is_obj=False):
         mesh_data.vs, faces = fill_from_file(mesh_data, file)
     mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
     _, face_areas = compute_face_normals_and_areas(mesh_data, faces)
+    # 已转移到C++端 这里可以不用处理
     # faces, face_areas = remove_non_manifolds(mesh_data, faces)
     # faces, face_areas = remove_boundary(faces, face_areas, n_target_edges)   # if edge > 7500, remove some boundary face
     build_gemm(mesh_data, faces, face_areas)
@@ -94,6 +95,7 @@ def from_scratch_obj(file, n_target_edges):
     mesh_data.vs, faces = fill_from_file(mesh_data, file)
     mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
     _, face_areas = compute_face_normals_and_areas(mesh_data, faces)
+    # 已转移到C++端 这里可以不用处理
     # faces, face_areas = remove_non_manifolds(mesh_data, faces)
     # faces, face_areas = remove_boundary(faces, face_areas, n_target_edges)   # if edge > 7500, remove some boundary face
     build_gemm(mesh_data, faces, face_areas)

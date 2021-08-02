@@ -15,8 +15,8 @@ def run_val(epoch=-1):
     writer.reset_counter()
 
     for i, data in enumerate(dataset):
-        model.set_input(data)
         try:
+            model.set_input(data)
             ncorrect, nexamples = model.val()
             writer.update_counter(ncorrect, nexamples)
         except Exception as e:

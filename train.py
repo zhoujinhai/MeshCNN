@@ -32,9 +32,8 @@ if __name__ == '__main__':
                 t_data = iter_start_time - iter_data_time
             total_steps += opt.batch_size
             epoch_iter += opt.batch_size
-            model.set_input(data)
-
             try:
+                model.set_input(data)
                 model.optimize_parameters()
             except Exception as e:
                 print(e, data["filename"])

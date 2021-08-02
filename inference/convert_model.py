@@ -129,62 +129,62 @@ def run_test():
         del state_dict._metadata
     net.load_state_dict(state_dict)
     net = net.eval()
-    # torch.save(net, "./model_weight/predict.pth")  # 保存网络和权重
+    torch.save(net, "./AI_model/meshCNN_2_teeth_gums_complete_jaw.pth")  # 保存网络和权重
     # script_model = torch.jit.script(net)
     # print(script_model.code)
 
-    # *** 3. data
-    test_obj_lists = []
-    for item in os.walk(config.test_dir):
-        for file in item[2]:
-            file_path = os.path.join(item[0], file)
-            if os.path.splitext(file_path)[1] == ".obj":
-                test_obj_lists.append(file_path)
-    print("data number: {} \n ".format(len(test_obj_lists)))
-
-    # *** 4. loop predict
-    for i, model_file in enumerate(test_obj_lists):
-        # base_name, ext = os.path.splitext(os.path.basename(model_file))
-        # model_path_file = os.path.join(config.export_folder, base_name + "_0" + ext)
-        # if os.path.isfile(model_path_file):
-        #     predict_vs, predict_faces, predict_edges = parse_obje(model_path_file)
-        #     if len(predict_edges) != 0:
-        #         continue
-        data = process_data(model_file, mean, std, config)
-        print("Predict {}th file: {}".format((i + 1), data["filename"]))
-        try:
-            start = time.time()
-            if data["edge_features"].shape[1] == 0:
-                raise ValueError("input edges must greater than feature shape,"
-                                 " please check your model")
-
-            features = torch.from_numpy(data['edge_features']).float().unsqueeze(0)
-            features = features.to(device).requires_grad_(False)
-            mesh = [data['mesh']]
-
-            # predict
-            out = net(features, mesh)
-            pred_class = out.data.max(1)[1].cpu()
-            # np.savetxt("/home/heygears/work/github/MeshCNN/001", pred_class.numpy())
-            # 导出结果
-            export_segmentation(pred_class, mesh)
-
-            # # compare result
-            # ori_class = np.loadtxt("/home/heygears/work/github/MeshCNN/001")
-            # print("***result is ture: ***", (ori_class == pred_class.numpy()).all())
-
-            end = time.time()
-            run_time = end - start
-            # print("Predict result :{}, run time is {}ms".format(pred_class, run_time*1000))
-        except Exception as e:
-            print("error{}", repr(e))
-            with open('error_model.txt', mode='a') as filename:
-                filename.write(repr(e))
-                filename.write(" ")
-                filename.write(str(data["filename"]))
-                filename.write('\n')  # 换行
-
-    print("-----------------\npredict done!")
+    # # *** 3. data
+    # test_obj_lists = []
+    # for item in os.walk(config.test_dir):
+    #     for file in item[2]:
+    #         file_path = os.path.join(item[0], file)
+    #         if os.path.splitext(file_path)[1] == ".obj":
+    #             test_obj_lists.append(file_path)
+    # print("data number: {} \n ".format(len(test_obj_lists)))
+    #
+    # # *** 4. loop predict
+    # for i, model_file in enumerate(test_obj_lists):
+    #     # base_name, ext = os.path.splitext(os.path.basename(model_file))
+    #     # model_path_file = os.path.join(config.export_folder, base_name + "_0" + ext)
+    #     # if os.path.isfile(model_path_file):
+    #     #     predict_vs, predict_faces, predict_edges = parse_obje(model_path_file)
+    #     #     if len(predict_edges) != 0:
+    #     #         continue
+    #     data = process_data(model_file, mean, std, config)
+    #     print("Predict {}th file: {}".format((i + 1), data["filename"]))
+    #     try:
+    #         start = time.time()
+    #         if data["edge_features"].shape[1] == 0:
+    #             raise ValueError("input edges must greater than feature shape,"
+    #                              " please check your model")
+    #
+    #         features = torch.from_numpy(data['edge_features']).float().unsqueeze(0)
+    #         features = features.to(device).requires_grad_(False)
+    #         mesh = [data['mesh']]
+    #
+    #         # predict
+    #         out = net(features, mesh)
+    #         pred_class = out.data.max(1)[1].cpu()
+    #         # np.savetxt("/home/heygears/work/github/MeshCNN/001", pred_class.numpy())
+    #         # 导出结果
+    #         export_segmentation(pred_class, mesh)
+    #
+    #         # # compare result
+    #         # ori_class = np.loadtxt("/home/heygears/work/github/MeshCNN/001")
+    #         # print("***result is ture: ***", (ori_class == pred_class.numpy()).all())
+    #
+    #         end = time.time()
+    #         run_time = end - start
+    #         # print("Predict result :{}, run time is {}ms".format(pred_class, run_time*1000))
+    #     except Exception as e:
+    #         print("error{}", repr(e))
+    #         with open('error_model.txt', mode='a') as filename:
+    #             filename.write(repr(e))
+    #             filename.write(" ")
+    #             filename.write(str(data["filename"]))
+    #             filename.write('\n')  # 换行
+    #
+    # print("-----------------\npredict done!")
 
 
 if __name__ == '__main__':

@@ -39,12 +39,16 @@ class SegmentationData(BaseDataset):
         meta['mesh'] = mesh
         if self.opt.phase != "test":
             label = read_seg(self.seg_paths[index]) - self.offset
-            label = pad(label, self.opt.ninput_edges, val=-1, dim=0)
+            # print("label: ", label.shape, type(label), label)
+            if len(label) <= self.opt.ninput_edges:
+                label = pad(label, self.opt.ninput_edges, val=-1, dim=0)
             meta['label'] = label
             soft_label = read_sseg(self.sseg_paths[index])
-            meta['soft_label'] = pad(soft_label, self.opt.ninput_edges, val=-1, dim=0)
+            if len(soft_label) <= self.opt.ninput_edges:
+                soft_label = pad(soft_label, self.opt.ninput_edges, val=-1, dim=0)
+            meta['soft_label'] = soft_label
 
-        # get edge features
+            # get edge features
         edge_features = mesh.extract_features()
         if edge_features.shape[1] <= self.opt.ninput_edges:
             edge_features = pad(edge_features, self.opt.ninput_edges)

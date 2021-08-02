@@ -74,6 +74,8 @@ def from_scratch(file, opt):
     mesh_data.vs, faces = fill_from_file(mesh_data, file)
     mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
     faces, face_areas = remove_non_manifolds(mesh_data, faces)
+    # print(opt.ninput_edges)
+    faces, face_areas = remove_boundary(faces, face_areas, opt.ninput_edges)  # if edge > 7500, remove some boundary face
     if opt.num_aug > 1:
         faces = augmentation(mesh_data, opt, faces)
     build_gemm(mesh_data, faces, face_areas)
@@ -137,6 +139,45 @@ def remove_non_manifolds(mesh, faces):
             for idx, edge in enumerate(faces_edges):
                 edges_set.add(edge)
     return faces[mask], face_areas[mask]
+
+
+def remove_boundary(faces, face_areas, n_target_edges):
+    mask = np.ones(len(faces), dtype=bool)
+    edge_cnt = dict()
+
+    for face_id, face in enumerate(faces):
+        faces_edges = []
+        for i in range(3):
+            cur_edge = (face[i], face[(i + 1) % 3])
+            faces_edges.append(cur_edge)
+        for idx, edge in enumerate(faces_edges):
+            edge = tuple(sorted(list(edge)))
+            faces_edges[idx] = edge
+            if edge not in edge_cnt:
+                edge_cnt[edge] = 1
+            else:
+                edge_cnt[edge] += 1
+    n = len(edge_cnt) - n_target_edges
+    # print(len(edge_cnt), n)
+    for face_id, face in enumerate(faces):
+        faces_edges = []
+        for i in range(3):
+            cur_edge = (face[i], face[(i + 1) % 3])
+            faces_edges.append(cur_edge)
+        for idx, edge in enumerate(faces_edges):
+            edge = tuple(sorted(list(edge)))
+            faces_edges[idx] = edge
+            if edge_cnt[edge] != 2 and n > 0:
+                mask[face_id] = False
+                n -= 1
+                break
+            else:
+                mask[face_id] = True
+    if len(edge_cnt) > 7500:
+        # print("len", len(edge_cnt))
+        return faces[mask], face_areas[mask]
+    else:
+        return faces, face_areas
 
 
 def compute_face_normals_and_areas(mesh, faces):
@@ -297,7 +338,7 @@ def flip_edges(mesh, prct, faces):
 
 def slide_verts(mesh, prct):
     edge_points = get_edge_points(mesh)
-    dihedral = dihedral_angle(mesh, edge_points).squeeze() #todo make fixed_division epsilon=0
+    dihedral = dihedral_angle(mesh, edge_points).squeeze()  # todo make fixed_division epsilon=0
     thr = np.mean(dihedral) + np.std(dihedral)
     vids = np.random.permutation(len(mesh.ve))
     target = int(prct * len(vids))
@@ -305,7 +346,7 @@ def slide_verts(mesh, prct):
     for vi in vids:
         if shifted < target:
             edges = mesh.ve[vi]
-            if min(dihedral[edges]) > 2.65:
+            if len(dihedral[edges]) > 0 and min(dihedral[edges]) > 2.65:
                 edge = mesh.edges[np.random.choice(edges)]
                 vi_t = edge[1] if vi == edge[0] else edge[0]
                 nv = mesh.vs[vi] + np.random.uniform(0.2, 0.5) * (mesh.vs[vi_t] - mesh.vs[vi])

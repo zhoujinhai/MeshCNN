@@ -5,11 +5,13 @@
 
 #### deal_file.ipynb
 **功能**
+
 - 从各文件夹中挑选出stl模型及牙龈线文件pts
 - stl模型批量转换为obj格式
 
 #### down_sample.py
 **功能**
+
 - 对obj模型进行下采样
 
 #### deal_data_Class.ipynb
@@ -23,3 +25,15 @@
 
 - 解析预测的模型，生成分割结果
 - 预测模型结果上采样回原始模型
+
+#### show_data.py
+
+**功能**
+
+- 查看数据标注是否正确
+
+#### Mesh_Simplifier.py
+
+**功能**
+
+- stl直接下采样生成obj牙模

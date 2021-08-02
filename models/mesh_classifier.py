@@ -47,6 +47,7 @@ class ClassifierModel:
             self.load_network(opt.which_epoch)
 
     def set_input(self, data):
+        # print('edge_features: ', data['edge_features'].shape)
         input_edge_features = torch.from_numpy(data['edge_features']).float()
         # set inputs
         self.edge_features = input_edge_features.to(self.device).requires_grad_(self.is_train)
