@@ -78,7 +78,7 @@ class InferenceClass(object):
         self.net = self.net.eval()
         # gpu_tracker.track()
 
-        print("load model successed!")
+        print("load model: {} successed!".format(config.mesh_net))
 
         self.meta = dict()
 

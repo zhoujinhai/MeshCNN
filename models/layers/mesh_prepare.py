@@ -2,6 +2,7 @@ import numpy as np
 import os
 import sys
 import ntpath
+from collections import OrderedDict
 
 
 def fill_mesh(mesh2fill, file: str, opt):
@@ -20,7 +21,7 @@ def fill_mesh(mesh2fill, file: str, opt):
                             edges_count=mesh_data.edges_count, ve=mesh_data.ve, v_mask=mesh_data.v_mask,
                             filename=mesh_data.filename, sides=mesh_data.sides, faces=mesh_data.faces,
                             edge_lengths=mesh_data.edge_lengths, edge_areas=mesh_data.edge_areas,
-                            features=mesh_data.features)
+                            features=mesh_data.features, e_masks=mesh_data.e_masks)
     mesh2fill.vs = mesh_data['vs']
     mesh2fill.edges = mesh_data['edges']
     mesh2fill.faces = mesh_data["faces"]
@@ -33,6 +34,7 @@ def fill_mesh(mesh2fill, file: str, opt):
     mesh2fill.edge_areas = mesh_data['edge_areas']
     mesh2fill.features = mesh_data['features']
     mesh2fill.sides = mesh_data['sides']
+    mesh2fill.e_masks = mesh_data['e_masks']
 
 
 def get_mesh_path(file: str, num_aug: int):
@@ -67,13 +69,18 @@ def from_scratch(file, opt):
     mesh_data.gemm_edges = mesh_data.sides = None
     mesh_data.edges_count = None
     mesh_data.ve = None
+    mesh_data.e_masks = None
     mesh_data.v_mask = None
     mesh_data.filename = None
     mesh_data.edge_lengths = None
     mesh_data.edge_areas = []
     mesh_data.vs, faces = fill_from_file(mesh_data, file)
+    edge_masks = OrderedDict()
+    edge_masks = mask_edges(faces, edge_masks)
     mesh_data.v_mask = np.ones(len(mesh_data.vs), dtype=bool)
     faces, face_areas = remove_non_manifolds(mesh_data, faces)
+    edge_masks = mask_edges(faces, edge_masks, False)
+    mesh_data.e_masks = get_edges_masks(edge_masks)
     # print(opt.ninput_edges)
     faces, face_areas = remove_boundary(faces, face_areas, opt.ninput_edges)  # if edge > 7500, remove some boundary face
     if opt.num_aug > 1:
@@ -84,6 +91,38 @@ def from_scratch(file, opt):
     mesh_data.faces = faces
     mesh_data.features = extract_features(mesh_data)
     return mesh_data
+
+
+def mask_edges(faces, edge_masks, is_init=True):
+    """
+    根据顶点和面生成边及邻边
+    @faces: 模型面
+    edge_masks = OrderedDict()
+    return: 模型的边
+    """
+    for face_id, face in enumerate(faces):
+        faces_edges = []
+        for i in range(3):
+            cur_edge = (face[i], face[(i + 1) % 3])
+            faces_edges.append(cur_edge)
+
+        for idx, edge in enumerate(faces_edges):
+            edge = tuple(sorted(list(edge)))                 # 排序 小序号在前
+            # 去重
+            if edge not in edge_masks:
+                if is_init:
+                    edge_masks[edge] = False                      # 初始标签
+                else:
+                    edge_masks[edge] = True
+
+    return edge_masks
+
+
+def get_edges_masks(edge_masks):
+    masks = []
+    for key, value in edge_masks.items():
+        masks.append(value)
+    return np.asarray(masks, dtype=bool)
 
 
 def fill_from_file(mesh, file):

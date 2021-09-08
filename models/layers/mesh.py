@@ -12,6 +12,7 @@ class Mesh:
         self.vs = self.v_mask = self.filename = self.features = self.edge_areas = None
         self.edges = self.gemm_edges = self.sides = None
         self.faces = None
+        self.e_masks = None
         self.pool_count = 0
         fill_mesh(self, file, opt)  # 给self赋值 包括vs,edges,gemm_edges,features等
         self.export_folder = export_folder
