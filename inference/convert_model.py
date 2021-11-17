@@ -129,7 +129,8 @@ def run_test():
         del state_dict._metadata
     net.load_state_dict(state_dict)
     net = net.eval()
-    torch.save(net, "./AI_model/meshCNN_2_teeth_gums_complete_jaw_200.pth")  # 保存网络和权重
+    with torch.no_grad():
+        torch.save(net, "./AI_model/meshCNN_2_teeth_gums_complete_jaw_150_0910.pth")  # 保存网络和权重
     # script_model = torch.jit.script(net)
     # print(script_model.code)
 

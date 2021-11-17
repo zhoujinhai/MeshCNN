@@ -569,7 +569,7 @@ def define_classifier(opt):
 
 """
 opt: Namespace(arch='meshunet', batch_size=1, checkpoints_dir='./checkpoints', 
-dataroot='datasets/tooth_seg', dataset_mode='segmentation', 
+dataroot='datasets/tooth_seg_20210910', dataset_mode='segmentation', 
 export_folder='./checkpoints/tooth_seg_20201231_add_data_with_curvature/meshes',  fc_n=100, gpu_ids=[], 
 init_gain=0.02, init_type='normal', input_nc=7, is_train=False,  max_dataset_size=inf, 
 name='tooth_seg_20201231_add_data_with_curvature', ncf=[32, 64, 128, 256],  nclasses=2, ninput_edges=7500, 

@@ -382,7 +382,7 @@ if __name__ == "__main__":
     #     print("{} {} is healed".format(i, model_path))
 
     # # # add loss
-    # seg_file = "/home/heygears/work/github/MeshCNN/datasets/tooth_seg/seg/1PT7E_VS_SET_VSc2_Subsetup_Retainer_Maxillar.eseg"
+    # seg_file = "/home/heygears/work/github/MeshCNN/datasets/tooth_seg_20210910/seg/1PT7E_VS_SET_VSc2_Subsetup_Retainer_Maxillar.eseg"
     # label = read_sseg(seg_file) - 1
     # label = pad(label, 7500, val=-1, dim=0)
     # labels = torch.from_numpy(label[np.newaxis, :]).long()
@@ -401,7 +401,7 @@ if __name__ == "__main__":
     # soft_label = np.loadtxt("./soft_label.txt")
     # print(soft_label.shape, soft_label[40:50])
 
-    # sseg_file = "/home/heygears/work/github/MeshCNN/datasets/tooth_seg/sseg/1PT7E_VS_SET_VSc2_Subsetup_Retainer_Maxillar.seseg"
+    # sseg_file = "/home/heygears/work/github/MeshCNN/datasets/tooth_seg_20210910/sseg/1PT7E_VS_SET_VSc2_Subsetup_Retainer_Maxillar.seseg"
     # sseg_label = np.loadtxt(sseg_file, dtype="float64")
     # # print(sseg_label[40:50])
     #

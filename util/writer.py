@@ -2,9 +2,10 @@ import os
 import time
 
 try:
-    from tensorboardX import SummaryWriter
+    # from tensorboardX import SummaryWriter
+    from torch.utils.tensorboard import SummaryWriter
 except ImportError as error:
-    print('tensorboard X not installed, visualizing wont be available')
+    print('tensorboard not installed, visualizing wont be available')
     SummaryWriter = None
 
 

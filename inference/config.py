@@ -19,8 +19,8 @@ class config(object):
 
     # ---- file path ----
     # # 模型路径
-    mesh_net = "./AI_model/meshCNN_2_teeth_gums_complete_jaw_200.pth"
-    # model_path = "../checkpoints/tooth_seg_20210805/200_net.pth"  # "./model_weight/200_net.pth"
+    mesh_net = "./AI_model/meshCNN_2_teeth_gums_complete_jaw_100_0910.pth"
+    model_path = "../checkpoints/tooth_seg_20210910/150_net.pth"  # "./model_weight/200_net.pth"
     # # 测试集存放路径
     test_dir = "./test_models"
     # # 模型结果保存路径
