@@ -52,7 +52,7 @@ if __name__ == '__main__':
     file_dir = "E:/code/python_web/MeshCNN/test_models/"
     filenames = os.listdir(file_dir)
     files = [os.path.join(file_dir, filename) for filename in filenames]
-    ip = "192.168.102.116"  # "127.0.0.1" 192.168.102.116
+    ip = "192.168.102.13"  # "127.0.0.1" 192.168.102.13
     port = 8000
     start = time.time()
     try:

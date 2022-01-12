@@ -37,3 +37,9 @@
 **功能**
 
 - stl直接下采样生成obj牙模
+
+#### test_AddFixture.py
+
+**功能**
+
+- 针对stl和pts文件 对某些点进行调整
