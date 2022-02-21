@@ -16,4 +16,4 @@ python train.py \
 --slide_verts 0.2 \
 --save_epoch_freq 50 \
 --niter 100 \
---niter_decay 200
+--niter_decay 500

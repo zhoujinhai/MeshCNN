@@ -9,7 +9,7 @@ checkpoints
 datasets
 runs
 hgapi
-deal_data
+deal_data/Release
 inference/results
 inference/AI_pts
 evaluation/test_data.md

@@ -58,8 +58,28 @@ def collate_fn(batch):
     """Creates mini-batch tensors
     We should build custom collate_fn rather than using default collate_fn
     """
+
     meta = {}
     keys = batch[0].keys()
     for key in keys:
         meta.update({key: np.array([d[key] for d in batch])})
+
+    # meta = {}
+    # keys = batch[0].keys()
+    # batch.sort(key=lambda x: len(x["label"]))
+    # max_len = len(batch[0]["label"])
+    # feature_label = ["label", "soft_label", "edge_features"]
+    # for key in keys:
+    #     if key not in feature_label:
+    #         meta.update({key: np.array([d[key] for d in batch])})
+    #     else:
+    #         data = []
+    #         for d in batch:
+    #             cur_len = len(d[key])
+    #             if len(d[key]) < max_len:
+    #                 print("****:", cur_len, max_len)
+    #                 d[key] = np.append(d[key], d[key][:, max_len - cur_len])
+    #
+    #         meta.update({key: np.array([d[key] for d in batch])})
+    # print("meta: ", meta)
     return meta

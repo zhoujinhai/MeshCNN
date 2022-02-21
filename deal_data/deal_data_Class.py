@@ -488,8 +488,8 @@ class GenSegSsegC(object):
         last_labels[self.face_labels==gingiva_label] = 2  # 牙龈记为2
         last_labels[self.face_labels!=gingiva_label] = 1  # 牙齿记为1
         self.face_labels = last_labels
-        
-    #----------- 6、生成*.eseg文件 ----------------
+
+    # ----------- 6、生成*.eseg文件 ----------------
     def get_edges(self):
         """
         根据顶点和面生成边及邻边
@@ -730,9 +730,9 @@ def parallel_generate(obj_list, pts_list, test_path, train_path, save_path, pts_
 # In[16]:
 
 if __name__ == "__main__":
-    pts_path = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\four_batch_data\pts"
-    obj_path = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\four_batch_data\down_obj"
-    save_path = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\four_batch_data\file"
+    pts_path = r"\\10.99.11.210\MeshCNN\Test_5044\MeshCNN_Train_data\pts"
+    obj_path = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\down_obj"
+    save_path = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\NewData\file"
     train_path = os.path.join(save_path, "train")
     test_path = os.path.join(save_path, "val")
 

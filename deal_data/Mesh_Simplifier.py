@@ -1,3 +1,7 @@
+import os
+import sys
+
+sys.path.append("./Release")
 import hgapi
 import numpy as np
 import os
@@ -56,14 +60,23 @@ def simplify(model_path, save_path):
 
         # 读取模型
         mesh = hgapi.Mesh()
-        stl_handler = hgapi.STLFileHandler()
+        stl_handler = hgapi.OBJFileHandler()  # hgapi.STLFileHandler()
         stl_handler.Read(model_path, mesh)
 
         mesh_healing = hgapi.MeshHealing()
         mesh_healing.RemoveSmallerIslands(mesh)
         mesh_healing.RemoveDanglingFace(mesh)
 
-        hgapi.MeshSimplify.Simplify2(mesh, 5000)
+        target_face = 5000
+        step = 50
+        while True:
+            hgapi.MeshSimplify.Simplify2(mesh, target_face)
+            mesh.GenerateEdgeAndAdjacency(True)
+            n_edges = mesh.GetNumEdge()
+            if n_edges > 7500:
+                target_face -= step
+            else:
+                break
 
         # 保存模型
         obj_handler = hgapi.OBJFileHandler()
@@ -117,15 +130,15 @@ def parallel_simplify(model_list, save_path, n_workers=8):
 
 if __name__ == "__main__":
     # "./test_models" r"\\10.99.11.210\MeshCNN\Test_5044\stl"
-    test_dir = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\UBP_data\stl"
-    save_dir = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\UBP_data\down_obj"
+    test_dir = r"\\10.99.11.210\MeshCNN\Test_5044\MeshCNN_Train_data\file\test1"
+    save_dir = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\down_obj"
 
     has_pts_files = glob.glob(os.path.join(save_dir, "*.obj"))
     has_pts_file_names = [os.path.splitext(os.path.basename(pts_file))[0] for pts_file in has_pts_files]
 
     error_models = []
 
-    all_stl_models = glob.glob(os.path.join(test_dir, "*.stl"))
+    all_stl_models = glob.glob(os.path.join(test_dir, "*.obj"))
     stl_models = []
     for stl_model in all_stl_models:
         basename = os.path.basename(stl_model)
@@ -134,6 +147,7 @@ if __name__ == "__main__":
         if os.path.splitext(basename)[0] in has_pts_file_names:
             continue
         stl_models.append(stl_model)
+    print(len(stl_models))
     parallel_simplify(stl_models, save_dir, 4)
 
     # test_model = "./test_models/7MUZ3_VS_SET_VSc2_Subsetup15_Maxillar.stl"

@@ -54,6 +54,7 @@ class ClassifierModel:
         self.mesh = data['mesh']
 
         if self.opt.phase != "test":
+            # print(data["label"], type(data["label"]))
             labels = torch.from_numpy(data['label']).long()
             self.labels = labels.to(self.device)
             # if self.opt.dataset_mode == 'segmentation' and not self.is_train:

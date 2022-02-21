@@ -392,11 +392,11 @@ def show_predict(predict1, predict2, pts):
 
 if __name__ == "__main__":
     # predict_dir = "/home/heygears/work/github/MeshCNN/checkpoints/tooth_seg_20201231_add_data_with_curvature/meshes/"
-    predict_dir = "/home/heygears/work/github/MeshCNN/inference/results"
+    predict_dir = r"\\10.99.11.210\MeshCNN\MeshCNN_Train_data\NewData\file\show"  # "/home/heygears/work/github/MeshCNN/inference/results"
 
-    # # 解析结果
-    predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))
-    parallel_show_predict(predict_model_list, predict_dir, n_workers=8)
+    # # # 解析结果
+    # predict_model_list = glob.glob(os.path.join(predict_dir, "*.obj"))
+    # parallel_show_predict(predict_model_list, predict_dir, n_workers=8)
 
     # 显示结果
     file_list = [os.path.join(predict_dir, file_path) for file_path in os.listdir(predict_dir)
@@ -405,9 +405,9 @@ if __name__ == "__main__":
     # print(file_list, len(file_list))
     for i, file in enumerate(file_list):
         print("{} file path is: {}".format(i+1, file))
-        predict1_path = os.path.join(file, "predict1.obj")
-        predict2_path = os.path.join(file, "predict2.obj")
-        predict_pts = os.path.join(file, "predict.vtk")
+        predict1_path = os.path.join(file, "mesh1.obj")
+        predict2_path = os.path.join(file, "mesh2.obj")
+        predict_pts = os.path.join(file, "test.vtk")
         show_predict(predict1_path, predict2_path, predict_pts)
 
     # ----- 按键控制 --------

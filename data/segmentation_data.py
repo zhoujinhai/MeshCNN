@@ -15,6 +15,7 @@ class SegmentationData(BaseDataset):
         self.device = torch.device('cuda:{}'.format(opt.gpu_ids[0])) if opt.gpu_ids else torch.device('cpu')
         self.root = opt.dataroot
         self.dir = os.path.join(opt.dataroot, opt.phase)
+        print("********", self.dir, self.root)
         self.paths = self.make_dataset(self.dir)
         if opt.phase == "test":
             self.seg_paths = None

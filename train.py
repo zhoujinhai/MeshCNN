@@ -36,11 +36,13 @@ if __name__ == '__main__':
                 model.set_input(data)
                 model.optimize_parameters()
             except Exception as e:
-                print(e, data["filename"])
+                print(e)
                 with open('error_model.txt', mode='a') as filename:
                     filename.write(str(e)+" ")
                     filename.write(str(data["filename"][0]))
                     filename.write('\n')  # 换行
+
+                continue
 
             if total_steps % opt.print_freq == 0:
                 loss = model.loss
