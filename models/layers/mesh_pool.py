@@ -37,8 +37,13 @@ class MeshPool(nn.Module):
         if self.__multi_thread:
             for mesh_index in range(len(meshes)):
                 pool_threads[mesh_index].join()
-        out_features = torch.cat(self.__updated_fe).view(len(meshes), -1, self.__out_target)
-        # print("out_features: {}, len(meshes): {}".format(out_features.size(), len(meshes)))
+        try:
+            out_features = torch.cat(self.__updated_fe).view(len(meshes), -1, self.__out_target)
+            # print("out_features: {}, len(meshes): {}".format(out_features.size(), len(meshes)))
+        except Exception as e:
+            self.__out_target = pool_target
+            raise IndexError(e)
+
         self.__out_target = pool_target
         return out_features
 
