@@ -115,3 +115,6 @@ If you have questions or issues running this code, please open an issue so we ca
   
 # Acknowledgments
 This code design was adopted from [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix).
+
+# Other Reference
+the curve compute is reference: https://www.researchgate.net/profile/Wenchong-He/publication/343776600_CurvaNet_Geometric_Deep_Learning_based_on_Directional_Curvature_for_3D_Shape_Analysis/links/6549f146b1398a779d6bceae/CurvaNet-Geometric-Deep-Learning-based-on-Directional-Curvature-for-3D-Shape-Analysis.pdf
