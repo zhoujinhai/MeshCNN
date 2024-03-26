@@ -1,1 +1,13 @@
-111
+#ifndef __SLIC3R_VERSION_H
+#define __SLIC3R_VERSION_H
+
+#define SLIC3R_APP_NAME "BambuStudio"
+#define SLIC3R_APP_KEY "BambuStudio"
+#define SLIC3R_VERSION "01.09.00.60"
+#define SLIC3R_BUILD_ID ""
+#define SLIC3R_BUILD_TIME "20240326-102313"
+//#define SLIC3R_RC_VERSION "01.09.00.60"
+#define BBL_RELEASE_TO_PUBLIC 1
+#define BBL_INTERNAL_TESTING 1
+
+#endif /* __SLIC3R_VERSION_H */
