@@ -1,13 +1,40 @@
-#ifndef __SLIC3R_VERSION_H
-#define __SLIC3R_VERSION_H
+#pragma once
 
-#define SLIC3R_APP_NAME "BambuStudio"
-#define SLIC3R_APP_KEY "BambuStudio"
-#define SLIC3R_VERSION "01.09.00.60"
-#define SLIC3R_BUILD_ID ""
-#define SLIC3R_BUILD_TIME "20240326-102313"
-//#define SLIC3R_RC_VERSION "01.09.00.60"
-#define BBL_RELEASE_TO_PUBLIC 1
-#define BBL_INTERNAL_TESTING 1
+#include "mesh/mesh.h" 
 
-#endif /* __SLIC3R_VERSION_H */
+namespace dental
+{
+
+struct BracketRemoveOpt { 
+    std::string AIModelPath;  // AI model 
+    bool bHasIronWire;        // whether has iron wire
+    bool bHasRing;            // whether has ring
+
+    BracketRemoveOpt()
+        : AIModelPath("//10.99.11.210/models/nightGuard/AIModel/Tooth_2D_V2.onnx")
+        , bHasIronWire(true)
+        , bHasRing(true)
+    {}
+};
+
+class BracketRemove
+{
+public:
+    BracketRemove(core::Mesh& mesh, const BracketRemoveOpt& opt);
+    ~BracketRemove();
+   
+    bool FindBrackets();  
+    core::Mesh GetMesh();
+
+    bool RemoveBracketByFace(const std::vector<int>& oneBracketFaceIds);
+    bool RemoveBracketByVertex(const std::vector<int>& oneBracketVertexIds);
+    bool RemoveBracket();
+    
+private:
+    BracketRemoveOpt opt_;
+    core::Mesh inMesh_; 
+    std::vector<int>  allBracketVIds_;
+    std::vector<char> vMarks_;
+};
+
+}
